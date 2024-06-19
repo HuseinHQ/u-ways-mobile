@@ -5,9 +5,11 @@ const GlobalStyles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: Colors.white.primary,
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: Colors.white.default,
+  },
+  title: {
+    fontFamily: 'Montserrat-Bold',
+    fontSize: 20,
   },
 });
 
