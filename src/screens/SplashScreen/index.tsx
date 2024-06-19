@@ -4,7 +4,6 @@ import {
   Image,
   SafeAreaView,
   StatusBar,
-  StyleSheet,
   useColorScheme,
   View,
 } from 'react-native';
@@ -14,6 +13,7 @@ import Colors from '@/utils/Colors';
 import logoLight from '@/assets/images/logo_light.png';
 import logoDark from '@/assets/images/logo_dark.png';
 import {useNavigation} from '@react-navigation/native';
+import styles from './styles';
 
 function SplashScreen(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -50,15 +50,5 @@ function SplashScreen(): React.JSX.Element {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  imageContainer: {
-    margin: 'auto',
-  },
-  image: {
-    width: 180,
-    height: 180,
-  },
-});
 
 export default SplashScreen;
