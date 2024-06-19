@@ -1,22 +1,23 @@
-const colors = {
+const Colors = {
+  primary: '#CE1212',
   white: {
-    primary: '#FFFFFF',
+    default: '#FFFFFF',
   },
   red: {
-    primary: '#CE1212',
+    default: '#CE1212',
   },
   green: {
-    primary: '#0DBF3F',
+    default: '#0DBF3F',
     darker: '#60884D',
   },
   grey: {
-    primary: '#ECEAEA',
+    default: '#ECEAEA',
     lighter: '#F4F4F4',
     darker: '#D9D9D9',
   },
   blue: {
-    primary: '#1A47BA',
+    default: '#1A47BA',
   },
 };
 
-export default colors;
+export default Colors;
