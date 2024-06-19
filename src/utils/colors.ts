@@ -5,6 +5,7 @@ const Colors = {
   },
   red: {
     default: '#CE1212',
+    lighter: '#D9D9D9',
   },
   green: {
     default: '#0DBF3F',

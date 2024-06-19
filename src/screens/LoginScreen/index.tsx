@@ -32,6 +32,15 @@ function LoginScreen(): React.JSX.Element {
     navigation.navigate('RegisterScreen');
   };
 
+  const onSubmitHandler = () => {
+    // TODO: validatsi email dan fetch
+    navigation.reset({
+      index: 0,
+      // @ts-ignore
+      routes: [{name: 'Main'}],
+    });
+  };
+
   useEffect(() => {
     setIsEmailUPN(validateEmailUPN(form.email));
   }, [form.email]);
@@ -99,7 +108,9 @@ function LoginScreen(): React.JSX.Element {
             </View>
           </View>
 
-          <TouchableOpacity style={[GlobalStyles.shadow, styles.loginButton]}>
+          <TouchableOpacity
+            onPress={onSubmitHandler}
+            style={[GlobalStyles.shadow, styles.loginButton]}>
             <Text style={styles.login}>LOGIN</Text>
           </TouchableOpacity>
         </View>
