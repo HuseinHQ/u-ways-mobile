@@ -7,9 +7,11 @@ const GlobalStyles = StyleSheet.create({
     padding: 20,
     backgroundColor: Colors.white.default,
   },
-  title: {
-    fontFamily: 'Montserrat-Bold',
-    fontSize: 20,
+  shadow: {
+    elevation: 2,
+  },
+  alignCenter: {
+    alignItems: 'center',
   },
 });
 

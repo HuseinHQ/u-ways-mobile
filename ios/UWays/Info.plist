@@ -67,6 +67,14 @@
 		<string>Montserrat-SemiBoldItalic.ttf</string>
 		<string>Montserrat-Thin.ttf</string>
 		<string>Montserrat-ThinItalic.ttf</string>
+		<string>Blinker-Black.ttf</string>
+		<string>Blinker-Bold.ttf</string>
+		<string>Blinker-ExtraBold.ttf</string>
+		<string>Blinker-ExtraLight.ttf</string>
+		<string>Blinker-Light.ttf</string>
+		<string>Blinker-Regular.ttf</string>
+		<string>Blinker-SemiBold.ttf</string>
+		<string>Blinker-Thin.ttf</string>
 	</array>
 </dict>
 </plist>
