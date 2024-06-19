@@ -10,6 +10,7 @@ import {validateEmailUPN} from '@/helpers';
 import CustomInput from '@/components/CustomInput';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import styles from './styles';
+import {useNavigation} from '@react-navigation/native';
 
 function LoginScreen(): React.JSX.Element {
   const [form, setForm] = useState({
@@ -17,12 +18,18 @@ function LoginScreen(): React.JSX.Element {
     password: '',
   });
   const [isEmailUPN, setIsEmailUPN] = useState(false);
+  const navigation = useNavigation();
 
   const onChangeText = (name: string) => (value: string) => {
     setForm({
       ...form,
       [name]: value,
     });
+  };
+
+  const goToRegisterScreen = () => {
+    // @ts-ignore
+    navigation.navigate('RegisterScreen');
   };
 
   useEffect(() => {
@@ -39,14 +46,14 @@ function LoginScreen(): React.JSX.Element {
         <View style={styles.textContainer}>
           <Text style={[Fonts.title, styles.textRed]}>Selamat Datang</Text>
           <Text style={Fonts.text}>
-            Silahkan login menggunakan akun UPN anda!
+            Silahkan login menggunakan email UPN anda!
           </Text>
         </View>
 
         <View style={styles.formContainer}>
           <CustomInput
             value={form.email}
-            placeholder="Email"
+            placeholder="NPM@student.upnjatim.ac.id"
             setValue={onChangeText('email')}
             leftIcon={
               <FontAwesome
@@ -99,7 +106,7 @@ function LoginScreen(): React.JSX.Element {
 
         <View style={styles.bottomContainer}>
           <Text style={[Fonts.text, styles.textRed]}>Belum punya akun? </Text>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={goToRegisterScreen}>
             <Text style={styles.daftar}>Daftar</Text>
           </TouchableOpacity>
         </View>

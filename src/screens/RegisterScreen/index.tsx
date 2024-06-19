@@ -1,21 +1,27 @@
 import Colors from '@/utils/Colors';
 import React, {useEffect, useState} from 'react';
-import {Image, StatusBar, StyleSheet, Text, View} from 'react-native';
+import {Image, StatusBar, Text, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import image from '@/assets/images/logo_dark.png';
 import Fonts from '@/styles/Fonts';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import GlobalStyles from '@/styles/GlobalStyles';
 import {validateEmailUPN} from '@/helpers';
 import CustomInput from '@/components/CustomInput';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import styles from './styles';
+import {useNavigation} from '@react-navigation/native';
 
-function LoginScreen(): React.JSX.Element {
+function RegisterScreen(): React.JSX.Element {
   const [form, setForm] = useState({
+    name: '',
     email: '',
     password: '',
+    confirm_password: '',
   });
   const [isEmailUPN, setIsEmailUPN] = useState(false);
+  const navigation = useNavigation();
 
   const onChangeText = (name: string) => (value: string) => {
     setForm({
@@ -23,6 +29,13 @@ function LoginScreen(): React.JSX.Element {
       [name]: value,
     });
   };
+
+  const goToLoginScreen = () => {
+    // @ts-ignore
+    navigation.goBack();
+  };
+
+  const onSubmitHandler = () => {};
 
   useEffect(() => {
     setIsEmailUPN(validateEmailUPN(form.email));
@@ -38,14 +51,36 @@ function LoginScreen(): React.JSX.Element {
         <View style={styles.textContainer}>
           <Text style={[Fonts.title, styles.textRed]}>Selamat Datang</Text>
           <Text style={Fonts.text}>
-            Silahkan login menggunakan akun UPN anda!
+            Silahkan daftar menggunakan email UPN anda!
           </Text>
         </View>
 
         <View style={styles.formContainer}>
           <CustomInput
+            value={form.name}
+            placeholder="Nama"
+            setValue={onChangeText('name')}
+            leftIcon={
+              <FontAwesome6
+                name="user-large"
+                size={20}
+                color={Colors.white.default}
+              />
+            }
+            rightIcon={
+              <FontAwesome
+                name="check-circle"
+                size={20}
+                color={Colors.green.default}
+              />
+            }
+            keyboardType="default"
+            textContentType="name"
+          />
+
+          <CustomInput
             value={form.email}
-            placeholder="Email"
+            placeholder="NPM@student.upnjatim.ac.id"
             setValue={onChangeText('email')}
             leftIcon={
               <FontAwesome
@@ -66,40 +101,39 @@ function LoginScreen(): React.JSX.Element {
             validation={isEmailUPN}
           />
 
-          <View>
-            <CustomInput
-              value={form.password}
-              placeholder="Password"
-              setValue={onChangeText('password')}
-              leftIcon={
-                <FontAwesome
-                  name="lock"
-                  size={20}
-                  color={Colors.white.default}
-                />
-              }
-              secureTextEntry={true}
-              textContentType="password"
-            />
+          <CustomInput
+            value={form.password}
+            placeholder="Password"
+            setValue={onChangeText('password')}
+            leftIcon={
+              <FontAwesome name="lock" size={20} color={Colors.white.default} />
+            }
+            secureTextEntry={true}
+            textContentType="password"
+          />
 
-            <View style={GlobalStyles.alignCenter}>
-              <TouchableOpacity>
-                <Text style={[Fonts.text, styles.forgotPassword]}>
-                  Lupa Sandi?
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
+          <CustomInput
+            value={form.confirm_password}
+            placeholder="Konfirmasi Password"
+            setValue={onChangeText('confirm_password')}
+            leftIcon={
+              <FontAwesome name="lock" size={20} color={Colors.white.default} />
+            }
+            secureTextEntry={true}
+            textContentType="password"
+          />
 
-          <TouchableOpacity style={[GlobalStyles.shadow, styles.loginButton]}>
-            <Text style={styles.login}>LOGIN</Text>
+          <TouchableOpacity
+            onPress={onSubmitHandler}
+            style={[GlobalStyles.shadow, styles.loginButton]}>
+            <Text style={styles.login}>DAFTAR</Text>
           </TouchableOpacity>
         </View>
 
         <View style={styles.bottomContainer}>
-          <Text style={[Fonts.text, styles.textRed]}>Belum punya akun? </Text>
-          <TouchableOpacity>
-            <Text style={styles.daftar}>Daftar</Text>
+          <Text style={[Fonts.text, styles.textRed]}>Sudah punya akun? </Text>
+          <TouchableOpacity onPress={goToLoginScreen}>
+            <Text style={styles.daftar}>Login</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -107,67 +141,4 @@ function LoginScreen(): React.JSX.Element {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.primary,
-    alignItems: 'center',
-  },
-  innerContainer: {
-    flex: 0.9,
-    backgroundColor: Colors.white.default,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    padding: 30,
-    width: '100%',
-  },
-  title: {
-    color: Colors.white.default,
-    marginTop: 20,
-  },
-  image: {
-    margin: 'auto',
-    width: 140,
-    height: 140,
-  },
-  textContainer: {
-    gap: 10,
-    marginBottom: 20,
-  },
-  textRed: {
-    color: Colors.primary,
-  },
-  formContainer: {
-    marginTop: 10,
-    gap: 15,
-  },
-  forgotPassword: {
-    color: Colors.primary,
-    marginTop: 5,
-    marginBottom: 10,
-  },
-  loginButton: {
-    alignItems: 'center',
-    backgroundColor: Colors.primary,
-    borderRadius: 20,
-    paddingVertical: 15,
-  },
-  login: {
-    color: Colors.white.default,
-    fontFamily: 'Montserrat-Bold',
-    fontSize: 17,
-  },
-  bottomContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    justifyContent: 'center',
-    marginBottom: 20,
-  },
-  daftar: {
-    color: Colors.primary,
-    fontFamily: 'Montserrat-SemiBold',
-  },
-});
-
-export default LoginScreen;
+export default RegisterScreen;
