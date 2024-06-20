@@ -4,34 +4,47 @@ import Carousel from 'react-native-reanimated-carousel';
 import Hero1 from '@/assets/images/hero_1.png';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Colors from '@/utils/Colors';
+import Spacer from '@/components/Spacer';
 
 const width = Dimensions.get('window').width;
-const carouselData = [{}, {}, {}];
+const carouselData = [
+  {
+    image: Hero1,
+  },
+  {
+    image: Hero1,
+  },
+  {
+    image: Hero1,
+  },
+];
 
 function CustomCarousel(): React.JSX.Element {
   const [carouselIndex, setCarouselIndex] = useState(0);
-  const height = Dimensions.get('screen').height;
 
   return (
-    <View style={{height: height / 4}}>
-      <Carousel
-        loop
-        width={width}
-        height={width / 2}
-        // autoPlay={true}
-        data={carouselData}
-        scrollAnimationDuration={1000}
-        onSnapToItem={index => setCarouselIndex(index)}
-        renderItem={({index}) => (
-          <View key={index} style={styles.carouselItem}>
-            <Image source={Hero1} style={styles.image} />
-          </View>
-        )}
-      />
-
+    <>
+      <View>
+        <Carousel
+          loop
+          width={width}
+          height={width / 2}
+          // autoPlay={true}
+          data={carouselData}
+          scrollAnimationDuration={1000}
+          onSnapToItem={index => setCarouselIndex(index)}
+          renderItem={({index, item}) => (
+            <View key={index} style={styles.carouselItem}>
+              <Image source={item.image} style={styles.image} />
+            </View>
+          )}
+        />
+      </View>
+      <Spacer height={5} />
       <View style={styles.bullet}>
         {carouselData.map((item, index) => (
           <FontAwesome
+            key={index}
             name="circle"
             size={10}
             color={
@@ -40,7 +53,7 @@ function CustomCarousel(): React.JSX.Element {
           />
         ))}
       </View>
-    </View>
+    </>
   );
 }
 

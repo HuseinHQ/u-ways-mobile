@@ -27,6 +27,7 @@ const CustomInput: React.FC<CustomInputProps> = ({
         style={styles.textInput}
         value={value}
         onChangeText={setValue}
+        placeholderTextColor={Colors.white.default}
         {...props}
       />
       <View style={styles.icon}>{validation ? rightIcon : null}</View>

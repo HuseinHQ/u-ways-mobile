@@ -5,6 +5,7 @@ import Header from './Header';
 import CustomCarousel from './CustomCarousel';
 import Spacer from '@/components/Spacer';
 import {ScrollView} from 'react-native-gesture-handler';
+import FeatureList from './FeatureList';
 
 function HomeScreen(): React.JSX.Element {
   return (
@@ -18,6 +19,8 @@ function HomeScreen(): React.JSX.Element {
         <Header />
         <Spacer height={20} />
         <CustomCarousel />
+        <Spacer height={20} />
+        <FeatureList />
       </ScrollView>
     </SafeAreaView>
   );
