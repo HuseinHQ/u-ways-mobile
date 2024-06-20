@@ -1,9 +1,11 @@
 import Colors from '@/utils/Colors';
-import {StyleSheet} from 'react-native';
+import {Dimensions, StatusBar, StyleSheet} from 'react-native';
+const screenHeight = Dimensions.get('screen').height;
+const statusBarHeight = StatusBar.currentHeight || 0;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    height: screenHeight - statusBarHeight,
     backgroundColor: Colors.primary,
     alignItems: 'center',
   },

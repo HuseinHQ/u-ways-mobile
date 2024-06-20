@@ -2,7 +2,7 @@ import Spacer from '@/components/Spacer';
 import Fonts from '@/styles/Fonts';
 import Colors from '@/utils/Colors';
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 function Header(): React.JSX.Element {
@@ -13,7 +13,9 @@ function Header(): React.JSX.Element {
           <Text style={[Fonts.title, styles.textRed]}>Halo</Text>
           <Text style={Fonts.title}>Lintang!</Text>
         </View>
-        <Ionicons name="notifications-outline" size={28} />
+        <TouchableOpacity>
+          <Ionicons name="notifications-outline" size={28} />
+        </TouchableOpacity>
       </View>
 
       <Spacer height={5} />
