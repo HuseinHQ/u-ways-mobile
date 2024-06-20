@@ -5,20 +5,23 @@ import Onboarding from '@/screens/OnboardingScreen';
 import LoginScreen from '@/screens/LoginScreen';
 import RegisterScreen from '@/screens/RegisterScreen';
 import TabNavigator from './TabNavigator';
+import {ModalProvider} from '@/contexts/Contexts';
 
 const Stack = createStackNavigator();
 
 function StackNavigator() {
   return (
-    <Stack.Navigator
-      initialRouteName="SplashScreen"
-      screenOptions={{headerShown: false}}>
-      <Stack.Screen name="SplashScreen" component={SplashScreen} />
-      <Stack.Screen name="Onboarding" component={Onboarding} />
-      <Stack.Screen name="LoginScreen" component={LoginScreen} />
-      <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
-      <Stack.Screen name="Main" component={TabNavigator} />
-    </Stack.Navigator>
+    <ModalProvider>
+      <Stack.Navigator
+        initialRouteName="SplashScreen"
+        screenOptions={{headerShown: false}}>
+        <Stack.Screen name="SplashScreen" component={SplashScreen} />
+        <Stack.Screen name="Onboarding" component={Onboarding} />
+        <Stack.Screen name="LoginScreen" component={LoginScreen} />
+        <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
+        <Stack.Screen name="Main" component={TabNavigator} />
+      </Stack.Navigator>
+    </ModalProvider>
   );
 }
 
