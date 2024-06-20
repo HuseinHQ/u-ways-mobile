@@ -11,6 +11,7 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 
 const articleListData = [
   {
@@ -25,11 +26,17 @@ const articleListData = [
 ];
 
 function ArticleRecommendation(): React.JSX.Element {
+  const navigation = useNavigation();
+  const goToArticlesScreen = () => {
+    // @ts-ignore
+    navigation.navigate('ArticlesScreen');
+  };
+
   return (
     <View>
       <View style={styles.subtitleContainer}>
         <Text style={Fonts.subtitle}>Rekomendasi Artikel</Text>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={goToArticlesScreen}>
           <Text style={styles.seeMore}>Lihat Semua</Text>
         </TouchableOpacity>
       </View>

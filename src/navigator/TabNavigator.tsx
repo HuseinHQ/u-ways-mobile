@@ -10,6 +10,7 @@ import {StyleSheet} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import GlobalStyles from '@/styles/GlobalStyles';
+import ArticlesScreen from '@/screens/ArticlesScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -77,6 +78,11 @@ function TabNavigator(): React.JSX.Element {
             />
           ),
         }}
+      />
+      <Tab.Screen
+        name="ArticlesScreen"
+        component={ArticlesScreen}
+        options={{tabBarButton: () => null}}
       />
     </Tab.Navigator>
   );
