@@ -39,8 +39,8 @@ function ArticleRecommendation(): React.JSX.Element {
         horizontal
         style={styles.featureContainer}>
         {articleListData?.map((item, index) => (
-          <>
-            <TouchableOpacity key={index} style={styles.featureItem}>
+          <React.Fragment key={index}>
+            <TouchableOpacity style={styles.featureItem}>
               <Image source={item.image} style={styles.image} />
               <View style={styles.overlay} />
               <Text
@@ -52,7 +52,7 @@ function ArticleRecommendation(): React.JSX.Element {
               </Text>
             </TouchableOpacity>
             {index !== articleListData.length - 1 && <Spacer width={10} />}
-          </>
+          </React.Fragment>
         ))}
       </ScrollView>
     </View>
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     left: 0,
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    backgroundColor: Colors.black.halfOpacity,
     borderRadius: 10,
   },
   text: {

@@ -8,6 +8,12 @@ const GlobalStyles = StyleSheet.create({
     backgroundColor: Colors.white.default,
   },
   shadow: {
+    // iOS Shadow
+    shadowColor: '#000', // Shadow color
+    shadowOffset: {width: 0, height: -2}, // Shadow direction and distance
+    shadowOpacity: 0.1, // Shadow opacity
+    shadowRadius: 4, // Blur radius of the shadow
+    // Android Elevation
     elevation: 2,
   },
   alignCenter: {
