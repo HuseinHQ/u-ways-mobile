@@ -19,6 +19,10 @@ const Colors = {
   blue: {
     default: '#1A47BA',
   },
+  black: {
+    default: '#000000',
+    halfOpacity: 'rgba(0,0,0,0.5)',
+  },
 };
 
 export default Colors;

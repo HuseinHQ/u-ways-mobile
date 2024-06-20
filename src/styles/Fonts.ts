@@ -10,7 +10,7 @@ const Fonts = StyleSheet.create({
     fontSize: 17,
   },
   text: {
-    fontFamily: 'Medium',
+    fontFamily: 'Montserrat-Medium',
     fontSize: 15,
   },
 });
