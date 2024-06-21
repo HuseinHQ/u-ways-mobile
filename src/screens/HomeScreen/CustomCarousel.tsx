@@ -2,6 +2,9 @@ import React, {useState} from 'react';
 import {Dimensions, Image, StyleSheet, View} from 'react-native';
 import Carousel from 'react-native-reanimated-carousel';
 import Hero1 from '@/assets/images/hero_1.png';
+import Hero2 from '@/assets/images/hero_2.png';
+import Hero3 from '@/assets/images/hero_3.png';
+import Hero4 from '@/assets/images/hero_4.png';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Colors from '@/utils/Colors';
 import Spacer from '@/components/Spacer';
@@ -12,10 +15,13 @@ const carouselData = [
     image: Hero1,
   },
   {
-    image: Hero1,
+    image: Hero2,
   },
   {
-    image: Hero1,
+    image: Hero3,
+  },
+  {
+    image: Hero4,
   },
 ];
 
