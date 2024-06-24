@@ -1,60 +1,45 @@
-import React from 'react';
-import {
-  Modal,
-  View,
-  Text,
-  TouchableOpacity,
-  Image,
-  GestureResponderEvent,
-} from 'react-native';
-import Spacer from '../Spacer';
-import styles from './styles';
+import Colors from '@/utils/Colors';
+import React, {PropsWithChildren} from 'react';
+import {View, StyleSheet, ViewStyle} from 'react-native';
+import Modal, {ModalProps} from 'react-native-modal';
 
-type CustomModalProps = {
-  visible: boolean;
-  setVisible: (value: boolean) => void;
-  buttonText?: string;
-  title?: string;
-  image?: number;
-  onPress?: (event: GestureResponderEvent) => void;
-};
+interface CustomModalProps extends PropsWithChildren<Partial<ModalProps>> {
+  containerStyle?: ViewStyle; // Optional prop for custom container styling
+  modalStyle?: ViewStyle;
+}
 
 function CustomModal({
-  visible,
-  setVisible,
-  buttonText = 'OK',
-  title = 'This is a modal!',
-  image,
-  onPress = () => {},
+  children,
+  containerStyle,
+  modalStyle,
+  ...modalProps
 }: CustomModalProps): React.JSX.Element {
+  // Merge custom styles with the default ones
+  const combinedContainerStyle = StyleSheet.flatten([
+    styles.container,
+    containerStyle,
+  ]);
+
   return (
-    <View style={styles.centeredView}>
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={visible}
-        onRequestClose={() => {
-          setVisible(!visible);
-        }}>
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            {image && (
-              <View style={styles.imageContainer}>
-                <Image source={image} style={styles.image} />
-              </View>
-            )}
-            <Spacer height={10} />
-            <Text style={styles.modalText}>{title}</Text>
-            <TouchableOpacity
-              style={[styles.button, styles.buttonClose]}
-              onPress={onPress}>
-              <Text style={styles.textStyle}>{buttonText}</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
-    </View>
+    <Modal
+      animationIn="zoomIn"
+      animationOut="zoomOut"
+      {...modalProps}
+      style={modalStyle}>
+      <View style={combinedContainerStyle}>{children}</View>
+    </Modal>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: Colors.white.default, // Default background color, can be overridden by containerStyle
+    borderRadius: 10, // Default border radius, can be overridden by containerStyle
+    padding: 30, // Default padding, can be overridden by containerStyle
+    margin: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
 
 export default CustomModal;

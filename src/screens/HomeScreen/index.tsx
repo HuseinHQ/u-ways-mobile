@@ -1,6 +1,14 @@
 import Colors from '@/utils/Colors';
 import React, {useEffect, useState} from 'react';
-import {SafeAreaView, StatusBar} from 'react-native';
+import {
+  Image,
+  SafeAreaView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import Header from './Header';
 import CustomCarousel from './CustomCarousel';
 import Spacer from '@/components/Spacer';
@@ -8,16 +16,14 @@ import {ScrollView} from 'react-native-gesture-handler';
 import FeatureList from './FeatureList';
 import ArticleRecommendation from './ArticleRecommendation';
 import CustomModal from '@/components/CustomModal';
-import {useModal} from '@/contexts/Contexts';
 import image from '@/assets/images/logo_5.png';
 import {useNavigation} from '@react-navigation/native';
+import GlobalStyles from '@/styles/GlobalStyles';
 
 function HomeScreen(): React.JSX.Element {
-  const [isBiodataComplete, setIsBiodataComplete] = useState(false);
-  const {modalVisible, setModalVisible} = useModal();
+  const [isBiodataComplete] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
   const navigation = useNavigation();
-
-  useEffect(() => {}, [isBiodataComplete, setModalVisible]);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -31,13 +37,21 @@ function HomeScreen(): React.JSX.Element {
     });
 
     return unsubscribe;
-  }, [navigation, isBiodataComplete, setModalVisible]);
+  }, [navigation, isBiodataComplete]);
+
+  const goToNextPage = () => {
+    setModalVisible(false);
+    // @ts-ignore
+    navigation.navigate('Page1');
+  };
 
   return (
     <SafeAreaView>
       <StatusBar
-        barStyle="dark-content"
-        backgroundColor={modalVisible ? 'grey' : Colors.white.default}
+        barStyle={modalVisible ? 'light-content' : 'dark-content'}
+        backgroundColor={
+          modalVisible ? Colors.grey.darkest : Colors.white.default
+        }
       />
 
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -51,19 +65,51 @@ function HomeScreen(): React.JSX.Element {
       </ScrollView>
 
       <CustomModal
-        image={image}
-        visible={modalVisible}
-        setVisible={setModalVisible}
-        title="Lengkapi Identitas Anda!"
-        buttonText="LANJUT"
-        onPress={() => {
-          setModalVisible(false);
-          // @ts-ignore
-          navigation.navigate('Page1');
-        }}
-      />
+        isVisible={modalVisible}
+        onBackdropPress={() => setModalVisible(false)}>
+        <View style={styles.imageContainer}>
+          <Image source={image} style={styles.image} />
+        </View>
+        <Spacer height={20} />
+        <Text style={styles.title}>lengkapi Identitas Anda!</Text>
+        <Spacer height={20} />
+        <TouchableOpacity onPress={goToNextPage} style={styles.button}>
+          <Text style={styles.text}>LANJUT</Text>
+        </TouchableOpacity>
+      </CustomModal>
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  imageContainer: {
+    width: 180,
+    height: 180,
+  },
+  image: {
+    width: '100%',
+    height: '100%',
+    marginLeft: 20,
+    resizeMode: 'contain',
+  },
+  button: {
+    width: '100%',
+    backgroundColor: Colors.primary,
+    borderRadius: 20,
+    padding: 7,
+    ...GlobalStyles.shadow,
+  },
+  title: {
+    fontFamily: 'Montserrat-Medium',
+    fontSize: 16,
+    textAlign: 'center',
+  },
+  text: {
+    textAlign: 'center',
+    color: Colors.white.default,
+    fontFamily: 'Poppins-Medium',
+    fontSize: 14,
+  },
+});
 
 export default HomeScreen;

@@ -16,34 +16,22 @@ import Fonts from '@/styles/Fonts';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 
 // TODO: Dummy data
-const facultyData = [
+const majorData = [
   {
     id: 0,
-    name: 'Ekonomi dan Bisnis',
+    name: 'Informatika',
   },
   {
     id: 1,
-    name: 'Pertanian',
+    name: 'Sistem Informasi',
   },
   {
     id: 2,
-    name: 'Ilmu Sosial dan Politik',
+    name: 'Sains Data',
   },
   {
     id: 3,
-    name: 'Arsitektur dan Desain',
-  },
-  {
-    id: 4,
-    name: 'Ilmu Komputer',
-  },
-  {
-    id: 5,
-    name: 'Hukum',
-  },
-  {
-    id: 6,
-    name: 'Kedokteran',
+    name: 'Bisnis Digital',
   },
 ];
 
@@ -52,14 +40,20 @@ type RouteParams = {
   faculty: {id: number; name: string};
 };
 
+type NextRouteParams = {
+  semester: number;
+  faculty: {id: number; name: string};
+  major: {id: number; name: string};
+};
+
 function Page3(): React.JSX.Element {
   const navigation = useNavigation();
   const route = useRoute<RouteProp<{params: RouteParams}, 'params'>>();
-  const {semester} = route.params;
+  const {semester, faculty} = route.params;
 
-  const goToNextPage = (data: {semester: number; facultyId: number}) => {
+  const goToNextPage = (data: NextRouteParams) => {
     // @ts-ignore
-    navigation.navigate('Page3', data);
+    navigation.navigate('Page4', data);
   };
 
   return (
@@ -77,10 +71,21 @@ function Page3(): React.JSX.Element {
             style={[styles.button, styles.selectedButton]}>
             <Text style={styles.text}>{semester}</Text>
           </TouchableOpacity>
-          {facultyData?.map(item => (
+          <TouchableOpacity
+            disabled
+            style={[styles.button, styles.selectedButton]}>
+            <Text style={styles.text}>{faculty.name}</Text>
+          </TouchableOpacity>
+          {majorData?.map(item => (
             <TouchableOpacity
               key={item.id}
-              onPress={() => goToNextPage({semester, facultyId: item.id})}
+              onPress={() =>
+                goToNextPage({
+                  semester,
+                  faculty,
+                  major: {id: item.id, name: item.name},
+                })
+              }
               style={styles.button}>
               <Text style={[styles.text, styles.unselectedText]}>
                 {item.name}

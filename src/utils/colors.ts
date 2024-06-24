@@ -15,6 +15,7 @@ const Colors = {
     default: '#ECEAEA',
     lighter: '#F4F4F4',
     darker: '#D9D9D9',
+    darkest: 'rgba(255, 255, 255, 0.14)',
   },
   blue: {
     default: '#1A47BA',
