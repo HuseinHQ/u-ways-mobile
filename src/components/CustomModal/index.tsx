@@ -1,24 +1,23 @@
-import GlobalStyles from '@/styles/GlobalStyles';
-import Colors from '@/utils/Colors';
 import React from 'react';
 import {
   Modal,
   View,
   Text,
-  StyleSheet,
   TouchableOpacity,
-  Dimensions,
+  Image,
+  GestureResponderEvent,
 } from 'react-native';
+import Spacer from '../Spacer';
+import styles from './styles';
 
 type CustomModalProps = {
   visible: boolean;
   setVisible: (value: boolean) => void;
   buttonText?: string;
   title?: string;
-  image?: React.JSX.Element;
+  image?: number;
+  onPress?: (event: GestureResponderEvent) => void;
 };
-
-const screehWidth = Dimensions.get('screen').width;
 
 function CustomModal({
   visible,
@@ -26,6 +25,7 @@ function CustomModal({
   buttonText = 'OK',
   title = 'This is a modal!',
   image,
+  onPress = () => {},
 }: CustomModalProps): React.JSX.Element {
   return (
     <View style={styles.centeredView}>
@@ -38,11 +38,16 @@ function CustomModal({
         }}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            {image && image}
+            {image && (
+              <View style={styles.imageContainer}>
+                <Image source={image} style={styles.image} />
+              </View>
+            )}
+            <Spacer height={10} />
             <Text style={styles.modalText}>{title}</Text>
             <TouchableOpacity
               style={[styles.button, styles.buttonClose]}
-              onPress={() => setVisible(!visible)}>
+              onPress={onPress}>
               <Text style={styles.textStyle}>{buttonText}</Text>
             </TouchableOpacity>
           </View>
@@ -51,45 +56,5 @@ function CustomModal({
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  centeredView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalView: {
-    margin: 20,
-    backgroundColor: 'white',
-    borderRadius: 20,
-    padding: 30,
-    alignItems: 'center',
-    ...GlobalStyles.shadow,
-    width: screehWidth * 0.7,
-  },
-  button: {
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
-    paddingVertical: 10,
-    width: '100%',
-  },
-  buttonClose: {
-    backgroundColor: Colors.primary,
-    borderRadius: 20,
-    marginTop: 15,
-  },
-  textStyle: {
-    fontFamily: 'Poppins-Medium',
-    color: Colors.white.default,
-    fontSize: 12,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: 'center',
-  },
-});
 
 export default CustomModal;

@@ -1,6 +1,6 @@
 import Colors from '@/utils/Colors';
 import React, {useEffect, useState} from 'react';
-import {Image, SafeAreaView, StatusBar} from 'react-native';
+import {SafeAreaView, StatusBar} from 'react-native';
 import Header from './Header';
 import CustomCarousel from './CustomCarousel';
 import Spacer from '@/components/Spacer';
@@ -10,20 +10,28 @@ import ArticleRecommendation from './ArticleRecommendation';
 import CustomModal from '@/components/CustomModal';
 import {useModal} from '@/contexts/Contexts';
 import image from '@/assets/images/logo_5.png';
+import {useNavigation} from '@react-navigation/native';
 
 function HomeScreen(): React.JSX.Element {
   const [isBiodataComplete, setIsBiodataComplete] = useState(false);
   const {modalVisible, setModalVisible} = useModal();
+  const navigation = useNavigation();
+
+  useEffect(() => {}, [isBiodataComplete, setModalVisible]);
 
   useEffect(() => {
-    const timeout = setTimeout(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
       if (!isBiodataComplete) {
         setModalVisible(true);
       }
-    }, 500);
 
-    return () => clearTimeout(timeout);
-  }, [isBiodataComplete, setModalVisible]);
+      return () => {
+        unsubscribe;
+      };
+    });
+
+    return unsubscribe;
+  }, [navigation, isBiodataComplete, setModalVisible]);
 
   return (
     <SafeAreaView>
@@ -43,9 +51,16 @@ function HomeScreen(): React.JSX.Element {
       </ScrollView>
 
       <CustomModal
-        image={<Image source={image} />}
+        image={image}
         visible={modalVisible}
         setVisible={setModalVisible}
+        title="Lengkapi Identitas Anda!"
+        buttonText="LANJUT"
+        onPress={() => {
+          setModalVisible(false);
+          // @ts-ignore
+          navigation.navigate('Page1');
+        }}
       />
     </SafeAreaView>
   );
