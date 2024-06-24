@@ -84,7 +84,7 @@ function Page5(): React.JSX.Element {
               size={48}
             />
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => setModalVisible(false)}>
             <AntDesign name="closecircleo" color={Colors.primary} size={48} />
           </TouchableOpacity>
         </View>

@@ -35,7 +35,8 @@ function CustomCarousel(): React.JSX.Element {
           loop
           width={width}
           height={width / 2}
-          // autoPlay={true}
+          autoPlayInterval={5000}
+          autoPlay={true}
           data={carouselData}
           scrollAnimationDuration={1000}
           onSnapToItem={index => setCarouselIndex(index)}

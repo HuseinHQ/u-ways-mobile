@@ -1,7 +1,6 @@
 import Colors from '@/utils/Colors';
 import React from 'react';
 import {
-  Dimensions,
   Image,
   SafeAreaView,
   StatusBar,
@@ -15,24 +14,38 @@ import article1 from '@/assets/images/article_1.png';
 import GlobalStyles from '@/styles/GlobalStyles';
 import Spacer from '@/components/Spacer';
 import CustomHeader from '@/components/CustomHeader';
+import {useNavigation} from '@react-navigation/native';
 
-const screenHeight = Dimensions.get('screen').height;
 const articleData = [
   {
     title: 'Toxic Positivity',
     abstract:
       'Toxic positivity, tentu kamu sering mendengar kata-kata tersebut, baik melalui media sosial maupun percakapan sehari-hari. Lalu sebenarnya, apa sih toxic positivity itu?',
     image: article1,
+    paragraph:
+      'Siapa sih di dunia ini, yang hidupnya tidak pernah memiliki masalah? Tentu, di antara kita pasti pernah memiliki sebuah masalah baik masalah ringan maupun masalah berat. Hal tersebut sangatlah wajar terjadi pada setiap fase kehidupan manusia. Akan tetapi, dikala mendapatkan masalah atau mengalami kegagalan, pasti ada perasaan yang mengganjal di dalam dirimu. Berbagai macam cara kamu lakukan untuk menghilangkan hal tersebut, sebagai sebuah bentuk pertahanan diri yang kamu lakukan. Salah satunya dengan tetap berpikir positif dan bersikap optimis atas apa yang telah terjadi. Sikap optimis dan tetap berpikir positif memang merupakan hal yang baik. Namun, jika kamu memaksakan hal tersebut, maka yang terjadi justru sebaliknya. Alih-alih masalah kamu segera terselesaikan, justru membuat kamu mendapatkan masalah yang baru. Sikap penyangkalan atas emosi negatif yang sedang kamu alami dengan menggunakan sikap positif dikenal dengan istilah toxic positivity.',
   },
   {
     title: 'Toxic Positivity',
     abstract:
       'Toxic positivity, tentu kamu sering mendengar kata-kata tersebut, baik melalui media sosial maupun percakapan sehari-hari. Lalu sebenarnya, apa sih toxic positivity itu?',
     image: article1,
+    paragraph:
+      'Siapa sih di dunia ini, yang hidupnya tidak pernah memiliki masalah? Tentu, di antara kita pasti pernah memiliki sebuah masalah baik masalah ringan maupun masalah berat. Hal tersebut sangatlah wajar terjadi pada setiap fase kehidupan manusia. Akan tetapi, dikala mendapatkan masalah atau mengalami kegagalan, pasti ada perasaan yang mengganjal di dalam dirimu. Berbagai macam cara kamu lakukan untuk menghilangkan hal tersebut, sebagai sebuah bentuk pertahanan diri yang kamu lakukan. Salah satunya dengan tetap berpikir positif dan bersikap optimis atas apa yang telah terjadi. Sikap optimis dan tetap berpikir positif memang merupakan hal yang baik. Namun, jika kamu memaksakan hal tersebut, maka yang terjadi justru sebaliknya. Alih-alih masalah kamu segera terselesaikan, justru membuat kamu mendapatkan masalah yang baru. Sikap penyangkalan atas emosi negatif yang sedang kamu alami dengan menggunakan sikap positif dikenal dengan istilah toxic positivity.',
+  },
+  {
+    title: 'Toxic Positivity',
+    abstract:
+      'Toxic positivity, tentu kamu sering mendengar kata-kata tersebut, baik melalui media sosial maupun percakapan sehari-hari. Lalu sebenarnya, apa sih toxic positivity itu?',
+    image: article1,
+    paragraph:
+      'Siapa sih di dunia ini, yang hidupnya tidak pernah memiliki masalah? Tentu, di antara kita pasti pernah memiliki sebuah masalah baik masalah ringan maupun masalah berat. Hal tersebut sangatlah wajar terjadi pada setiap fase kehidupan manusia. Akan tetapi, dikala mendapatkan masalah atau mengalami kegagalan, pasti ada perasaan yang mengganjal di dalam dirimu. Berbagai macam cara kamu lakukan untuk menghilangkan hal tersebut, sebagai sebuah bentuk pertahanan diri yang kamu lakukan. Salah satunya dengan tetap berpikir positif dan bersikap optimis atas apa yang telah terjadi. Sikap optimis dan tetap berpikir positif memang merupakan hal yang baik. Namun, jika kamu memaksakan hal tersebut, maka yang terjadi justru sebaliknya. Alih-alih masalah kamu segera terselesaikan, justru membuat kamu mendapatkan masalah yang baru. Sikap penyangkalan atas emosi negatif yang sedang kamu alami dengan menggunakan sikap positif dikenal dengan istilah toxic positivity.',
   },
 ];
 
 function ArticlesScreen(): React.JSX.Element {
+  const navigation = useNavigation();
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar
@@ -40,6 +53,7 @@ function ArticlesScreen(): React.JSX.Element {
         backgroundColor={Colors.white.default}
       />
       <FlatList
+        showsVerticalScrollIndicator={false}
         ListHeaderComponent={
           <CustomHeader
             title="Artikel"
@@ -52,7 +66,12 @@ function ArticlesScreen(): React.JSX.Element {
             <View>
               <View style={styles.topContent}>
                 <Text style={styles.title}>{item.title}</Text>
-                <TouchableOpacity style={styles.button}>
+                <TouchableOpacity
+                  onPress={() =>
+                    // @ts-ignore
+                    navigation.navigate('ArticleDetailScreen', item)
+                  }
+                  style={styles.button}>
                   <Text style={styles.lihat}>Lihat</Text>
                 </TouchableOpacity>
               </View>
@@ -74,9 +93,9 @@ function ArticlesScreen(): React.JSX.Element {
 
 const styles = StyleSheet.create({
   container: {
-    minHeight: screenHeight,
-    paddingBottom: 100,
     backgroundColor: Colors.white.default,
+    paddingHorizontal: 20,
+    paddingTop: 10,
   },
   imageContainer: {
     borderRadius: 10,

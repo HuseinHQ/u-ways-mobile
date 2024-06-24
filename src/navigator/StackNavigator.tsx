@@ -11,6 +11,8 @@ import Page3 from '@/screens/CompleteBiodataScreen/Page3';
 import Page4 from '@/screens/CompleteBiodataScreen/Page4';
 import Colors from '@/utils/Colors';
 import Page5 from '@/screens/CompleteBiodataScreen/Page5';
+import ArticlesScreen from '@/screens/ArticlesScreen';
+import ArticleDetailScreen from '@/screens/ArticleDetailScreen';
 
 const Stack = createStackNavigator();
 
@@ -28,6 +30,11 @@ function StackNavigator() {
       <Stack.Screen name="LoginScreen" component={LoginScreen} />
       <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
       <Stack.Screen name="Main" component={TabNavigator} />
+      <Stack.Screen name="ArticlesScreen" component={ArticlesScreen} />
+      <Stack.Screen
+        name="ArticleDetailScreen"
+        component={ArticleDetailScreen}
+      />
 
       {/* Complete Biodata Screen */}
       <Stack.Screen name="Page1" component={Page1} />
