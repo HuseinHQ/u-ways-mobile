@@ -59,6 +59,8 @@ function ArticlesScreen(): React.JSX.Element {
       <FlatList
         showsVerticalScrollIndicator={false}
         data={articleData}
+        ListFooterComponent={<View />}
+        ListFooterComponentStyle={{paddingBottom: 80}}
         renderItem={({item, index}) => (
           <React.Fragment key={index}>
             <View>

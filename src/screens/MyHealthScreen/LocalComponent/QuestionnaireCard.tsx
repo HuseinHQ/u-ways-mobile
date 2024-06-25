@@ -15,6 +15,7 @@ import {
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import number1 from '@/assets/images/number/1.png';
+import {useNavigation} from '@react-navigation/native';
 
 const questionnaireData = [
   {
@@ -44,6 +45,13 @@ const questionnaireData = [
 ];
 
 function QuestionnaireCard(): React.JSX.Element {
+  const navigation = useNavigation();
+
+  const goto = (page: string) => () => {
+    // @ts-ignore
+    navigation.navigate(page);
+  };
+
   return (
     <View style={styles.container}>
       <ScrollView style={styles.scrollViewContainer}>
@@ -91,7 +99,9 @@ function QuestionnaireCard(): React.JSX.Element {
             <FontAwesome name="circle" size={15} color={Colors.primary} />
           </View>
           <View style={styles.innerCardContainer}>
-            <TouchableOpacity style={{alignSelf: 'center'}}>
+            <TouchableOpacity
+              onPress={goto('QuestionnaireScreen')}
+              style={{alignSelf: 'center'}}>
               <FontAwesome name="plus" size={40} color={Colors.primary} />
             </TouchableOpacity>
           </View>

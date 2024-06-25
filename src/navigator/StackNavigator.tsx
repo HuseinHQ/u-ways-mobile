@@ -13,6 +13,8 @@ import Colors from '@/utils/Colors';
 import Page5 from '@/screens/CompleteBiodataScreen/Page5';
 import ArticlesScreen from '@/screens/ArticlesScreen';
 import ArticleDetailScreen from '@/screens/ArticleDetailScreen';
+import QuestionnaireScreen from '@/screens/QuestionnaireScreen';
+import QuestionCompleteScreen from '@/screens/QuestionnaireScreen/QuestionCompleteScreen';
 
 const Stack = createStackNavigator();
 
@@ -34,6 +36,14 @@ function StackNavigator() {
       <Stack.Screen
         name="ArticleDetailScreen"
         component={ArticleDetailScreen}
+      />
+      <Stack.Screen
+        name="QuestionnaireScreen"
+        component={QuestionnaireScreen}
+      />
+      <Stack.Screen
+        name="QuestionCompleteScreen"
+        component={QuestionCompleteScreen}
       />
 
       {/* Complete Biodata Screen */}
