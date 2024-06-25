@@ -52,14 +52,12 @@ function ArticlesScreen(): React.JSX.Element {
         barStyle="dark-content"
         backgroundColor={Colors.white.default}
       />
+      <CustomHeader
+        title="Artikel"
+        description="Temukan bacaan tentang kesehatan mental disini"
+      />
       <FlatList
         showsVerticalScrollIndicator={false}
-        ListHeaderComponent={
-          <CustomHeader
-            title="Artikel"
-            description="Temukan bacaan tentang kesehatan mental disini"
-          />
-        }
         data={articleData}
         renderItem={({item, index}) => (
           <React.Fragment key={index}>

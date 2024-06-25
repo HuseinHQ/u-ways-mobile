@@ -9,12 +9,12 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import Header from './Header';
-import CustomCarousel from './CustomCarousel';
+import Header from './LocalComponent/Header';
+import CustomCarousel from './LocalComponent/CustomCarousel';
 import Spacer from '@/components/Spacer';
 import {ScrollView} from 'react-native-gesture-handler';
-import FeatureList from './FeatureList';
-import ArticleRecommendation from './ArticleRecommendation';
+import FeatureList from './LocalComponent/FeatureList';
+import ArticleRecommendation from './LocalComponent/ArticleRecommendation';
 import CustomModal from '@/components/CustomModal';
 import image from '@/assets/images/logo_5.png';
 import {useNavigation} from '@react-navigation/native';

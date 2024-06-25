@@ -29,9 +29,8 @@ function ArticleDetailScreen() {
   return (
     <ScrollView style={styles.container}>
       <StatusBar
-        translucent
         barStyle="light-content"
-        backgroundColor="transparent"
+        backgroundColor={Colors.grey.darkest}
       />
       <View style={styles.imageContainer}>
         <Image source={image} style={styles.image} />
