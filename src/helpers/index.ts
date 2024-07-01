@@ -1,14 +1,31 @@
 import moment from 'moment';
 
-export function validateEmailUPN(email: string) {
-  const domain = '.upnjatim.ac.id';
+export function validateEmailUPN(email: string): boolean {
+  const lecturerDomain = 'upnjatim.ac.id';
+  const studentDomain = 'student.upnjatim.ac.id';
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Simple regex for email validation
 
   if (typeof email !== 'string') {
     return false;
   }
 
-  return emailRegex.test(email) && email.endsWith(domain);
+  const emailDomain = email.split('@')[1];
+  return (
+    emailRegex.test(email) &&
+    (emailDomain === lecturerDomain || emailDomain === studentDomain)
+  );
+}
+
+export function validatePassword(password: string): boolean {
+  if (!password) {
+    return false;
+  }
+
+  if (password.length < 8 && password.length > 255) {
+    return false;
+  }
+
+  return true;
 }
 
 export function formatDates(startDate: Date, endDate: Date): string {
