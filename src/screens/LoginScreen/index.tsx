@@ -13,9 +13,9 @@ import styles from './styles';
 import {useNavigation} from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 import id from '@/utils/text';
-import login from '@/helpers/backend/login';
 import {useSelector} from 'react-redux';
 import {RootState, useAppDispatch} from '@/store/store';
+import {login} from '@/store/authSlice';
 
 function LoginScreen(): React.JSX.Element {
   const accessToken = useSelector((state: RootState) => state.auth.accessToken);
@@ -25,8 +25,8 @@ function LoginScreen(): React.JSX.Element {
   const loading = useSelector((state: RootState) => state.auth.loading);
   const errors = useSelector((state: RootState) => state.auth.errors);
   const user = useSelector((state: RootState) => state.auth.user);
-
-  console.log(accessToken, refreshToken, loading, errors, user);
+  console.log({accessToken, refreshToken, loading, errors, user});
+  const dispatch = useAppDispatch();
 
   const [form, setForm] = useState({
     email: '',
@@ -65,13 +65,18 @@ function LoginScreen(): React.JSX.Element {
       });
     }
 
-    useAppDispatch(login(form));
-    // navigation.reset({
-    //   index: 0,
-    //   // @ts-ignore
-    //   routes: [{name: 'Main'}],
-    // });
+    dispatch(login(form));
   };
+
+  useEffect(() => {
+    if (accessToken) {
+      navigation.reset({
+        index: 0,
+        // @ts-ignore
+        routes: [{name: 'Main'}],
+      });
+    }
+  }, [accessToken, navigation]);
 
   useEffect(() => {
     setIsEmailUPN(validateEmailUPN(form.email));

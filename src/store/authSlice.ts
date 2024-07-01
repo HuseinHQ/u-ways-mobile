@@ -8,7 +8,7 @@ export const login = createAsyncThunk(
   async (loginData: {email: string; password: string}, {rejectWithValue}) => {
     try {
       const {data} = await axios({
-        method: 'GET',
+        method: 'POST',
         url: baseUrl + '/auth/login',
         headers: {'Content-Type': 'application/json'},
         data: loginData,
@@ -43,7 +43,6 @@ const authSlice = createSlice({
       .addCase(login.fulfilled, (state, action) => {
         state.accessToken = action.payload.access_token;
         state.refreshToken = action.payload.refresh_token;
-        state.user = action.payload.user;
         state.loading = false;
       })
       .addCase(login.rejected, (state, action) => {
