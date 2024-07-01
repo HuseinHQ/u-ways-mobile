@@ -11,9 +11,10 @@ import {
   REGISTER,
   REHYDRATE,
 } from 'redux-persist';
+import {useDispatch} from 'react-redux';
 
 const rootReducer = combineReducers({
-  Auth: authReducer,
+  auth: authReducer,
 });
 
 const persistConfig = {
@@ -32,6 +33,10 @@ const store = configureStore({
       },
     }),
 });
+
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
+export const useAppDispatch = useDispatch.withTypes<AppDispatch>();
 
 export const persistor = persistStore(store);
 export default store;

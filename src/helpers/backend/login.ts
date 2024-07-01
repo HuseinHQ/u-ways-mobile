@@ -1,4 +1,5 @@
 import axios from 'axios';
+import {BACKEND_URL} from '@env';
 
 export default async function login({
   email,
@@ -9,14 +10,15 @@ export default async function login({
 }) {
   try {
     const {data} = await axios.post(
-      'https://3h5hsg96-3001.asse.devtunnels.ms/auth/login',
+      `${process.env.BACKEND_URL}/auth/login`,
       {
         email,
         password,
       },
       {headers: {'Content-Type': 'application/json'}},
     );
+    console.log(data);
   } catch (error) {
-    console.log(error.response);
+    console.log(error);
   }
 }

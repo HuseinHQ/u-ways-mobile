@@ -14,8 +14,20 @@ import {useNavigation} from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 import id from '@/utils/text';
 import login from '@/helpers/backend/login';
+import {useSelector} from 'react-redux';
+import {RootState, useAppDispatch} from '@/store/store';
 
 function LoginScreen(): React.JSX.Element {
+  const accessToken = useSelector((state: RootState) => state.auth.accessToken);
+  const refreshToken = useSelector(
+    (state: RootState) => state.auth.refreshToken,
+  );
+  const loading = useSelector((state: RootState) => state.auth.loading);
+  const errors = useSelector((state: RootState) => state.auth.errors);
+  const user = useSelector((state: RootState) => state.auth.user);
+
+  console.log(accessToken, refreshToken, loading, errors, user);
+
   const [form, setForm] = useState({
     email: '',
     password: '',
@@ -53,7 +65,7 @@ function LoginScreen(): React.JSX.Element {
       });
     }
 
-    const data = await login({email: form.email, password: form.password});
+    useAppDispatch(login(form));
     // navigation.reset({
     //   index: 0,
     //   // @ts-ignore
