@@ -17,7 +17,7 @@ import FeatureList from './LocalComponent/FeatureList';
 import ArticleRecommendation from './LocalComponent/ArticleRecommendation';
 import CustomModal from '@/components/CustomModal';
 import image from '@/assets/images/logo_5.png';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import GlobalStyles from '@/styles/GlobalStyles';
 import {useSelector} from 'react-redux';
 import {RootState} from '@/store/store';
@@ -25,13 +25,15 @@ import {RootState} from '@/store/store';
 function HomeScreen(): React.JSX.Element {
   const [modalVisible, setModalVisible] = useState(false);
   const navigation = useNavigation();
+  const route = useRoute();
   const isBioComplete = useSelector(
     (state: RootState) => state.user.is_bio_complete,
   );
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      if (!isBioComplete) {
+      // @ts-ignore
+      if (!route?.params?.is_bio_complete && !isBioComplete) {
         setModalVisible(true);
       }
 

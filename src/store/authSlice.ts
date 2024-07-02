@@ -16,7 +16,7 @@ export const login = createAsyncThunk(
       return data.data;
     } catch (error) {
       // @ts-ignore
-      return rejectWithValue(error?.response?.errors);
+      return rejectWithValue(error?.response?.data?.errors);
     }
   },
 );
@@ -40,7 +40,7 @@ export const refreshToken = createAsyncThunk(
       return data.data;
     } catch (error) {
       // @ts-ignore
-      return rejectWithValue(error?.response?.errors);
+      return rejectWithValue(error?.response?.data?.errors);
     }
   },
 );
@@ -51,18 +51,14 @@ const authSlice = createSlice({
     loading: false,
     accessToken: '',
     refreshToken: '',
-    errors: {},
-    user: {
-      name: '',
-      role: '',
-    },
+    errors: null,
   },
   reducers: {},
   extraReducers: builder => {
     builder
       .addCase(login.pending, state => {
         state.loading = true;
-        state.errors = {};
+        state.errors = null;
       })
       .addCase(login.fulfilled, (state, action) => {
         state.accessToken = action.payload.access_token;
@@ -75,7 +71,7 @@ const authSlice = createSlice({
       })
       .addCase(refreshToken.pending, state => {
         state.loading = true;
-        state.errors = {};
+        state.errors = null;
       })
       .addCase(refreshToken.fulfilled, (state, action) => {
         state.accessToken = action.payload.access_token;

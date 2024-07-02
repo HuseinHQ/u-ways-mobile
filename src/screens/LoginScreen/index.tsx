@@ -1,6 +1,6 @@
 import Colors from '@/utils/Colors';
 import React, {useEffect, useState} from 'react';
-import {Image, StatusBar, Text, View} from 'react-native';
+import {ActivityIndicator, Image, StatusBar, Text, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import image from '@/assets/images/logo_dark.png';
 import Fonts from '@/styles/Fonts';
@@ -16,16 +16,14 @@ import id from '@/utils/text';
 import {useSelector} from 'react-redux';
 import {RootState, useAppDispatch} from '@/store/store';
 import {login} from '@/store/authSlice';
+import {getUserProfile} from '@/store/userSlice';
 
 function LoginScreen(): React.JSX.Element {
   const accessToken = useSelector((state: RootState) => state.auth.accessToken);
-  const refreshToken = useSelector(
-    (state: RootState) => state.auth.refreshToken,
-  );
-  const loading = useSelector((state: RootState) => state.auth.loading);
-  const errors = useSelector((state: RootState) => state.auth.errors);
-  const user = useSelector((state: RootState) => state.auth.user);
-  console.log({accessToken, refreshToken, loading, errors, user});
+  const authLoading = useSelector((state: RootState) => state.auth.loading);
+  const userLoading = useSelector((state: RootState) => state.user.loading);
+  const authErrors = useSelector((state: RootState) => state.auth.errors);
+  const userErrors = useSelector((state: RootState) => state.user.errors);
   const dispatch = useAppDispatch();
 
   const [form, setForm] = useState({
@@ -63,24 +61,42 @@ function LoginScreen(): React.JSX.Element {
         text1: 'Password Invalid',
         text2: id.password.LENGTH,
       });
+    } else {
+      dispatch(login(form));
     }
-
-    dispatch(login(form));
   };
 
   useEffect(() => {
     if (accessToken) {
-      navigation.reset({
-        index: 0,
-        // @ts-ignore
-        routes: [{name: 'Main'}],
-      });
+      dispatch(
+        getUserProfile({
+          access_token: accessToken,
+          cb: params => {
+            navigation.reset({
+              index: 0,
+              // @ts-ignore
+              routes: [{name: 'Main', params}],
+            });
+          },
+        }),
+      );
     }
-  }, [accessToken, navigation]);
+  }, [accessToken, navigation, dispatch]);
 
   useEffect(() => {
     setIsEmailUPN(validateEmailUPN(form.email));
   }, [form.email]);
+
+  useEffect(() => {
+    if (authErrors || userErrors) {
+      Toast.show({
+        type: 'error',
+        text1: 'Login Error',
+        // @ts-ignore
+        text2: authErrors?.message || userErrors?.message,
+      });
+    }
+  }, [authErrors, userErrors]);
 
   return (
     <ScrollView>
@@ -149,7 +165,11 @@ function LoginScreen(): React.JSX.Element {
             <TouchableOpacity
               onPress={onSubmitHandler}
               style={[GlobalStyles.shadow, styles.loginButton]}>
-              <Text style={styles.login}>LOGIN</Text>
+              {authLoading || userLoading ? (
+                <ActivityIndicator />
+              ) : (
+                <Text style={styles.login}>LOGIN</Text>
+              )}
             </TouchableOpacity>
           </View>
 

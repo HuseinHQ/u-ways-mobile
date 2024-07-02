@@ -5,15 +5,20 @@ import MyHealthScreen from '@/screens/MyHealthScreen';
 import ProfileScreen from '@/screens/ProfileScreen';
 import Colors from '@/utils/Colors';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {StyleSheet} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import GlobalStyles from '@/styles/GlobalStyles';
+import {getUserProfile} from '@/store/userSlice';
+import {RootState, useAppDispatch} from '@/store/store';
+import {useSelector} from 'react-redux';
+import {useRoute} from '@react-navigation/native';
 
 const Tab = createBottomTabNavigator();
 
 function TabNavigator(): React.JSX.Element {
+  const route = useRoute();
   return (
     <Tab.Navigator
       sceneContainerStyle={styles.container}
@@ -27,6 +32,7 @@ function TabNavigator(): React.JSX.Element {
       <Tab.Screen
         name="Home"
         component={HomeScreen}
+        initialParams={route.params}
         options={{
           tabBarLabel: 'Beranda',
           tabBarIcon: ({focused}) => (

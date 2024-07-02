@@ -44,12 +44,18 @@ function SplashScreen(): React.JSX.Element {
           refreshToken({
             refresh_token,
             successCallback: access_token => {
-              dispatch(getUserProfile(access_token));
-              navigation.reset({
-                index: 0,
-                // @ts-ignore
-                routes: [{name: 'Main'}],
-              });
+              dispatch(
+                getUserProfile({
+                  access_token,
+                  cb: () => {
+                    navigation.reset({
+                      index: 0,
+                      // @ts-ignore
+                      routes: [{name: 'Main'}],
+                    });
+                  },
+                }),
+              );
             },
           }),
         );
