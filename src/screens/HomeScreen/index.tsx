@@ -43,7 +43,8 @@ function HomeScreen(): React.JSX.Element {
     });
 
     return unsubscribe;
-  }, [navigation, isBioComplete]);
+    // @ts-ignore
+  }, [navigation, isBioComplete, route?.params?.is_bio_complete]);
 
   const goToNextPage = () => {
     setModalVisible(false);
