@@ -21,6 +21,30 @@ export const login = createAsyncThunk(
   },
 );
 
+export const refreshToken = createAsyncThunk(
+  'auth/refresh-token',
+  async (
+    {
+      refresh_token,
+      successCallback = () => {},
+    }: {refresh_token: string; successCallback: (value: any) => void},
+    {rejectWithValue},
+  ) => {
+    try {
+      const {data} = await axios({
+        method: 'GET',
+        url: baseUrl + '/auth/refresh-token',
+        headers: {refresh_token},
+      });
+      successCallback(data.data.access_token);
+      return data.data;
+    } catch (error) {
+      // @ts-ignore
+      return rejectWithValue(error?.response?.errors);
+    }
+  },
+);
+
 const authSlice = createSlice({
   name: 'auth',
   initialState: {
@@ -46,6 +70,19 @@ const authSlice = createSlice({
         state.loading = false;
       })
       .addCase(login.rejected, (state, action) => {
+        state.loading = false;
+        state.errors = action.payload as any;
+      })
+      .addCase(refreshToken.pending, state => {
+        state.loading = true;
+        state.errors = {};
+      })
+      .addCase(refreshToken.fulfilled, (state, action) => {
+        state.accessToken = action.payload.access_token;
+        state.refreshToken = action.payload.refresh_token;
+        state.loading = false;
+      })
+      .addCase(refreshToken.rejected, (state, action) => {
         state.loading = false;
         state.errors = action.payload as any;
       });

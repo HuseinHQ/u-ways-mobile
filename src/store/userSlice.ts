@@ -1,16 +1,60 @@
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
+import axios from 'axios';
 
-const slice = createSlice({
+const baseUrl = process.env.BACKEND_URL;
+
+export const getUserProfile = createAsyncThunk(
+  'user',
+  async function (access_token: string, {rejectWithValue}) {
+    try {
+      const {data} = await axios({
+        method: 'GET',
+        url: baseUrl + '/user',
+        headers: {access_token},
+      });
+      return data.data;
+    } catch (err) {
+      // @ts-ignore
+      return rejectWithValue(error?.response?.errors);
+    }
+  },
+);
+
+const userSlice = createSlice({
   name: 'user',
   initialState: {
     email: '',
     name: '',
     role: '',
-    isComplete: 'false',
+    is_bio_complete: false,
+    major_id: 0,
+    major_name: '',
+    faculty_id: 0,
+    faculty_name: '',
+    semester: 0,
+    lecturer_id: 0,
+    lecturer_name: '',
+    loading: false,
+    errors: {},
   },
-  reducers: {
-    login: (state, action) => {
-      state.name = action.payload.role;
-    },
+  reducers: {},
+  extraReducers: builder => {
+    builder
+      .addCase(getUserProfile.pending, state => {
+        state.loading = true;
+        state.errors = {};
+      })
+      .addCase(getUserProfile.fulfilled, (state, action) => {
+        return {
+          ...state,
+          ...action.payload,
+        };
+      })
+      .addCase(getUserProfile.rejected, (state, action) => {
+        state.loading = false;
+        state.errors = action.payload as any;
+      });
   },
 });
+
+export default userSlice.reducer;

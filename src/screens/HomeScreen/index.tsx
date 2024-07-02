@@ -19,15 +19,19 @@ import CustomModal from '@/components/CustomModal';
 import image from '@/assets/images/logo_5.png';
 import {useNavigation} from '@react-navigation/native';
 import GlobalStyles from '@/styles/GlobalStyles';
+import {useSelector} from 'react-redux';
+import {RootState} from '@/store/store';
 
 function HomeScreen(): React.JSX.Element {
-  const [isBiodataComplete] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const navigation = useNavigation();
+  const isBioComplete = useSelector(
+    (state: RootState) => state.user.is_bio_complete,
+  );
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      if (!isBiodataComplete) {
+      if (!isBioComplete) {
         setModalVisible(true);
       }
 
@@ -37,7 +41,7 @@ function HomeScreen(): React.JSX.Element {
     });
 
     return unsubscribe;
-  }, [navigation, isBiodataComplete]);
+  }, [navigation, isBioComplete]);
 
   const goToNextPage = () => {
     setModalVisible(false);
