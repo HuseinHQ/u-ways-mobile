@@ -5,14 +5,11 @@ import MyHealthScreen from '@/screens/MyHealthScreen';
 import ProfileScreen from '@/screens/ProfileScreen';
 import Colors from '@/utils/Colors';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import React, {useEffect} from 'react';
+import React from 'react';
 import {StyleSheet} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import GlobalStyles from '@/styles/GlobalStyles';
-import {getUserProfile} from '@/store/userSlice';
-import {RootState, useAppDispatch} from '@/store/store';
-import {useSelector} from 'react-redux';
 import {useRoute} from '@react-navigation/native';
 
 const Tab = createBottomTabNavigator();
