@@ -2,6 +2,7 @@ import {combineReducers, configureStore} from '@reduxjs/toolkit';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import authReducer from './authSlice';
 import userReducer from './userSlice';
+import facultyReducer from './facultySlice';
 import {
   FLUSH,
   PAUSE,
@@ -17,6 +18,7 @@ import {useDispatch} from 'react-redux';
 const rootReducer = combineReducers({
   auth: authReducer,
   user: userReducer,
+  faculty: facultyReducer,
 });
 
 const persistConfig = {

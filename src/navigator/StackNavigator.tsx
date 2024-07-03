@@ -15,6 +15,7 @@ import ArticlesScreen from '@/screens/ArticlesScreen';
 import ArticleDetailScreen from '@/screens/ArticleDetailScreen';
 import QuestionnaireScreen from '@/screens/QuestionnaireScreen';
 import QuestionCompleteScreen from '@/screens/QuestionnaireScreen/QuestionCompleteScreen';
+import EditProfileScreen from '@/screens/EditProfileScreen';
 
 const Stack = createStackNavigator();
 
@@ -45,6 +46,7 @@ function StackNavigator() {
         name="QuestionCompleteScreen"
         component={QuestionCompleteScreen}
       />
+      <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} />
 
       {/* Complete Biodata Screen */}
       <Stack.Screen name="Page1" component={Page1} />

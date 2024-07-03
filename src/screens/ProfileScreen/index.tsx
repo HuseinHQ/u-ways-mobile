@@ -72,6 +72,11 @@ function ProfileScreen(): React.JSX.Element {
     );
   };
 
+  const goToEditPage = () => {
+    // @ts-ignore
+    navigation.navigate('EditProfileScreen');
+  };
+
   return (
     <SafeAreaView style={styles.mainContainer}>
       <StatusBar barStyle="light-content" backgroundColor={Colors.primary} />
@@ -103,6 +108,7 @@ function ProfileScreen(): React.JSX.Element {
       <View>
         <View style={styles.buttonContainer}>
           <TouchableOpacity
+            onPress={goToEditPage}
             style={[styles.button, {backgroundColor: Colors.blue.default}]}>
             <Text style={styles.buttonText}>Edit</Text>
           </TouchableOpacity>
