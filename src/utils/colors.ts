@@ -14,6 +14,7 @@ const Colors = {
   grey: {
     default: '#ECEAEA',
     lighter: '#F4F4F4',
+    lightest: '#EBEBEB',
     darker: '#D9D9D9',
     darkest: 'rgba(255, 255, 255, 0.14)',
   },

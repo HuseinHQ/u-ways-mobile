@@ -88,8 +88,6 @@ function TabNavigator(): React.JSX.Element {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: Colors.white.default,
-    paddingHorizontal: 20,
-    paddingTop: 10,
   },
   labelStyle: {
     fontFamily: 'Poppins-SemiBold',

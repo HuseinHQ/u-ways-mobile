@@ -28,7 +28,7 @@ function MyHealthScreen(): React.JSX.Element {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 10,
+    ...GlobalStyles.container,
     flex: 1,
   },
   imageContainer: {

@@ -53,7 +53,7 @@ function HomeScreen(): React.JSX.Element {
   };
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={GlobalStyles.tabContainer}>
       <StatusBar
         barStyle={modalVisible ? 'light-content' : 'dark-content'}
         backgroundColor={

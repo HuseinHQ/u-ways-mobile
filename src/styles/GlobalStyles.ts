@@ -24,6 +24,10 @@ const GlobalStyles = StyleSheet.create({
     height: '100%',
     resizeMode: 'cover',
   },
+  tabContainer: {
+    paddingHorizontal: 20,
+    paddingTop: 10,
+  },
 });
 
 export default GlobalStyles;

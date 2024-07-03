@@ -23,7 +23,7 @@ export const getUserProfile = createAsyncThunk(
       return data.data;
     } catch (err) {
       // @ts-ignore
-      return rejectWithValue(error?.response?.data?.errors);
+      return rejectWithValue(err?.response?.data?.errors);
     }
   },
 );
@@ -55,6 +55,7 @@ const userSlice = createSlice({
       .addCase(getUserProfile.fulfilled, (state, action) => {
         return {
           ...state,
+          loading: false,
           ...action.payload,
         };
       })

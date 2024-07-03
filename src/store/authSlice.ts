@@ -35,6 +35,7 @@ export const refreshToken = createAsyncThunk(
         method: 'GET',
         url: baseUrl + '/auth/refresh-token',
         headers: {refresh_token},
+        timeout: 5000,
       });
       successCallback(data.data.access_token);
       return data.data;
@@ -53,7 +54,13 @@ const authSlice = createSlice({
     refreshToken: '',
     errors: null,
   },
-  reducers: {},
+  reducers: {
+    logout: state => {
+      state.accessToken = '';
+      state.refreshToken = '';
+      state.errors = null;
+    },
+  },
   extraReducers: builder => {
     builder
       .addCase(login.pending, state => {
@@ -81,8 +88,11 @@ const authSlice = createSlice({
       .addCase(refreshToken.rejected, (state, action) => {
         state.loading = false;
         state.errors = action.payload as any;
+        state.accessToken = '';
+        state.refreshToken = '';
       });
   },
 });
 
+export const {logout} = authSlice.actions;
 export default authSlice.reducer;
