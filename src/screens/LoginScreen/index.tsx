@@ -15,8 +15,11 @@ import Toast from 'react-native-toast-message';
 import id from '@/utils/text';
 import {useSelector} from 'react-redux';
 import {RootState, useAppDispatch} from '@/store/store';
-import {login} from '@/store/authSlice';
-import {getUserProfile} from '@/store/userSlice';
+import {login, clearErrors as clearAuthErrors} from '@/store/authSlice';
+import {
+  getUserProfile,
+  clearErrors as clearUserErrors,
+} from '@/store/userSlice';
 
 function LoginScreen(): React.JSX.Element {
   const accessToken = useSelector((state: RootState) => state.auth.accessToken);
@@ -95,8 +98,10 @@ function LoginScreen(): React.JSX.Element {
         // @ts-ignore
         text2: authErrors?.message || userErrors?.message,
       });
+      dispatch(clearAuthErrors());
+      dispatch(clearUserErrors());
     }
-  }, [authErrors, userErrors]);
+  }, [authErrors, userErrors, dispatch]);
 
   return (
     <ScrollView>

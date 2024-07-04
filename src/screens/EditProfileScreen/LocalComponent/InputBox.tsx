@@ -14,6 +14,7 @@ type InputBoxProps = {
   value: string;
   setValue: (value: string) => void;
   keyboardType?: KeyboardTypeOptions;
+  editable?: boolean;
 };
 
 function InputBox({
@@ -21,6 +22,7 @@ function InputBox({
   value,
   setValue,
   keyboardType = 'default',
+  editable = true,
 }: InputBoxProps): React.JSX.Element {
   return (
     <>
@@ -31,6 +33,7 @@ function InputBox({
           onChangeText={setValue}
           keyboardType={keyboardType}
           style={styles.input}
+          editable={editable}
         />
         <View style={styles.horizontalLine} />
       </View>
@@ -47,7 +50,7 @@ const styles = StyleSheet.create({
   input: {
     color: Colors.black.default,
     fontFamily: 'Montserrat-Regular',
-    fontSize: 12,
+    fontSize: 13,
     paddingHorizontal: 0,
     paddingVertical: 5,
   },

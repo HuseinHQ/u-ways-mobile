@@ -1,4 +1,5 @@
 import moment from 'moment';
+import validateInput from './validateInput';
 
 export function validateEmailUPN(email: string): boolean {
   const lecturerDomain = 'upnjatim.ac.id';
@@ -44,3 +45,5 @@ export function formatDates(startDate: Date, endDate: Date): string {
     return `${start.format('D MMMM YYYY')} - ${end.format('D MMMM YYYY')}`;
   }
 }
+
+export {validateInput};

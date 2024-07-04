@@ -3,6 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import authReducer from './authSlice';
 import userReducer from './userSlice';
 import facultyReducer from './facultySlice';
+import lecturerReducer from './lecturerSlice';
 import {
   FLUSH,
   PAUSE,
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
   auth: authReducer,
   user: userReducer,
   faculty: facultyReducer,
+  lecturer: lecturerReducer,
 });
 
 const persistConfig = {

@@ -17,6 +17,7 @@ export const getUserProfile = createAsyncThunk(
         method: 'GET',
         url: baseUrl + '/user',
         headers: {access_token},
+        timeout: 5000,
       });
       const params = {is_bio_complete: data.data.is_bio_complete};
       cb(params);
@@ -24,6 +25,30 @@ export const getUserProfile = createAsyncThunk(
     } catch (err) {
       // @ts-ignore
       return rejectWithValue(err?.response?.data?.errors);
+    }
+  },
+);
+
+export const updateUserProfile = createAsyncThunk(
+  'user/updateProfile',
+  async (
+    updateData: {access_token: string; data: any; cb?: (value?: any) => void},
+    {rejectWithValue, dispatch},
+  ) => {
+    const {access_token, data, cb = () => {}} = updateData;
+    try {
+      const {data} = await axios({
+        method: 'PUT',
+        url: `${baseUrl}/user`,
+        headers: {access_token},
+        data,
+        timeout: 5000,
+      });
+      dispatch(getUserProfile({access_token}));
+      cb(data.data.message);
+      return data.data;
+    } catch (err) {
+      return rejectWithValue((err as any)?.response?.data?.errors);
     }
   },
 );
@@ -45,7 +70,11 @@ const userSlice = createSlice({
     loading: false,
     errors: null,
   },
-  reducers: {},
+  reducers: {
+    clearErrors: state => {
+      state.errors = null;
+    },
+  },
   extraReducers: builder => {
     builder
       .addCase(getUserProfile.pending, state => {
@@ -62,8 +91,21 @@ const userSlice = createSlice({
       .addCase(getUserProfile.rejected, (state, action) => {
         state.loading = false;
         state.errors = action.payload as any;
+      })
+      .addCase(updateUserProfile.pending, state => {
+        state.loading = true;
+        state.errors = null;
+      })
+      .addCase(updateUserProfile.fulfilled, state => {
+        state.loading = false;
+        state.errors = null;
+      })
+      .addCase(updateUserProfile.rejected, (state, action) => {
+        state.loading = false;
+        state.errors = action.payload as any;
       });
   },
 });
 
+export const {clearErrors} = userSlice.actions;
 export default userSlice.reducer;

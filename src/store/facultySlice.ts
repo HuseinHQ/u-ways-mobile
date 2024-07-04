@@ -27,7 +27,11 @@ const facultySlice = createSlice({
     faculties: [],
     errors: null,
   },
-  reducers: {},
+  reducers: {
+    clearErrors: state => {
+      state.errors = null;
+    },
+  },
   extraReducers: builder => {
     builder
       .addCase(getFaculties.pending, state => {
@@ -45,4 +49,5 @@ const facultySlice = createSlice({
   },
 });
 
+export const {clearErrors} = facultySlice.actions;
 export default facultySlice.reducer;
