@@ -21,6 +21,32 @@ export const login = createAsyncThunk(
   },
 );
 
+export const register = createAsyncThunk(
+  'auth/register',
+  async (
+    registerData: {
+      name: string;
+      email: string;
+      password: string;
+      confirm_password: string;
+    },
+    {rejectWithValue},
+  ) => {
+    try {
+      const {data} = await axios({
+        method: 'POST',
+        url: baseUrl + '/auth/register',
+        headers: {'Content-Type': 'application/json'},
+        data: registerData,
+      });
+      return data.data;
+    } catch (error) {
+      // @ts-ignore
+      return rejectWithValue(error?.response?.data?.errors);
+    }
+  },
+);
+
 export const refreshToken = createAsyncThunk(
   'auth/refresh-token',
   async (

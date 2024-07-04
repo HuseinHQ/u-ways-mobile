@@ -37,7 +37,7 @@ export const updateUserProfile = createAsyncThunk(
   ) => {
     const {access_token, data, cb = () => {}} = updateData;
     try {
-      const {data} = await axios({
+      await axios({
         method: 'PUT',
         url: `${baseUrl}/user`,
         headers: {access_token},
