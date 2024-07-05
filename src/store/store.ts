@@ -4,6 +4,7 @@ import authReducer from './authSlice';
 import userReducer from './userSlice';
 import facultyReducer from './facultySlice';
 import lecturerReducer from './lecturerSlice';
+import majorReducer from './majorSlice';
 import {
   FLUSH,
   PAUSE,
@@ -21,6 +22,7 @@ const rootReducer = combineReducers({
   user: userReducer,
   faculty: facultyReducer,
   lecturer: lecturerReducer,
+  major: majorReducer,
 });
 
 const persistConfig = {

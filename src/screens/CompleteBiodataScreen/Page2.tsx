@@ -1,5 +1,5 @@
 import Colors from '@/utils/Colors';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -14,44 +14,22 @@ import Spacer from '@/components/Spacer';
 import GlobalStyles from '@/styles/GlobalStyles';
 import Fonts from '@/styles/Fonts';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-
-// TODO: Dummy data
-const facultyData = [
-  {
-    id: 0,
-    name: 'Ekonomi dan Bisnis',
-  },
-  {
-    id: 1,
-    name: 'Pertanian',
-  },
-  {
-    id: 2,
-    name: 'Ilmu Sosial dan Politik',
-  },
-  {
-    id: 3,
-    name: 'Arsitektur dan Desain',
-  },
-  {
-    id: 4,
-    name: 'Ilmu Komputer',
-  },
-  {
-    id: 5,
-    name: 'Hukum',
-  },
-  {
-    id: 6,
-    name: 'Kedokteran',
-  },
-];
+import {RootState, useAppDispatch} from '@/store/store';
+import {getFaculties} from '@/store/facultySlice';
+import {useSelector} from 'react-redux';
 
 type RouteParams = {
   semester: number;
 };
 
 function Page2(): React.JSX.Element {
+  const access_token = useSelector(
+    (state: RootState) => state.auth.accessToken,
+  );
+  const selectFaculties = useSelector(
+    (state: RootState) => state.faculty.faculties,
+  );
+  const dispatch = useAppDispatch();
   const navigation = useNavigation();
   const route = useRoute<RouteProp<{params: RouteParams}, 'params'>>();
   const {semester} = route.params;
@@ -63,6 +41,10 @@ function Page2(): React.JSX.Element {
     // @ts-ignore
     navigation.navigate('Page3', data);
   };
+
+  useEffect(() => {
+    dispatch(getFaculties({access_token}));
+  }, [dispatch, access_token]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -79,7 +61,7 @@ function Page2(): React.JSX.Element {
             style={[styles.button, styles.selectedButton]}>
             <Text style={styles.text}>{semester}</Text>
           </TouchableOpacity>
-          {facultyData?.map(item => (
+          {selectFaculties?.map(item => (
             <TouchableOpacity
               key={item.id}
               onPress={() => goToNextPage({semester, faculty: item})}

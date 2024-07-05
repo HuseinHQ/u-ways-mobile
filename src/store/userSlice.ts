@@ -59,7 +59,7 @@ const userSlice = createSlice({
     email: '',
     name: '',
     role: '',
-    is_bio_complete: false,
+    is_bio_complete: true,
     major_id: 0,
     major_name: '',
     faculty_id: 0,

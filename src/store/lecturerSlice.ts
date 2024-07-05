@@ -29,11 +29,16 @@ export const getAllLecturers = createAsyncThunk(
   },
 );
 
+type Lecturer = {
+  id: number;
+  name: string;
+};
+
 const lecturerSlice = createSlice({
   name: 'lecturer',
   initialState: {
     loading: false,
-    lecturers: [],
+    lecturers: [] as Lecturer[],
     errors: null,
   },
   reducers: {

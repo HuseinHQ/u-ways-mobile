@@ -49,6 +49,10 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     marginTop: 30,
   },
+  innerLoginContainer: {
+    height: 25,
+    justifyContent: 'center',
+  },
   login: {
     color: Colors.white.default,
     fontFamily: 'Montserrat-Bold',

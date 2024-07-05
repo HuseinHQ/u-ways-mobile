@@ -12,6 +12,7 @@ export const login = createAsyncThunk(
         url: baseUrl + '/auth/login',
         headers: {'Content-Type': 'application/json'},
         data: loginData,
+        timeout: 5000,
       });
       return data.data;
     } catch (error) {
@@ -38,6 +39,7 @@ export const register = createAsyncThunk(
         url: baseUrl + '/auth/register',
         headers: {'Content-Type': 'application/json'},
         data: registerData,
+        timeout: 5000,
       });
       return data.data;
     } catch (error) {
@@ -53,7 +55,7 @@ export const refreshToken = createAsyncThunk(
     {
       refresh_token,
       successCallback = () => {},
-    }: {refresh_token: string; successCallback: (value: any) => void},
+    }: {refresh_token: string; successCallback?: (value: any) => void},
     {rejectWithValue},
   ) => {
     try {
@@ -78,6 +80,7 @@ const authSlice = createSlice({
     loading: false,
     accessToken: '',
     refreshToken: '',
+    isBioComplete: true,
     errors: null,
   },
   reducers: {
@@ -85,6 +88,7 @@ const authSlice = createSlice({
       state.accessToken = '';
       state.refreshToken = '';
       state.errors = null;
+      state.isBioComplete = true;
     },
     clearErrors: state => {
       state.errors = null;
@@ -97,11 +101,27 @@ const authSlice = createSlice({
         state.errors = null;
       })
       .addCase(login.fulfilled, (state, action) => {
+        console.log(action.payload);
         state.accessToken = action.payload.access_token;
         state.refreshToken = action.payload.refresh_token;
+        state.isBioComplete = action.payload.isBioComplete;
         state.loading = false;
       })
       .addCase(login.rejected, (state, action) => {
+        state.loading = false;
+        state.errors = action.payload as any;
+      })
+      .addCase(register.pending, state => {
+        state.loading = true;
+        state.errors = null;
+      })
+      .addCase(register.fulfilled, (state, action) => {
+        state.accessToken = action.payload.access_token;
+        state.refreshToken = action.payload.refresh_token;
+        state.isBioComplete = action.payload.isBioComplete;
+        state.loading = false;
+      })
+      .addCase(register.rejected, (state, action) => {
         state.loading = false;
         state.errors = action.payload as any;
       })

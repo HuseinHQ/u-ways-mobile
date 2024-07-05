@@ -1,27 +1,51 @@
 import Colors from '@/utils/Colors';
 import React, {useEffect, useState} from 'react';
-import {Image, ScrollView, StatusBar, Text, View} from 'react-native';
+import {
+  ActivityIndicator,
+  Image,
+  ScrollView,
+  StatusBar,
+  Text,
+  View,
+} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import image from '@/assets/images/logo_dark.png';
 import Fonts from '@/styles/Fonts';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import GlobalStyles from '@/styles/GlobalStyles';
-import {validateEmailUPN} from '@/helpers';
+import {validateEmailUPN, validateRegister} from '@/helpers';
 import CustomInput from '@/components/CustomInput';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import styles from './styles';
 import {useNavigation} from '@react-navigation/native';
+import {RootState, useAppDispatch} from '@/store/store';
+import {register, clearErrors as clearAuthErrors} from '@/store/authSlice';
+import {useSelector} from 'react-redux';
+
+import Toast from 'react-native-toast-message';
+import id from '@/utils/text';
+import useErrorToast from '@/hooks/useToastError';
 
 function RegisterScreen(): React.JSX.Element {
   const [form, setForm] = useState({
-    name: '',
-    email: '',
-    password: '',
-    confirm_password: '',
+    name: 'Kaisar Fauzan',
+    email: '20081010152@student.upnjatim.ac.id',
+    password: '12345678',
+    confirm_password: '12345678',
   });
   const [isEmailUPN, setIsEmailUPN] = useState(false);
   const navigation = useNavigation();
+  const dispatch = useAppDispatch();
+  const authErrors = useSelector((state: RootState) => state.auth.errors);
+  const userErrors = useSelector((state: RootState) => state.user.errors);
+  const authLoading = useSelector((state: RootState) => state.auth.loading);
+  const userLoading = useSelector((state: RootState) => state.user.loading);
+  useErrorToast({
+    errors: authErrors,
+    title: 'Register Error',
+    dispatchFunction: clearAuthErrors,
+  });
 
   const onChangeText = (name: string) => (value: string) => {
     setForm({
@@ -35,7 +59,19 @@ function RegisterScreen(): React.JSX.Element {
     navigation.goBack();
   };
 
-  const onSubmitHandler = () => {};
+  const onSubmitHandler = () => {
+    const {isValid, errors: validationErrors} = validateRegister(form);
+    if (isValid) {
+      dispatch(register(form));
+    } else {
+      const firstKey = Object.keys(validationErrors)[0];
+      Toast.show({
+        type: 'error',
+        text1: 'Validasi Error',
+        text2: validationErrors[firstKey],
+      });
+    }
+  };
 
   useEffect(() => {
     setIsEmailUPN(validateEmailUPN(form.email));
@@ -135,14 +171,20 @@ function RegisterScreen(): React.JSX.Element {
             <TouchableOpacity
               onPress={onSubmitHandler}
               style={[GlobalStyles.shadow, styles.loginButton]}>
-              <Text style={styles.login}>DAFTAR</Text>
+              <View style={styles.innerLoginContainer}>
+                {authLoading || userLoading ? (
+                  <ActivityIndicator />
+                ) : (
+                  <Text style={styles.login}>DAFTAR</Text>
+                )}
+              </View>
             </TouchableOpacity>
           </View>
 
           <View style={styles.bottomContainer}>
             <Text style={[Fonts.text, styles.textRed]}>Sudah punya akun? </Text>
             <TouchableOpacity onPress={goToLoginScreen}>
-              <Text style={styles.daftar}>Login</Text>
+              <Text style={styles.daftar}>Masuk</Text>
             </TouchableOpacity>
           </View>
         </View>

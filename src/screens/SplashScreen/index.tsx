@@ -17,7 +17,6 @@ import styles from './styles';
 import {RootState, useAppDispatch} from '@/store/store';
 import {useSelector} from 'react-redux';
 import {refreshToken} from '@/store/authSlice';
-import {getUserProfile} from '@/store/userSlice';
 
 function SplashScreen(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -43,19 +42,12 @@ function SplashScreen(): React.JSX.Element {
         dispatch(
           refreshToken({
             refresh_token,
-            successCallback: access_token => {
-              dispatch(
-                getUserProfile({
-                  access_token,
-                  cb: () => {
-                    navigation.reset({
-                      index: 0,
-                      // @ts-ignore
-                      routes: [{name: 'Main'}],
-                    });
-                  },
-                }),
-              );
+            successCallback: () => {
+              navigation.reset({
+                index: 0,
+                // @ts-ignore
+                routes: [{name: 'Main'}],
+              });
             },
           }),
         );
@@ -63,7 +55,7 @@ function SplashScreen(): React.JSX.Element {
     }, 2000);
 
     return () => clearTimeout(timeout);
-  }, [navigation, dispatch, refresh_token]);
+  }, [dispatch, navigation, refresh_token]);
 
   return (
     <SafeAreaView style={[GlobalStyles.container, {...backgroundStyle}]}>

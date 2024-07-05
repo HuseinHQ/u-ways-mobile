@@ -1,5 +1,5 @@
 import Colors from '@/utils/Colors';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -14,26 +14,9 @@ import Spacer from '@/components/Spacer';
 import GlobalStyles from '@/styles/GlobalStyles';
 import Fonts from '@/styles/Fonts';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-
-// TODO: Dummy data
-const majorData = [
-  {
-    id: 0,
-    name: 'Informatika',
-  },
-  {
-    id: 1,
-    name: 'Sistem Informasi',
-  },
-  {
-    id: 2,
-    name: 'Sains Data',
-  },
-  {
-    id: 3,
-    name: 'Bisnis Digital',
-  },
-];
+import {RootState, useAppDispatch} from '@/store/store';
+import {useSelector} from 'react-redux';
+import {getMajors} from '@/store/majorSlice';
 
 type RouteParams = {
   semester: number;
@@ -50,11 +33,20 @@ function Page3(): React.JSX.Element {
   const navigation = useNavigation();
   const route = useRoute<RouteProp<{params: RouteParams}, 'params'>>();
   const {semester, faculty} = route.params;
-
+  const dispatch = useAppDispatch();
+  const access_token = useSelector(
+    (state: RootState) => state.auth.accessToken,
+  );
+  const selectMajors = useSelector((state: RootState) => state.major.majors);
+  console.log(selectMajors);
   const goToNextPage = (data: NextRouteParams) => {
     // @ts-ignore
     navigation.navigate('Page4', data);
   };
+
+  useEffect(() => {
+    dispatch(getMajors({access_token, FacultyId: faculty.id}));
+  }, [dispatch, access_token, faculty.id]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -76,7 +68,7 @@ function Page3(): React.JSX.Element {
             style={[styles.button, styles.selectedButton]}>
             <Text style={styles.text}>{faculty.name}</Text>
           </TouchableOpacity>
-          {majorData?.map(item => (
+          {selectMajors?.map(item => (
             <TouchableOpacity
               key={item.id}
               onPress={() =>

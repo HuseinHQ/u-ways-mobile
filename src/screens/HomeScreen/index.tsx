@@ -1,5 +1,5 @@
 import Colors from '@/utils/Colors';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {
   Image,
   SafeAreaView,
@@ -17,34 +17,32 @@ import FeatureList from './LocalComponent/FeatureList';
 import ArticleRecommendation from './LocalComponent/ArticleRecommendation';
 import CustomModal from '@/components/CustomModal';
 import image from '@/assets/images/logo_5.png';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import GlobalStyles from '@/styles/GlobalStyles';
 import {useSelector} from 'react-redux';
-import {RootState} from '@/store/store';
+import {RootState, useAppDispatch} from '@/store/store';
+import {getUserProfile} from '@/store/userSlice';
 
 function HomeScreen(): React.JSX.Element {
   const [modalVisible, setModalVisible] = useState(false);
   const navigation = useNavigation();
-  const route = useRoute();
+  const dispatch = useAppDispatch();
   const isBioComplete = useSelector(
-    (state: RootState) => state.user.is_bio_complete,
+    (state: RootState) => state.auth.isBioComplete,
+  );
+  const access_token = useSelector(
+    (state: RootState) => state.auth.accessToken,
   );
 
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      // @ts-ignore
-      if (!route?.params?.is_bio_complete && !isBioComplete) {
+  useFocusEffect(
+    useCallback(() => {
+      if (isBioComplete) {
+        dispatch(getUserProfile({access_token}));
+      } else {
         setModalVisible(true);
       }
-
-      return () => {
-        unsubscribe;
-      };
-    });
-
-    return unsubscribe;
-    // @ts-ignore
-  }, [navigation, isBioComplete, route?.params?.is_bio_complete]);
+    }, [isBioComplete, dispatch, access_token]),
+  );
 
   const goToNextPage = () => {
     setModalVisible(false);
@@ -71,9 +69,7 @@ function HomeScreen(): React.JSX.Element {
         <ArticleRecommendation />
       </ScrollView>
 
-      <CustomModal
-        isVisible={modalVisible}
-        onBackdropPress={() => setModalVisible(false)}>
+      <CustomModal isVisible={modalVisible} onBackdropPress={() => {}}>
         <View style={styles.imageContainer}>
           <Image source={image} style={styles.image} />
         </View>

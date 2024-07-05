@@ -37,6 +37,10 @@ function Page5(): React.JSX.Element {
     return () => setModalVisible(false);
   }, []);
 
+  const handleSubmit = () => {
+    console.log({semester, faculty, major, lecturer});
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar
@@ -77,7 +81,7 @@ function Page5(): React.JSX.Element {
         <Text style={styles.title}>Apakah Identitas Anda Sudah Benar?</Text>
         <Spacer height={20} />
         <View style={styles.buttonContainer2}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={handleSubmit}>
             <AntDesign
               name="checkcircleo"
               color={Colors.green.default}

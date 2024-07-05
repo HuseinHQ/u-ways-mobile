@@ -16,10 +16,8 @@ import id from '@/utils/text';
 import {useSelector} from 'react-redux';
 import {RootState, useAppDispatch} from '@/store/store';
 import {login, clearErrors as clearAuthErrors} from '@/store/authSlice';
-import {
-  getUserProfile,
-  clearErrors as clearUserErrors,
-} from '@/store/userSlice';
+import {clearErrors as clearUserErrors} from '@/store/userSlice';
+import useErrorToast from '@/hooks/useToastError';
 
 function LoginScreen(): React.JSX.Element {
   const accessToken = useSelector((state: RootState) => state.auth.accessToken);
@@ -28,6 +26,16 @@ function LoginScreen(): React.JSX.Element {
   const authErrors = useSelector((state: RootState) => state.auth.errors);
   const userErrors = useSelector((state: RootState) => state.user.errors);
   const dispatch = useAppDispatch();
+  useErrorToast({
+    errors: authErrors,
+    title: 'Login Error',
+    dispatchFunction: clearAuthErrors,
+  });
+  useErrorToast({
+    errors: userErrors,
+    title: 'Login Error',
+    dispatchFunction: clearUserErrors,
+  });
 
   const [form, setForm] = useState({
     email: '',
@@ -49,7 +57,6 @@ function LoginScreen(): React.JSX.Element {
   };
 
   const onSubmitHandler = async () => {
-    // TODO: validasi email dan fetch
     if (!validateEmailUPN(form.email)) {
       Toast.show({
         type: 'error',
@@ -71,37 +78,17 @@ function LoginScreen(): React.JSX.Element {
 
   useEffect(() => {
     if (accessToken) {
-      dispatch(
-        getUserProfile({
-          access_token: accessToken,
-          cb: params => {
-            navigation.reset({
-              index: 0,
-              // @ts-ignore
-              routes: [{name: 'Main', params}],
-            });
-          },
-        }),
-      );
+      navigation.reset({
+        index: 0,
+        // @ts-ignore
+        routes: [{name: 'Main'}],
+      });
     }
   }, [accessToken, navigation, dispatch]);
 
   useEffect(() => {
     setIsEmailUPN(validateEmailUPN(form.email));
   }, [form.email]);
-
-  useEffect(() => {
-    if (authErrors || userErrors) {
-      Toast.show({
-        type: 'error',
-        text1: 'Login Error',
-        // @ts-ignore
-        text2: authErrors?.message || userErrors?.message,
-      });
-      dispatch(clearAuthErrors());
-      dispatch(clearUserErrors());
-    }
-  }, [authErrors, userErrors, dispatch]);
 
   return (
     <ScrollView>
@@ -170,11 +157,13 @@ function LoginScreen(): React.JSX.Element {
             <TouchableOpacity
               onPress={onSubmitHandler}
               style={[GlobalStyles.shadow, styles.loginButton]}>
-              {authLoading || userLoading ? (
-                <ActivityIndicator />
-              ) : (
-                <Text style={styles.login}>LOGIN</Text>
-              )}
+              <View style={styles.innerLoginContainer}>
+                {authLoading || userLoading ? (
+                  <ActivityIndicator />
+                ) : (
+                  <Text style={styles.login}>MASUK</Text>
+                )}
+              </View>
             </TouchableOpacity>
           </View>
 

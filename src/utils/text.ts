@@ -3,11 +3,13 @@ const id = {
     NULL: 'Email tidak boleh kosong',
     EMPTY: 'Email tidak boleh kosong',
     INVALID: 'Pastikan email yang Anda gunakan dari UPN',
+    'email must be unique': 'Email sudah terdaftar, silakan gunakan email lain',
   },
   password: {
     NULL: 'Password tidak boleh kosong',
     EMPTY: 'Password tidak boleh kosong',
     LENGTH: 'Minimal dan maksimal karakter password adalah 8 dan 255',
+    NOT_SAME: 'Password dan konfirmasi password tidak sama',
   },
   name: {
     NULL: 'Nama tidak boleh kosong',

@@ -1,5 +1,5 @@
 import Colors from '@/utils/Colors';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -14,46 +14,49 @@ import Spacer from '@/components/Spacer';
 import GlobalStyles from '@/styles/GlobalStyles';
 import Fonts from '@/styles/Fonts';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import {RootState, useAppDispatch} from '@/store/store';
+import {useSelector} from 'react-redux';
+import {getAllLecturers} from '@/store/lecturerSlice';
 
 // TODO: Dummy data
-const lecturerData = [
-  {
-    id: 0,
-    name: 'Fetty Tri Anggraeny, S.Kom. M.Kom',
-  },
-  {
-    id: 1,
-    name: 'Dr. Basuki Rahmat, S.Si. MT.',
-  },
-  {
-    id: 2,
-    name: 'Intan Yuniar Purbasari, S.Kom. MSc.',
-  },
-  {
-    id: 3,
-    name: 'Budi Nugroho, S.Kom. M.Kom.',
-  },
-  {
-    id: 4,
-    name: 'Chrystia Aji Putra, S.Kom, M.T',
-  },
-  {
-    id: 5,
-    name: 'Eva Yulia Puspaningrum, S.Kom., M.Kom',
-  },
-  {
-    id: 6,
-    name: 'Faisal Muttaqin, S.Kom, M.T',
-  },
-  {
-    id: 7,
-    name: 'Firza Prima Aditiawan, S.Kom., MTI',
-  },
-  {
-    id: 8,
-    name: 'Henni Endah Wahanani, ST. M.Kom.',
-  },
-];
+// const lecturerData = [
+//   {
+//     id: 0,
+//     name: 'Fetty Tri Anggraeny, S.Kom. M.Kom',
+//   },
+//   {
+//     id: 1,
+//     name: 'Dr. Basuki Rahmat, S.Si. MT.',
+//   },
+//   {
+//     id: 2,
+//     name: 'Intan Yuniar Purbasari, S.Kom. MSc.',
+//   },
+//   {
+//     id: 3,
+//     name: 'Budi Nugroho, S.Kom. M.Kom.',
+//   },
+//   {
+//     id: 4,
+//     name: 'Chrystia Aji Putra, S.Kom, M.T',
+//   },
+//   {
+//     id: 5,
+//     name: 'Eva Yulia Puspaningrum, S.Kom., M.Kom',
+//   },
+//   {
+//     id: 6,
+//     name: 'Faisal Muttaqin, S.Kom, M.T',
+//   },
+//   {
+//     id: 7,
+//     name: 'Firza Prima Aditiawan, S.Kom., MTI',
+//   },
+//   {
+//     id: 8,
+//     name: 'Henni Endah Wahanani, ST. M.Kom.',
+//   },
+// ];
 
 type RouteParams = {
   semester: number;
@@ -72,11 +75,22 @@ function Page4(): React.JSX.Element {
   const navigation = useNavigation();
   const route = useRoute<RouteProp<{params: RouteParams}, 'params'>>();
   const {semester, faculty, major} = route.params;
+  const dispatch = useAppDispatch();
+  const access_token = useSelector(
+    (state: RootState) => state.auth.accessToken,
+  );
+  const selectLecturers = useSelector(
+    (state: RootState) => state.lecturer.lecturers,
+  );
 
   const goToNextPage = (data: NextRouteParams) => {
     // @ts-ignore
     navigation.navigate('Page5', data);
   };
+
+  useEffect(() => {
+    dispatch(getAllLecturers({access_token, FacultyId: String(faculty.id)}));
+  }, [dispatch, access_token, faculty.id]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -103,7 +117,14 @@ function Page4(): React.JSX.Element {
             style={[styles.button, styles.selectedButton]}>
             <Text style={styles.text}>{major.name}</Text>
           </TouchableOpacity>
-          {lecturerData?.map(item => (
+          {!selectLecturers.length && (
+            <TouchableOpacity
+              disabled
+              style={[styles.button, styles.selectedButton]}>
+              <Text style={styles.text}>Tidak ada data dosen</Text>
+            </TouchableOpacity>
+          )}
+          {selectLecturers?.map(item => (
             <TouchableOpacity
               key={item.id}
               onPress={() =>
