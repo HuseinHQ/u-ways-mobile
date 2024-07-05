@@ -30,7 +30,7 @@ function Page5(): React.JSX.Element {
   const route = useRoute<RouteProp<{params: RouteParams}, 'params'>>();
   const {semester, faculty, major, lecturer} = route.params;
   const [modalVisible, setModalVisible] = useState(false);
-
+  // TODO: Last mau submit complete data
   useEffect(() => {
     setModalVisible(true);
 
