@@ -1,11 +1,15 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import axios from 'axios';
+import {userBioComplete} from './userSlice';
 
 const baseUrl = process.env.BACKEND_URL;
 
 export const login = createAsyncThunk(
   'auth/login',
-  async (loginData: {email: string; password: string}, {rejectWithValue}) => {
+  async (
+    loginData: {email: string; password: string},
+    {rejectWithValue, dispatch},
+  ) => {
     try {
       const {data} = await axios({
         method: 'POST',
@@ -14,6 +18,7 @@ export const login = createAsyncThunk(
         data: loginData,
         timeout: 5000,
       });
+      dispatch(userBioComplete(data.data.isBioComplete));
       return data.data;
     } catch (error) {
       // @ts-ignore
@@ -93,6 +98,9 @@ const authSlice = createSlice({
     clearErrors: state => {
       state.errors = null;
     },
+    authBioComplete: (state, action) => {
+      state.isBioComplete = action.payload;
+    },
   },
   extraReducers: builder => {
     builder
@@ -101,7 +109,6 @@ const authSlice = createSlice({
         state.errors = null;
       })
       .addCase(login.fulfilled, (state, action) => {
-        console.log(action.payload);
         state.accessToken = action.payload.access_token;
         state.refreshToken = action.payload.refresh_token;
         state.isBioComplete = action.payload.isBioComplete;
@@ -143,5 +150,5 @@ const authSlice = createSlice({
   },
 });
 
-export const {logout, clearErrors} = authSlice.actions;
+export const {logout, clearErrors, authBioComplete} = authSlice.actions;
 export default authSlice.reducer;

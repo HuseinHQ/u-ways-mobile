@@ -9,7 +9,6 @@ import {useSelector} from 'react-redux';
 
 function Header(): React.JSX.Element {
   const selectUser = useSelector((state: RootState) => state.user.name);
-  console.log(selectUser);
 
   return (
     <View>

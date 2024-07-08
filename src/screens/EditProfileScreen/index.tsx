@@ -166,7 +166,7 @@ function EditProfileScreen(): React.JSX.Element {
         open={openFacultyDropdown}
         value={FacultyId}
         items={
-          faculties.length > 0
+          faculties?.length > 0
             ? faculties
             : [{label: 'Tidak ada data', value: ''}]
         }
@@ -187,7 +187,7 @@ function EditProfileScreen(): React.JSX.Element {
         open={openMajorDropdown}
         value={MajorId}
         items={
-          majors.length > 0 ? majors : [{label: 'Tidak ada data', value: ''}]
+          majors?.length > 0 ? majors : [{label: 'Tidak ada data', value: ''}]
         }
         setOpen={setOpenMajorDropdown}
         setValue={setMajorId}
@@ -206,7 +206,7 @@ function EditProfileScreen(): React.JSX.Element {
         open={openLecturerDropdown}
         value={LecturerId}
         items={
-          lecturers.length > 0
+          lecturers?.length > 0
             ? lecturers
             : [{label: 'Tidak ada data', value: ''}]
         }

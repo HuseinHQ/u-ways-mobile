@@ -15,7 +15,7 @@ import wave_2 from '@/assets/images/wave_2.png';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import Avatar from '@/components/Avatar';
 import logo from '@/assets/images/logo_light.png';
-import {RootState, useAppDispatch} from '@/store/store';
+import {clearPersistedState, RootState, useAppDispatch} from '@/store/store';
 import {getUserProfile} from '@/store/userSlice';
 import {useSelector} from 'react-redux';
 import Spacer from '@/components/Spacer';
@@ -59,8 +59,9 @@ function ProfileScreen(): React.JSX.Element {
         },
         {
           text: 'Iya',
-          onPress: () => {
+          onPress: async () => {
             dispatch(logout());
+            await clearPersistedState();
             navigation.reset({
               index: 0,
               // @ts-ignore

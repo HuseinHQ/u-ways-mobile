@@ -38,7 +38,6 @@ function Page3(): React.JSX.Element {
     (state: RootState) => state.auth.accessToken,
   );
   const selectMajors = useSelector((state: RootState) => state.major.majors);
-  console.log(selectMajors);
   const goToNextPage = (data: NextRouteParams) => {
     // @ts-ignore
     navigation.navigate('Page4', data);

@@ -28,20 +28,28 @@ function HomeScreen(): React.JSX.Element {
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
   const isBioComplete = useSelector(
-    (state: RootState) => state.auth.isBioComplete,
+    (state: RootState) => state.user.is_bio_complete,
+  );
+  const is_bio_complete = useSelector(
+    (state: RootState) => state.user.is_bio_complete,
   );
   const access_token = useSelector(
     (state: RootState) => state.auth.accessToken,
   );
 
+  console.log(isBioComplete, is_bio_complete);
   useFocusEffect(
     useCallback(() => {
-      if (isBioComplete) {
-        dispatch(getUserProfile({access_token}));
-      } else {
+      if (!isBioComplete && !is_bio_complete) {
         setModalVisible(true);
+      } else {
+        dispatch(getUserProfile({access_token}));
       }
-    }, [isBioComplete, dispatch, access_token]),
+
+      if (isBioComplete) {
+        setModalVisible(false);
+      }
+    }, [isBioComplete, is_bio_complete, dispatch, access_token]),
   );
 
   const goToNextPage = () => {

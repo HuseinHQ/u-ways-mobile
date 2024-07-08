@@ -24,14 +24,27 @@ function FeatureList(): React.JSX.Element {
       <Spacer height={10} />
       <View style={styles.featureContainer}>
         {featureListData?.map((item, index) => (
-          <TouchableOpacity key={index} style={styles.featureItem}>
-            <View style={styles.topContent}>
-              <Image source={item.image} style={styles.image} />
-            </View>
-            <View style={styles.bottomContent}>
-              <Text style={styles.featureItemText}>{item.title}</Text>
-            </View>
-          </TouchableOpacity>
+          <React.Fragment key={index}>
+            <TouchableOpacity style={styles.featureItem}>
+              <View style={styles.topContent}>
+                <Image source={item.image} style={styles.image} />
+              </View>
+              <View style={styles.bottomContent}>
+                <Text style={styles.featureItemText}>{item.title}</Text>
+              </View>
+            </TouchableOpacity>
+            {index === featureListData?.length - 1 &&
+              featureListData?.length % 2 === 1 && (
+                <TouchableOpacity disabled style={styles.featureItem}>
+                  <View style={styles.topContent}>
+                    <Image source={item.image} style={styles.image2} />
+                  </View>
+                  <View style={[styles.bottomContent, styles.bottomContent2]}>
+                    <Text style={styles.featureItemText2}>{item.title}</Text>
+                  </View>
+                </TouchableOpacity>
+              )}
+          </React.Fragment>
         ))}
       </View>
     </View>
@@ -46,9 +59,9 @@ const styles = StyleSheet.create({
   },
   featureItem: {
     flex: 1,
-    minWidth: 150,
-    maxWidth: 170,
     minHeight: 180,
+    minWidth: 170,
+    maxWidth: 200,
     borderRadius: 10,
     backgroundColor: Colors.white.default,
   },
@@ -60,6 +73,12 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
+  image2: {
+    resizeMode: 'contain',
+    width: '100%',
+    height: '100%',
+    opacity: 0,
+  },
   bottomContent: {
     flex: 0.1,
     borderBottomLeftRadius: 10,
@@ -68,10 +87,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  bottomContent2: {
+    backgroundColor: 'transparent',
+  },
   featureItemText: {
     fontFamily: 'Montserrat-Bold',
     fontSize: 14,
     color: Colors.white.default,
+  },
+  featureItemText2: {
+    fontFamily: 'Montserrat-Bold',
+    fontSize: 14,
+    color: 'transparent',
   },
 });
 

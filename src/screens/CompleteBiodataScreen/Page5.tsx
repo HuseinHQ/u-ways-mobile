@@ -1,6 +1,7 @@
 import Colors from '@/utils/Colors';
 import React, {useEffect, useState} from 'react';
 import {
+  ActivityIndicator,
   Image,
   SafeAreaView,
   StatusBar,
@@ -17,6 +18,10 @@ import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import image from '@/assets/images/logo_5.png';
 import CustomModal from '@/components/CustomModal';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import {RootState, useAppDispatch} from '@/store/store';
+import {clearErrors, completeBiodata} from '@/store/userSlice';
+import {useSelector} from 'react-redux';
+import useErrorToast from '@/hooks/useToastError';
 
 type RouteParams = {
   semester: number;
@@ -30,7 +35,18 @@ function Page5(): React.JSX.Element {
   const route = useRoute<RouteProp<{params: RouteParams}, 'params'>>();
   const {semester, faculty, major, lecturer} = route.params;
   const [modalVisible, setModalVisible] = useState(false);
-  // TODO: Last mau submit complete data
+  const access_token = useSelector(
+    (state: RootState) => state.auth.accessToken,
+  );
+  const errors = useSelector((state: RootState) => state.user.errors);
+  const loading = useSelector((state: RootState) => state.user.loading);
+  const dispatch = useAppDispatch();
+  useErrorToast({
+    errors: errors,
+    title: 'Submit Error',
+    dispatchFunction: clearErrors,
+  });
+
   useEffect(() => {
     setModalVisible(true);
 
@@ -38,7 +54,23 @@ function Page5(): React.JSX.Element {
   }, []);
 
   const handleSubmit = () => {
-    console.log({semester, faculty, major, lecturer});
+    const successCB = () => {
+      navigation.reset({
+        index: 0,
+        // @ts-ignore
+        routes: [{name: 'Main'}],
+      });
+    };
+
+    dispatch(
+      completeBiodata({
+        access_token,
+        successCB,
+        LecturerId: lecturer.id,
+        MajorId: major.id,
+        semester,
+      }),
+    );
   };
 
   return (
@@ -81,16 +113,26 @@ function Page5(): React.JSX.Element {
         <Text style={styles.title}>Apakah Identitas Anda Sudah Benar?</Text>
         <Spacer height={20} />
         <View style={styles.buttonContainer2}>
-          <TouchableOpacity onPress={handleSubmit}>
-            <AntDesign
-              name="checkcircleo"
-              color={Colors.green.default}
-              size={48}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => setModalVisible(false)}>
-            <AntDesign name="closecircleo" color={Colors.primary} size={48} />
-          </TouchableOpacity>
+          {loading ? (
+            <ActivityIndicator />
+          ) : (
+            <>
+              <TouchableOpacity onPress={handleSubmit}>
+                <AntDesign
+                  name="checkcircleo"
+                  color={Colors.green.default}
+                  size={48}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => setModalVisible(false)}>
+                <AntDesign
+                  name="closecircleo"
+                  color={Colors.primary}
+                  size={48}
+                />
+              </TouchableOpacity>
+            </>
+          )}
         </View>
       </CustomModal>
     </SafeAreaView>
@@ -138,8 +180,10 @@ const styles = StyleSheet.create({
   },
   buttonContainer2: {
     width: '100%',
+    minHeight: 50,
     flexDirection: 'row',
     justifyContent: 'space-evenly',
+    alignItems: 'center',
   },
   title: {
     fontFamily: 'Montserrat-Medium',
