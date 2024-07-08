@@ -15,7 +15,7 @@ function Header(): React.JSX.Element {
       <View style={styles.topContainer}>
         <View style={styles.titleContainer}>
           <Text style={[Fonts.title, styles.textRed]}>Halo</Text>
-          <Text style={Fonts.title}>{selectUser}!</Text>
+          <Text style={Fonts.title}>{selectUser?.split(' ')[0]}!</Text>
         </View>
         <TouchableOpacity>
           <Ionicons name="notifications-outline" size={28} />

@@ -11,7 +11,7 @@ export const getUserProfile = createAsyncThunk(
       access_token,
       cb = () => {},
     }: {access_token: string; cb?: (value?: any) => void},
-    {rejectWithValue, dispatch},
+    {rejectWithValue},
   ) {
     try {
       const {data} = await axios({
@@ -38,7 +38,7 @@ export const updateUserProfile = createAsyncThunk(
   ) => {
     const {access_token, data, cb = () => {}} = updateData;
     try {
-      await axios({
+      const {data: response} = await axios({
         method: 'PUT',
         url: `${baseUrl}/user`,
         headers: {access_token},
@@ -46,7 +46,7 @@ export const updateUserProfile = createAsyncThunk(
         timeout: 5000,
       });
       dispatch(getUserProfile({access_token}));
-      cb(data.data.message);
+      cb(response.data.message);
       return data.data;
     } catch (err) {
       return rejectWithValue((err as any)?.response?.data?.errors);
