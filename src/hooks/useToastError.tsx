@@ -22,7 +22,6 @@ const useErrorToast = (data: useErrorToastProps) => {
           ? errors[key]
           : // @ts-ignore
             id[key][errors[key]];
-        console.log(errors.email);
         Toast.show({
           type: 'error',
           text1: title,

@@ -47,7 +47,7 @@ function CustomCarousel(): React.JSX.Element {
           )}
         />
       </View>
-      <Spacer height={5} />
+      <Spacer height={10} />
       <View style={styles.bullet}>
         {carouselData.map((item, index) => (
           <FontAwesome

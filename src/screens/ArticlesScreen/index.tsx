@@ -1,5 +1,5 @@
 import Colors from '@/utils/Colors';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   Image,
   SafeAreaView,
@@ -10,41 +10,25 @@ import {
   View,
 } from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
-import article1 from '@/assets/images/article_1.png';
 import GlobalStyles from '@/styles/GlobalStyles';
 import Spacer from '@/components/Spacer';
 import CustomHeader from '@/components/CustomHeader';
 import {useNavigation} from '@react-navigation/native';
-
-const articleData = [
-  {
-    title: 'Toxic Positivity',
-    abstract:
-      'Toxic positivity, tentu kamu sering mendengar kata-kata tersebut, baik melalui media sosial maupun percakapan sehari-hari. Lalu sebenarnya, apa sih toxic positivity itu?',
-    image: article1,
-    paragraph:
-      'Siapa sih di dunia ini, yang hidupnya tidak pernah memiliki masalah? Tentu, di antara kita pasti pernah memiliki sebuah masalah baik masalah ringan maupun masalah berat. Hal tersebut sangatlah wajar terjadi pada setiap fase kehidupan manusia. Akan tetapi, dikala mendapatkan masalah atau mengalami kegagalan, pasti ada perasaan yang mengganjal di dalam dirimu. Berbagai macam cara kamu lakukan untuk menghilangkan hal tersebut, sebagai sebuah bentuk pertahanan diri yang kamu lakukan. Salah satunya dengan tetap berpikir positif dan bersikap optimis atas apa yang telah terjadi. Sikap optimis dan tetap berpikir positif memang merupakan hal yang baik. Namun, jika kamu memaksakan hal tersebut, maka yang terjadi justru sebaliknya. Alih-alih masalah kamu segera terselesaikan, justru membuat kamu mendapatkan masalah yang baru. Sikap penyangkalan atas emosi negatif yang sedang kamu alami dengan menggunakan sikap positif dikenal dengan istilah toxic positivity.',
-  },
-  {
-    title: 'Toxic Positivity',
-    abstract:
-      'Toxic positivity, tentu kamu sering mendengar kata-kata tersebut, baik melalui media sosial maupun percakapan sehari-hari. Lalu sebenarnya, apa sih toxic positivity itu?',
-    image: article1,
-    paragraph:
-      'Siapa sih di dunia ini, yang hidupnya tidak pernah memiliki masalah? Tentu, di antara kita pasti pernah memiliki sebuah masalah baik masalah ringan maupun masalah berat. Hal tersebut sangatlah wajar terjadi pada setiap fase kehidupan manusia. Akan tetapi, dikala mendapatkan masalah atau mengalami kegagalan, pasti ada perasaan yang mengganjal di dalam dirimu. Berbagai macam cara kamu lakukan untuk menghilangkan hal tersebut, sebagai sebuah bentuk pertahanan diri yang kamu lakukan. Salah satunya dengan tetap berpikir positif dan bersikap optimis atas apa yang telah terjadi. Sikap optimis dan tetap berpikir positif memang merupakan hal yang baik. Namun, jika kamu memaksakan hal tersebut, maka yang terjadi justru sebaliknya. Alih-alih masalah kamu segera terselesaikan, justru membuat kamu mendapatkan masalah yang baru. Sikap penyangkalan atas emosi negatif yang sedang kamu alami dengan menggunakan sikap positif dikenal dengan istilah toxic positivity.',
-  },
-  {
-    title: 'Toxic Positivity',
-    abstract:
-      'Toxic positivity, tentu kamu sering mendengar kata-kata tersebut, baik melalui media sosial maupun percakapan sehari-hari. Lalu sebenarnya, apa sih toxic positivity itu?',
-    image: article1,
-    paragraph:
-      'Siapa sih di dunia ini, yang hidupnya tidak pernah memiliki masalah? Tentu, di antara kita pasti pernah memiliki sebuah masalah baik masalah ringan maupun masalah berat. Hal tersebut sangatlah wajar terjadi pada setiap fase kehidupan manusia. Akan tetapi, dikala mendapatkan masalah atau mengalami kegagalan, pasti ada perasaan yang mengganjal di dalam dirimu. Berbagai macam cara kamu lakukan untuk menghilangkan hal tersebut, sebagai sebuah bentuk pertahanan diri yang kamu lakukan. Salah satunya dengan tetap berpikir positif dan bersikap optimis atas apa yang telah terjadi. Sikap optimis dan tetap berpikir positif memang merupakan hal yang baik. Namun, jika kamu memaksakan hal tersebut, maka yang terjadi justru sebaliknya. Alih-alih masalah kamu segera terselesaikan, justru membuat kamu mendapatkan masalah yang baru. Sikap penyangkalan atas emosi negatif yang sedang kamu alami dengan menggunakan sikap positif dikenal dengan istilah toxic positivity.',
-  },
-];
+import {useSelector} from 'react-redux';
+import {getArticles} from '@/store/articleSlice';
+import {RootState, useAppDispatch} from '@/store/store';
 
 function ArticlesScreen(): React.JSX.Element {
   const navigation = useNavigation();
+  const dispath = useAppDispatch();
+  const access_token = useSelector(
+    (state: RootState) => state.auth.accessToken,
+  );
+  const selectArticles = useSelector((state: RootState) => state.article.data);
+
+  useEffect(() => {
+    dispath(getArticles({access_token}));
+  }, [access_token, dispath]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -58,9 +42,9 @@ function ArticlesScreen(): React.JSX.Element {
       />
       <FlatList
         showsVerticalScrollIndicator={false}
-        data={articleData}
+        data={selectArticles}
         ListFooterComponent={<View />}
-        ListFooterComponentStyle={{paddingBottom: 80}}
+        ListFooterComponentStyle={styles.ListFooterComponentStyle}
         renderItem={({item, index}) => (
           <React.Fragment key={index}>
             <View>
@@ -69,7 +53,7 @@ function ArticlesScreen(): React.JSX.Element {
                 <TouchableOpacity
                   onPress={() =>
                     // @ts-ignore
-                    navigation.navigate('ArticleDetailScreen', item)
+                    navigation.navigate('ArticleDetailScreen', {id: item.id})
                   }
                   style={styles.button}>
                   <Text style={styles.lihat}>Lihat</Text>
@@ -77,7 +61,7 @@ function ArticlesScreen(): React.JSX.Element {
               </View>
               <Spacer height={10} />
               <View style={styles.imageContainer}>
-                <Image source={item.image} style={styles.image} />
+                <Image source={{uri: item.imageUrl}} style={styles.image} />
               </View>
               <View>
                 <Text style={styles.abstract}>{item.abstract}</Text>
@@ -113,11 +97,13 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: 'Poppins-Bold',
     fontSize: 20,
+    maxWidth: '80%',
   },
   topContent: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    flexWrap: 'wrap',
   },
   button: {
     paddingVertical: 5,
@@ -137,6 +123,9 @@ const styles = StyleSheet.create({
     fontFamily: 'Montserrat-Regular',
     fontSize: 14,
     textAlign: 'justify',
+  },
+  ListFooterComponentStyle: {
+    paddingBottom: 80,
   },
 });
 

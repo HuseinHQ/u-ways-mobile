@@ -1,8 +1,7 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import Spacer from '@/components/Spacer';
 import Fonts from '@/styles/Fonts';
 import Colors from '@/utils/Colors';
-import article1 from '@/assets/images/article_1.png';
 import {
   Image,
   StyleSheet,
@@ -10,20 +9,12 @@ import {
   View,
   TouchableOpacity,
   ScrollView,
+  ActivityIndicator,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-
-const articleListData = [
-  {
-    title: 'Self Diagnosis, Sebuah Jembatan Petaka Untuk Diri',
-    image: article1,
-  },
-  {
-    title:
-      'Apa Itu Toxic Positivity? Bagaimana Dampaknya Bagi Kesehatan Mental?',
-    image: article1,
-  },
-];
+import {useSelector} from 'react-redux';
+import {RootState, useAppDispatch} from '@/store/store';
+import {getArticles} from '@/store/articleSlice';
 
 function ArticleRecommendation(): React.JSX.Element {
   const navigation = useNavigation();
@@ -31,6 +22,18 @@ function ArticleRecommendation(): React.JSX.Element {
     // @ts-ignore
     navigation.navigate('ArticlesScreen');
   };
+  const articleLoading = useSelector(
+    (state: RootState) => state.article.loading,
+  );
+  const access_token = useSelector(
+    (state: RootState) => state.auth.accessToken,
+  );
+  const selectArticles = useSelector((state: RootState) => state.article.data);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(getArticles({access_token, limit: 3}));
+  }, [access_token, dispatch]);
 
   return (
     <View>
@@ -45,22 +48,31 @@ function ArticleRecommendation(): React.JSX.Element {
         showsHorizontalScrollIndicator={false}
         horizontal
         style={styles.featureContainer}>
-        {articleListData?.map((item, index) => (
-          <React.Fragment key={index}>
-            <TouchableOpacity style={styles.featureItem}>
-              <Image source={item.image} style={styles.image} />
-              <View style={styles.overlay} />
-              <Text
-                style={[
-                  styles.text,
-                  index % 2 === 0 ? styles.textVariant1 : styles.textVariant2,
-                ]}>
-                {item.title}
-              </Text>
-            </TouchableOpacity>
-            {index !== articleListData.length - 1 && <Spacer width={10} />}
-          </React.Fragment>
-        ))}
+        {articleLoading ? (
+          <ActivityIndicator />
+        ) : (
+          selectArticles?.map((item, index) => (
+            <React.Fragment key={index}>
+              <TouchableOpacity
+                onPress={() =>
+                  // @ts-ignore
+                  navigation.navigate('ArticleDetailScreen', {id: item.id})
+                }
+                style={styles.featureItem}>
+                <Image source={{uri: item.imageUrl}} style={styles.image} />
+                <View style={styles.overlay} />
+                <Text
+                  style={[
+                    styles.text,
+                    index % 2 === 0 ? styles.textVariant1 : styles.textVariant2,
+                  ]}>
+                  {item.title}
+                </Text>
+              </TouchableOpacity>
+              {index !== selectArticles.length - 1 && <Spacer width={10} />}
+            </React.Fragment>
+          ))
+        )}
       </ScrollView>
     </View>
   );

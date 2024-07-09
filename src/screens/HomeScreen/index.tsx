@@ -37,7 +37,6 @@ function HomeScreen(): React.JSX.Element {
     (state: RootState) => state.auth.accessToken,
   );
 
-  console.log(isBioComplete, is_bio_complete);
   useFocusEffect(
     useCallback(() => {
       if (!isBioComplete && !is_bio_complete) {

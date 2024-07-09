@@ -4,7 +4,14 @@ import Fonts from '@/styles/Fonts';
 import Colors from '@/utils/Colors';
 import image1 from '@/assets/images/feature_1.png';
 import image2 from '@/assets/images/feature_2.png';
-import {Image, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import {
+  Image,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Dimensions,
+} from 'react-native';
 
 const featureListData = [
   {
@@ -60,7 +67,7 @@ const styles = StyleSheet.create({
   featureItem: {
     flex: 1,
     minHeight: 180,
-    minWidth: 170,
+    minWidth: Dimensions.get('screen').width / 3,
     maxWidth: 200,
     borderRadius: 10,
     backgroundColor: Colors.white.default,

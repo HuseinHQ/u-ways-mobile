@@ -1,11 +1,10 @@
 import Colors from '@/utils/Colors';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {
   Dimensions,
   Image,
-  ImageProps,
   StatusBar,
   StyleSheet,
   Text,
@@ -13,18 +12,32 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
+import {useSelector} from 'react-redux';
+import {RootState, useAppDispatch} from '@/store/store';
+import {getArticleDetail} from '@/store/articleSlice';
 
 type RouteParams = {
-  abstract: string;
-  image: ImageProps;
-  title: string;
-  paragraph: string;
+  id: number;
 };
 
 function ArticleDetailScreen() {
   const route = useRoute<RouteProp<{params: RouteParams}, 'params'>>();
-  const {image, title, paragraph} = route.params;
+  const {id} = route.params;
   const navigation = useNavigation();
+  const articleDetail = useSelector((state: RootState) => state.article.detail);
+  const access_token = useSelector(
+    (state: RootState) => state.auth.accessToken,
+  );
+  const dispatch = useAppDispatch();
+  const loading = useSelector((state: RootState) => state.article.loading);
+
+  useEffect(() => {
+    dispatch(getArticleDetail({access_token, id}));
+  }, [dispatch, access_token, id]);
+
+  if (loading) {
+    return <></>;
+  }
 
   return (
     <ScrollView style={styles.container}>
@@ -33,9 +46,9 @@ function ArticleDetailScreen() {
         backgroundColor={Colors.grey.darkest}
       />
       <View style={styles.imageContainer}>
-        <Image source={image} style={styles.image} />
+        <Image source={{uri: articleDetail.imageUrl}} style={styles.image} />
         <View style={styles.overlay} />
-        <Text style={styles.title}>{title}</Text>
+        <Text style={styles.title}>{articleDetail.title}</Text>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           style={styles.back}>
@@ -44,7 +57,7 @@ function ArticleDetailScreen() {
       </View>
       <View style={styles.mainContainer}>
         <View style={styles.strip} />
-        <Text style={styles.paragraph}>{paragraph}</Text>
+        <Text style={styles.paragraph}>{articleDetail.description}</Text>
       </View>
     </ScrollView>
   );
@@ -72,10 +85,12 @@ const styles = StyleSheet.create({
   },
   title: {
     position: 'absolute',
-    top: '45%',
+    top: '50%',
     color: Colors.white.default,
     fontFamily: 'Poppins-Bold',
     fontSize: 32,
+    textAlign: 'center',
+    transform: [{translateY: -50}],
   },
   mainContainer: {
     flex: 1,
