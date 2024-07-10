@@ -1,9 +1,18 @@
 import Colors from '@/utils/Colors';
 import React from 'react';
-import {SafeAreaView, ScrollView, StatusBar, StyleSheet} from 'react-native';
+import {
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+} from 'react-native';
 import Header from '../ChatScreen/LocalComponent/Header';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import {useNavigation} from '@react-navigation/native';
 
 function ChatScreen(): React.JSX.Element {
+  const navigation = useNavigation();
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar
@@ -13,6 +22,11 @@ function ChatScreen(): React.JSX.Element {
 
       <ScrollView>
         <Header title="Chat" withBackButton />
+        <TouchableOpacity
+          // @ts-ignore
+          onPress={() => navigation.navigate('ChatDetailScreen')}>
+          <Text>TESTING</Text>
+        </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
   );

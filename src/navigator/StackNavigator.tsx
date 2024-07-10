@@ -16,6 +16,7 @@ import ArticleDetailScreen from '@/screens/ArticleDetailScreen';
 import QuestionnaireScreen from '@/screens/QuestionnaireScreen';
 import QuestionCompleteScreen from '@/screens/QuestionnaireScreen/QuestionCompleteScreen';
 import EditProfileScreen from '@/screens/EditProfileScreen';
+import ChatDetailScreen from '@/screens/ChatDetailScreen';
 
 const Stack = createStackNavigator();
 
@@ -47,6 +48,11 @@ function StackNavigator() {
         component={QuestionCompleteScreen}
       />
       <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} />
+      <Stack.Screen
+        name="ChatDetailScreen"
+        component={ChatDetailScreen}
+        options={{headerShown: true}}
+      />
 
       {/* Complete Biodata Screen */}
       <Stack.Screen name="Page1" component={Page1} />
