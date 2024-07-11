@@ -20,12 +20,14 @@ function Header({
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity disabled={!withBackButton} onPress={goBack}>
-        {withBackButton && (
-          <MaterialCommunityIcons name="arrow-left" size={30} />
-        )}
-      </TouchableOpacity>
-      <Spacer width={10} />
+      {withBackButton && (
+        <>
+          <TouchableOpacity onPress={goBack}>
+            <MaterialCommunityIcons name="arrow-left" size={30} />
+          </TouchableOpacity>
+          <Spacer width={10} />
+        </>
+      )}
       <Text style={styles.title}>{title}</Text>
     </View>
   );
@@ -34,6 +36,7 @@ function Header({
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
+    marginBottom: 10,
   },
   innerContainer: {
     flex: 0.1,
