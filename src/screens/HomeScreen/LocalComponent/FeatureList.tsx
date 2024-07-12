@@ -12,47 +12,69 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
-
-const featureListData = [
-  {
-    title: 'My Health',
-    image: image1,
-  },
-  {
-    title: 'Konseling',
-    image: image2,
-  },
-];
+import {useSelector} from 'react-redux';
+import {RootState} from '@/store/store';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
+import {RootStackParamList} from '@/navigator/StackNavigator';
 
 function FeatureList(): React.JSX.Element {
+  const selectRole = useSelector((state: RootState) => state.user.role);
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
+  const featureListData = [
+    {
+      title: 'My Health',
+      image: image1,
+      show: selectRole === 'mahasiswa',
+      // @ts-ignore
+      onPress: () => navigation.navigate('MyHealth'),
+    },
+    {
+      title: 'Mahasiswa',
+      image: image1,
+      show: selectRole === 'dosen',
+      onPress: () => {},
+    },
+    {
+      title: 'Konseling',
+      image: image2,
+      show: true,
+      onPress: () => navigation.navigate('Main', {screen: 'Chat'}),
+    },
+  ];
+
   return (
     <View>
       <Text style={Fonts.subtitle}>Apa yang kamu butuhkan?</Text>
       <Spacer height={10} />
       <View style={styles.featureContainer}>
-        {featureListData?.map((item, index) => (
-          <React.Fragment key={index}>
-            <TouchableOpacity style={styles.featureItem}>
-              <View style={styles.topContent}>
-                <Image source={item.image} style={styles.image} />
-              </View>
-              <View style={styles.bottomContent}>
-                <Text style={styles.featureItemText}>{item.title}</Text>
-              </View>
-            </TouchableOpacity>
-            {index === featureListData?.length - 1 &&
-              featureListData?.length % 2 === 1 && (
-                <TouchableOpacity disabled style={styles.featureItem}>
-                  <View style={styles.topContent}>
-                    <Image source={item.image} style={styles.image2} />
-                  </View>
-                  <View style={[styles.bottomContent, styles.bottomContent2]}>
-                    <Text style={styles.featureItemText2}>{item.title}</Text>
-                  </View>
-                </TouchableOpacity>
-              )}
-          </React.Fragment>
-        ))}
+        {featureListData
+          ?.filter(item => item.show)
+          ?.map((item, index) => (
+            <React.Fragment key={index}>
+              <TouchableOpacity
+                onPress={item.onPress}
+                style={styles.featureItem}>
+                <View style={styles.topContent}>
+                  <Image source={item.image} style={styles.image} />
+                </View>
+                <View style={styles.bottomContent}>
+                  <Text style={styles.featureItemText}>{item.title}</Text>
+                </View>
+              </TouchableOpacity>
+              {index === featureListData?.length - 1 &&
+                featureListData?.length % 2 === 1 && (
+                  <TouchableOpacity disabled style={styles.featureItem}>
+                    <View style={styles.topContent}>
+                      <Image source={item.image} style={styles.image2} />
+                    </View>
+                    <View style={[styles.bottomContent, styles.bottomContent2]}>
+                      <Text style={styles.featureItemText2}>{item.title}</Text>
+                    </View>
+                  </TouchableOpacity>
+                )}
+            </React.Fragment>
+          ))}
       </View>
     </View>
   );

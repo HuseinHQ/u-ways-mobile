@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 
 type InputBoxProps = {
-  label: string;
+  label?: string;
   value: string;
   setValue: (value: string) => void;
   keyboardType?: KeyboardTypeOptions;
@@ -27,7 +27,7 @@ function InputBox({
   return (
     <>
       <View>
-        <Text style={styles.label}>{label}:</Text>
+        {label && <Text style={styles.label}>{label}:</Text>}
         <TextInput
           value={value}
           onChangeText={setValue}

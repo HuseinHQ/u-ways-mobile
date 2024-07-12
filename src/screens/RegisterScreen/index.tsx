@@ -18,7 +18,7 @@ import {validateEmailUPN, validateRegister} from '@/helpers';
 import CustomInput from '@/components/CustomInput';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import styles from './styles';
-import {useNavigation} from '@react-navigation/native';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {RootState, useAppDispatch} from '@/store/store';
 import {register, clearErrors as clearAuthErrors} from '@/store/authSlice';
 import {useSelector} from 'react-redux';
@@ -26,16 +26,17 @@ import {useSelector} from 'react-redux';
 import Toast from 'react-native-toast-message';
 import id from '@/utils/text';
 import useErrorToast from '@/hooks/useToastError';
+import {RootStackParamList} from '@/navigator/StackNavigator';
 
 function RegisterScreen(): React.JSX.Element {
   const [form, setForm] = useState({
-    name: 'Kaisar Fauzan',
-    email: '20081010152@student.upnjatim.ac.id',
-    password: '12345678',
-    confirm_password: '12345678',
+    name: '',
+    email: '',
+    password: '',
+    confirm_password: '',
   });
   const [isEmailUPN, setIsEmailUPN] = useState(false);
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const dispatch = useAppDispatch();
   const authErrors = useSelector((state: RootState) => state.auth.errors);
   const userErrors = useSelector((state: RootState) => state.user.errors);
@@ -62,7 +63,9 @@ function RegisterScreen(): React.JSX.Element {
   const onSubmitHandler = () => {
     const {isValid, errors: validationErrors} = validateRegister(form);
     if (isValid) {
-      dispatch(register(form));
+      dispatch(
+        register({...form, callback: () => navigation.navigate('Page0')}),
+      );
     } else {
       const firstKey = Object.keys(validationErrors)[0];
       Toast.show({

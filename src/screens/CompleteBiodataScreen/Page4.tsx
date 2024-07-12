@@ -13,66 +13,34 @@ import Header from './LocalComponent';
 import Spacer from '@/components/Spacer';
 import GlobalStyles from '@/styles/GlobalStyles';
 import Fonts from '@/styles/Fonts';
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import {
+  NavigationProp,
+  RouteProp,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import {RootState, useAppDispatch} from '@/store/store';
 import {useSelector} from 'react-redux';
 import {getAllLecturers} from '@/store/lecturerSlice';
-
-// TODO: Dummy data
-// const lecturerData = [
-//   {
-//     id: 0,
-//     name: 'Fetty Tri Anggraeny, S.Kom. M.Kom',
-//   },
-//   {
-//     id: 1,
-//     name: 'Dr. Basuki Rahmat, S.Si. MT.',
-//   },
-//   {
-//     id: 2,
-//     name: 'Intan Yuniar Purbasari, S.Kom. MSc.',
-//   },
-//   {
-//     id: 3,
-//     name: 'Budi Nugroho, S.Kom. M.Kom.',
-//   },
-//   {
-//     id: 4,
-//     name: 'Chrystia Aji Putra, S.Kom, M.T',
-//   },
-//   {
-//     id: 5,
-//     name: 'Eva Yulia Puspaningrum, S.Kom., M.Kom',
-//   },
-//   {
-//     id: 6,
-//     name: 'Faisal Muttaqin, S.Kom, M.T',
-//   },
-//   {
-//     id: 7,
-//     name: 'Firza Prima Aditiawan, S.Kom., MTI',
-//   },
-//   {
-//     id: 8,
-//     name: 'Henni Endah Wahanani, ST. M.Kom.',
-//   },
-// ];
+import {RootStackParamList} from '@/navigator/StackNavigator';
 
 type RouteParams = {
-  semester: number;
+  semester?: number;
+  nip?: string;
   faculty: {id: number; name: string};
   major: {id: number; name: string};
 };
 
 type NextRouteParams = {
-  semester: number;
+  semester?: number;
+  nip?: string;
   faculty: {id: number; name: string};
   major: {id: number; name: string};
   lecturer: {id: number; name: string};
 };
 
 function Page4(): React.JSX.Element {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const route = useRoute<RouteProp<{params: RouteParams}, 'params'>>();
   const {semester, faculty, major} = route.params;
   const dispatch = useAppDispatch();
@@ -84,7 +52,6 @@ function Page4(): React.JSX.Element {
   );
 
   const goToNextPage = (data: NextRouteParams) => {
-    // @ts-ignore
     navigation.navigate('Page5', data);
   };
 

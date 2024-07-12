@@ -142,6 +142,7 @@ function LoginScreen(): React.JSX.Element {
                   />
                 }
                 secureTextEntry={true}
+                keyboardType="default"
                 textContentType="password"
               />
 

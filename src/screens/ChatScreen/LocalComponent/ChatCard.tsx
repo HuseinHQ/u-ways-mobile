@@ -23,7 +23,9 @@ function ChatCard({item}: any): React.JSX.Element {
       <View style={styles.midContent}>
         <Text style={styles.title}>{item.user.name}</Text>
         <Text style={styles.subtitle}>
-          {user.role === 'mahasiswa' ? 'Dosen Wali' : user.email.split('@')[0]}
+          {user.role === 'mahasiswa'
+            ? 'Dosen Wali'
+            : item.user.email.split('@')[0]}
         </Text>
       </View>
       <View style={styles.rightContent}>
@@ -40,7 +42,7 @@ function ChatCard({item}: any): React.JSX.Element {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    paddingVertical: 5,
+    paddingVertical: 10,
     flex: 1,
     alignItems: 'center',
     gap: 10,

@@ -30,15 +30,17 @@ export const login = createAsyncThunk(
 export const register = createAsyncThunk(
   'auth/register',
   async (
-    registerData: {
+    props: {
       name: string;
       email: string;
       password: string;
       confirm_password: string;
+      callback?: () => void;
     },
     {rejectWithValue},
   ) => {
     try {
+      const {callback = () => {}, ...registerData} = props;
       const {data} = await axios({
         method: 'POST',
         url: baseUrl + '/auth/register',
@@ -46,10 +48,13 @@ export const register = createAsyncThunk(
         data: registerData,
         timeout: 5000,
       });
+
+      if (data.data.forward) {
+        callback();
+      }
       return data.data;
-    } catch (error) {
-      // @ts-ignore
-      return rejectWithValue(error?.response?.data?.errors);
+    } catch (err) {
+      return rejectWithValue((err as any)?.response?.data?.errors);
     }
   },
 );
@@ -79,22 +84,20 @@ export const refreshToken = createAsyncThunk(
   },
 );
 
+const initialState = {
+  loading: false,
+  accessToken: '',
+  refreshToken: '',
+  isBioComplete: true,
+  role: '',
+  errors: null,
+};
+
 const authSlice = createSlice({
   name: 'auth',
-  initialState: {
-    loading: false,
-    accessToken: '',
-    refreshToken: '',
-    isBioComplete: true,
-    errors: null,
-  },
+  initialState,
   reducers: {
-    logout: state => {
-      state.accessToken = '';
-      state.refreshToken = '';
-      state.errors = null;
-      state.isBioComplete = true;
-    },
+    logout: () => initialState,
     clearErrors: state => {
       state.errors = null;
     },
@@ -112,6 +115,7 @@ const authSlice = createSlice({
         state.accessToken = action.payload.access_token;
         state.refreshToken = action.payload.refresh_token;
         state.isBioComplete = action.payload.isBioComplete;
+        state.role = action.payload.role;
         state.loading = false;
       })
       .addCase(login.rejected, (state, action) => {
@@ -126,6 +130,7 @@ const authSlice = createSlice({
         state.accessToken = action.payload.access_token;
         state.refreshToken = action.payload.refresh_token;
         state.isBioComplete = action.payload.isBioComplete;
+        state.role = action.payload.role;
         state.loading = false;
       })
       .addCase(register.rejected, (state, action) => {

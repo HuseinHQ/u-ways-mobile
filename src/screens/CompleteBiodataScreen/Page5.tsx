@@ -14,7 +14,12 @@ import Header from './LocalComponent';
 import Spacer from '@/components/Spacer';
 import GlobalStyles from '@/styles/GlobalStyles';
 import Fonts from '@/styles/Fonts';
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import {
+  NavigationProp,
+  RouteProp,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import image from '@/assets/images/logo_5.png';
 import CustomModal from '@/components/CustomModal';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -22,18 +27,20 @@ import {RootState, useAppDispatch} from '@/store/store';
 import {clearErrors, completeBiodata} from '@/store/userSlice';
 import {useSelector} from 'react-redux';
 import useErrorToast from '@/hooks/useToastError';
+import {RootStackParamList} from '@/navigator/StackNavigator';
 
 type RouteParams = {
-  semester: number;
+  semester?: number;
+  nip?: string;
   faculty: {id: number; name: string};
   major: {id: number; name: string};
-  lecturer: {id: number; name: string};
+  lecturer?: {id: number; name: string};
 };
 
 function Page5(): React.JSX.Element {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const route = useRoute<RouteProp<{params: RouteParams}, 'params'>>();
-  const {semester, faculty, major, lecturer} = route.params;
+  const {semester, faculty, major, lecturer, nip} = route.params;
   const [modalVisible, setModalVisible] = useState(false);
   const access_token = useSelector(
     (state: RootState) => state.auth.accessToken,
@@ -57,7 +64,6 @@ function Page5(): React.JSX.Element {
     const successCB = () => {
       navigation.reset({
         index: 0,
-        // @ts-ignore
         routes: [{name: 'Main'}],
       });
     };
@@ -66,9 +72,10 @@ function Page5(): React.JSX.Element {
       completeBiodata({
         access_token,
         successCB,
-        LecturerId: lecturer.id,
-        MajorId: major.id,
+        LecturerId: lecturer?.id,
+        MajorId: major?.id,
         semester,
+        nip,
       }),
     );
   };
@@ -81,14 +88,18 @@ function Page5(): React.JSX.Element {
           modalVisible ? Colors.grey.darkest : Colors.white.default
         }
       />
-      <Header title="Data Mahasiswa" withBackButton />
+      <Header
+        title={semester ? 'Data Mahasiswa' : 'Data Dosen'}
+        withBackButton
+      />
       <Spacer height={20} />
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           disabled
           style={[styles.button, styles.selectedButton]}>
-          <Text style={styles.text}>{semester}</Text>
+          <Text style={styles.text}>{semester ? semester : nip}</Text>
         </TouchableOpacity>
+
         <TouchableOpacity
           disabled
           style={[styles.button, styles.selectedButton]}>
@@ -99,11 +110,13 @@ function Page5(): React.JSX.Element {
           style={[styles.button, styles.selectedButton]}>
           <Text style={styles.text}>{major.name}</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          disabled
-          style={[styles.button, styles.selectedButton]}>
-          <Text style={styles.text}>{lecturer.name}</Text>
-        </TouchableOpacity>
+        {semester && (
+          <TouchableOpacity
+            disabled
+            style={[styles.button, styles.selectedButton]}>
+            <Text style={styles.text}>{lecturer?.name}</Text>
+          </TouchableOpacity>
+        )}
       </View>
       <CustomModal modalStyle={styles.modalStyle} isVisible={modalVisible}>
         <View style={styles.imageContainer}>

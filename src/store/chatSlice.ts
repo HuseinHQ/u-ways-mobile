@@ -44,14 +44,18 @@ export const updateChatDate = createAsyncThunk(
   },
 );
 
+const initialState = {
+  data: [],
+  loading: false,
+  errors: null,
+};
+
 const chatSlice = createSlice({
   name: 'chat',
-  initialState: {
-    data: [],
-    loading: false,
-    errors: null,
+  initialState,
+  reducers: {
+    clearChats: () => initialState,
   },
-  reducers: {},
   extraReducers: builder => {
     builder
       .addCase(getChats.pending, state => {
@@ -69,4 +73,5 @@ const chatSlice = createSlice({
   },
 });
 
+export const {clearChats} = chatSlice.actions;
 export default chatSlice.reducer;

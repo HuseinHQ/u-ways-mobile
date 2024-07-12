@@ -17,15 +17,20 @@ import FeatureList from './LocalComponent/FeatureList';
 import ArticleRecommendation from './LocalComponent/ArticleRecommendation';
 import CustomModal from '@/components/CustomModal';
 import image from '@/assets/images/logo_5.png';
-import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import {
+  NavigationProp,
+  useFocusEffect,
+  useNavigation,
+} from '@react-navigation/native';
 import GlobalStyles from '@/styles/GlobalStyles';
 import {useSelector} from 'react-redux';
 import {RootState, useAppDispatch} from '@/store/store';
 import {getUserProfile} from '@/store/userSlice';
+import {RootStackParamList} from '@/navigator/StackNavigator';
 
 function HomeScreen(): React.JSX.Element {
   const [modalVisible, setModalVisible] = useState(false);
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const dispatch = useAppDispatch();
   const isBioComplete = useSelector(
     (state: RootState) => state.user.is_bio_complete,
@@ -36,6 +41,7 @@ function HomeScreen(): React.JSX.Element {
   const access_token = useSelector(
     (state: RootState) => state.auth.accessToken,
   );
+  const role = useSelector((state: RootState) => state.auth.role);
 
   useFocusEffect(
     useCallback(() => {
@@ -53,8 +59,11 @@ function HomeScreen(): React.JSX.Element {
 
   const goToNextPage = () => {
     setModalVisible(false);
-    // @ts-ignore
-    navigation.navigate('Page1');
+    if (role === 'mahasiswa') {
+      navigation.navigate('Page1');
+    } else if (role === 'dosen') {
+      navigation.navigate('Page0');
+    }
   };
 
   return (

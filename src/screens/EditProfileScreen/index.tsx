@@ -46,6 +46,7 @@ function EditProfileScreen(): React.JSX.Element {
     name: userData.name,
     email: userData.email,
     semester: userData.semester,
+    nip: userData.nip,
   });
   const firstRun = useRef(true);
 
@@ -119,7 +120,7 @@ function EditProfileScreen(): React.JSX.Element {
       LecturerId,
     };
 
-    const isinputValid = validateInput(body);
+    const isinputValid = validateInput(body, userData.role);
 
     if (isinputValid) {
       dispatch(
@@ -155,9 +156,11 @@ function EditProfileScreen(): React.JSX.Element {
         editable={false}
       />
       <InputBox
-        value={String(data.semester)}
-        label="Semester"
-        setValue={onChangeTextHandler('semester')}
+        value={userData.role === 'mahasiswa' ? String(data.semester) : data.nip}
+        label={userData.role === 'mahasiswa' ? 'Semester' : 'NIP'}
+        setValue={onChangeTextHandler(
+          userData.role === 'mahasiswa' ? 'semester' : 'nip',
+        )}
         keyboardType="number-pad"
       />
       <Text style={styles.label}>Fakultas:</Text>
@@ -199,27 +202,31 @@ function EditProfileScreen(): React.JSX.Element {
         }}
         style={{zIndex: 2}} // Increase zIndex when open
       />
-      <Spacer height={15} />
-      <Text style={styles.label}>Dosen Wali:</Text>
-      <Spacer height={10} />
-      <DropDownPicker
-        open={openLecturerDropdown}
-        value={LecturerId}
-        items={
-          lecturers?.length > 0
-            ? lecturers
-            : [{label: 'Tidak ada data', value: ''}]
-        }
-        setOpen={setOpenLecturerDropdown}
-        setValue={setLecturerId}
-        setItems={setLecturers}
-        placeholder="Pilih Dosen Wali"
-        onOpen={() => {
-          setOpenFacultyDropdown(false);
-          setOpenMajorDropdown(false);
-        }}
-        style={{zIndex: 1}} // Increase zIndex when open
-      />
+      {userData.role === 'mahasiswa' && (
+        <>
+          <Spacer height={15} />
+          <Text style={styles.label}>Dosen Wali:</Text>
+          <Spacer height={10} />
+          <DropDownPicker
+            open={openLecturerDropdown}
+            value={LecturerId}
+            items={
+              lecturers?.length > 0
+                ? lecturers
+                : [{label: 'Tidak ada data', value: ''}]
+            }
+            setOpen={setOpenLecturerDropdown}
+            setValue={setLecturerId}
+            setItems={setLecturers}
+            placeholder="Pilih Dosen Wali"
+            onOpen={() => {
+              setOpenFacultyDropdown(false);
+              setOpenMajorDropdown(false);
+            }}
+            style={{zIndex: 1}} // Increase zIndex when open
+          />
+        </>
+      )}
       <Spacer height={30} />
       <TouchableOpacity
         disabled={selectLoading}

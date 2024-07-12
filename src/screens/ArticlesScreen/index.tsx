@@ -13,13 +13,14 @@ import {FlatList} from 'react-native-gesture-handler';
 import GlobalStyles from '@/styles/GlobalStyles';
 import Spacer from '@/components/Spacer';
 import CustomHeader from '@/components/CustomHeader';
-import {useNavigation} from '@react-navigation/native';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 import {getArticles} from '@/store/articleSlice';
 import {RootState, useAppDispatch} from '@/store/store';
+import {RootStackParamList} from '@/navigator/StackNavigator';
 
 function ArticlesScreen(): React.JSX.Element {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const dispath = useAppDispatch();
   const access_token = useSelector(
     (state: RootState) => state.auth.accessToken,
@@ -52,7 +53,6 @@ function ArticlesScreen(): React.JSX.Element {
                 <Text style={styles.title}>{item.title}</Text>
                 <TouchableOpacity
                   onPress={() =>
-                    // @ts-ignore
                     navigation.navigate('ArticleDetailScreen', {id: item.id})
                   }
                   style={styles.button}>

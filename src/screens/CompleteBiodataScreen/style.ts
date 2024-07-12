@@ -30,6 +30,18 @@ const styles = StyleSheet.create({
   unselectedText: {
     color: Colors.white.default,
   },
+  lanjut: {
+    backgroundColor: Colors.primary,
+    paddingVertical: 10,
+    paddingHorizontal: 5,
+    borderRadius: 10,
+    ...GlobalStyles.shadow,
+  },
+  textBold: {
+    fontFamily: 'Montserrat-Bold',
+    fontSize: 15,
+    textAlign: 'center',
+  },
 });
 
 export default styles;

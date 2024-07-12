@@ -61,13 +61,15 @@ export const completeBiodata = createAsyncThunk(
       access_token: string;
       successCB?: () => void;
       MajorId: number;
-      LecturerId: number;
-      semester: number;
+      LecturerId?: number;
+      semester?: number;
+      nip?: string;
     },
     {rejectWithValue, dispatch},
   ) => {
     try {
       const {access_token, successCB = () => {}, ...formData} = props;
+      console.log(formData);
       const {data} = await axios({
         method: 'POST',
         url: baseUrl + '/user/complete-data',
@@ -85,23 +87,26 @@ export const completeBiodata = createAsyncThunk(
   },
 );
 
+const initialState = {
+  email: '',
+  name: '',
+  role: '',
+  is_bio_complete: true,
+  major_id: 0,
+  major_name: '',
+  faculty_id: 0,
+  faculty_name: '',
+  semester: 0,
+  lecturer_id: 0,
+  lecturer_name: '',
+  loading: false,
+  errors: null,
+  nip: '',
+};
+
 const userSlice = createSlice({
   name: 'user',
-  initialState: {
-    email: '',
-    name: '',
-    role: '',
-    is_bio_complete: true,
-    major_id: 0,
-    major_name: '',
-    faculty_id: 0,
-    faculty_name: '',
-    semester: 0,
-    lecturer_id: 0,
-    lecturer_name: '',
-    loading: false,
-    errors: null,
-  },
+  initialState,
   reducers: {
     clearErrors: state => {
       state.errors = null;
@@ -109,6 +114,7 @@ const userSlice = createSlice({
     userBioComplete: (state, action) => {
       state.is_bio_complete = action.payload;
     },
+    resetUser: () => initialState,
   },
   extraReducers: builder => {
     builder
@@ -154,5 +160,5 @@ const userSlice = createSlice({
   },
 });
 
-export const {clearErrors, userBioComplete} = userSlice.actions;
+export const {clearErrors, userBioComplete, resetUser} = userSlice.actions;
 export default userSlice.reducer;

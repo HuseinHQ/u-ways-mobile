@@ -4,7 +4,7 @@ import SplashScreen from '@/screens/SplashScreen';
 import Onboarding from '@/screens/OnboardingScreen';
 import LoginScreen from '@/screens/LoginScreen';
 import RegisterScreen from '@/screens/RegisterScreen';
-import TabNavigator from './TabNavigator';
+import TabNavigator, {TabNavigatorParamList} from './TabNavigator';
 import Page1 from '@/screens/CompleteBiodataScreen/Page1';
 import Page2 from '@/screens/CompleteBiodataScreen/Page2';
 import Page3 from '@/screens/CompleteBiodataScreen/Page3';
@@ -17,8 +17,47 @@ import QuestionnaireScreen from '@/screens/QuestionnaireScreen';
 import QuestionCompleteScreen from '@/screens/QuestionnaireScreen/QuestionCompleteScreen';
 import EditProfileScreen from '@/screens/EditProfileScreen';
 import ChatDetailScreen from '@/screens/ChatDetailScreen';
+import {NavigatorScreenParams} from '@react-navigation/native';
+import Page0 from '@/screens/CompleteBiodataScreen/Page0';
 
-const Stack = createStackNavigator();
+export type RootStackParamList = {
+  SplashScreen: undefined;
+  Onboarding: undefined;
+  LoginScreen: undefined;
+  RegisterScreen: undefined;
+  Main: NavigatorScreenParams<TabNavigatorParamList> | undefined;
+  ArticlesScreen: undefined;
+  ArticleDetailScreen: {id: number | null | undefined} | undefined;
+  QuestionnaireScreen: undefined;
+  QuestionCompleteScreen: undefined;
+  EditProfileScreen: undefined;
+  ChatDetailScreen: undefined;
+  Page0: undefined;
+  Page1: undefined;
+  Page2: {nip?: string} | undefined;
+  Page3:
+    | {semester?: number; faculty: {id: number; name: string}; nip?: string}
+    | undefined;
+  Page4:
+    | {
+        nip?: string;
+        semester?: number;
+        faculty: {id: number; name: string};
+        major: {id: number; name: string};
+      }
+    | undefined;
+  Page5:
+    | {
+        semester?: number;
+        nip?: string;
+        faculty: {id: number; name: string};
+        major: {id: number; name: string};
+        lecturer?: {id: number; name: string};
+      }
+    | undefined;
+};
+
+const Stack = createStackNavigator<RootStackParamList>();
 
 function StackNavigator() {
   return (
@@ -55,6 +94,7 @@ function StackNavigator() {
       />
 
       {/* Complete Biodata Screen */}
+      <Stack.Screen name="Page0" component={Page0} />
       <Stack.Screen name="Page1" component={Page1} />
       <Stack.Screen name="Page2" component={Page2} />
       <Stack.Screen name="Page3" component={Page3} />

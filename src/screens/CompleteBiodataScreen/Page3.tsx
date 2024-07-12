@@ -13,34 +13,45 @@ import Header from './LocalComponent';
 import Spacer from '@/components/Spacer';
 import GlobalStyles from '@/styles/GlobalStyles';
 import Fonts from '@/styles/Fonts';
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import {
+  NavigationProp,
+  RouteProp,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import {RootState, useAppDispatch} from '@/store/store';
 import {useSelector} from 'react-redux';
 import {getMajors} from '@/store/majorSlice';
+import {RootStackParamList} from '@/navigator/StackNavigator';
 
 type RouteParams = {
-  semester: number;
+  nip?: string;
+  semester?: number;
   faculty: {id: number; name: string};
 };
 
 type NextRouteParams = {
-  semester: number;
+  nip?: string;
+  semester?: number;
   faculty: {id: number; name: string};
   major: {id: number; name: string};
 };
 
 function Page3(): React.JSX.Element {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const route = useRoute<RouteProp<{params: RouteParams}, 'params'>>();
-  const {semester, faculty} = route.params;
+  const {semester, faculty, nip} = route.params;
   const dispatch = useAppDispatch();
   const access_token = useSelector(
     (state: RootState) => state.auth.accessToken,
   );
   const selectMajors = useSelector((state: RootState) => state.major.majors);
   const goToNextPage = (data: NextRouteParams) => {
-    // @ts-ignore
-    navigation.navigate('Page4', data);
+    if (nip) {
+      navigation.navigate('Page5', data);
+    } else {
+      navigation.navigate('Page4', data);
+    }
   };
 
   useEffect(() => {
@@ -60,7 +71,7 @@ function Page3(): React.JSX.Element {
           <TouchableOpacity
             disabled
             style={[styles.button, styles.selectedButton]}>
-            <Text style={styles.text}>{semester}</Text>
+            <Text style={styles.text}>{semester ? semester : nip}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             disabled
@@ -75,6 +86,7 @@ function Page3(): React.JSX.Element {
                   semester,
                   faculty,
                   major: {id: item.id, name: item.name},
+                  nip,
                 })
               }
               style={styles.button}>

@@ -1,12 +1,19 @@
 import Colors from '@/utils/Colors';
-import React, {useEffect, useLayoutEffect} from 'react';
-import {FlatList, SafeAreaView, StatusBar, StyleSheet} from 'react-native';
+import React, {useLayoutEffect, useMemo} from 'react';
+import {
+  Dimensions,
+  FlatList,
+  SafeAreaView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import Header from '../ChatScreen/LocalComponent/Header';
-import {useNavigation} from '@react-navigation/native';
 import {RootState, useAppDispatch} from '@/store/store';
 import {getChats} from '@/store/chatSlice';
 import {useSelector} from 'react-redux';
-import {collection, onSnapshot, query, where} from 'firebase/firestore';
+import {doc, onSnapshot} from 'firebase/firestore';
 import {database} from '@/config/firebase';
 import ChatCard from './LocalComponent/ChatCard';
 
@@ -16,25 +23,22 @@ function ChatScreen(): React.JSX.Element {
     (state: RootState) => state.auth.accessToken,
   );
   const chats = useSelector((state: RootState) => state.chat.data);
-  const user = useSelector((state: RootState) => state.user);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const memoizedChats = useMemo(() => chats, [JSON.stringify(chats)]);
 
   useLayoutEffect(() => {
-    dispatch(getChats({access_token}));
-  }, [dispatch, access_token]);
+    const unsubscribeFunctions = memoizedChats.map((chat: any) => {
+      const chatDocRef = doc(database, 'chats', chat.chatId);
 
-  useEffect(() => {
-    const collectionRef = collection(database, 'chats');
-    const q = query(
-      collectionRef,
-      where('participants', 'array-contains', user.email),
-    );
-
-    const unsubscribe = onSnapshot(q, () => {
-      dispatch(getChats({access_token}));
+      return onSnapshot(chatDocRef, () => {
+        dispatch(getChats({access_token}));
+      });
     });
 
-    return () => unsubscribe();
-  }, [user.email, access_token, dispatch]);
+    return () => {
+      unsubscribeFunctions.forEach(unsubscribe => unsubscribe());
+    };
+  }, [memoizedChats, dispatch, access_token]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -46,8 +50,20 @@ function ChatScreen(): React.JSX.Element {
       <FlatList
         data={chats}
         ListHeaderComponent={<Header title="Chat" />}
-        renderItem={({item}: {item: any}) => <ChatCard item={item} />}
+        renderItem={({item, index}: {item: any; index: number}) => (
+          <>
+            <ChatCard item={item} />
+            {index !== chats.length - 1 && (
+              <View style={styles.horizontalLine} />
+            )}
+          </>
+        )}
       />
+      {!chats.length && (
+        <View style={styles.emptyChatsContainer}>
+          <Text style={styles.emptyChats}>Anda belum memiliki mahasiswa</Text>
+        </View>
+      )}
     </SafeAreaView>
   );
 }
@@ -57,6 +73,19 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white.default,
     paddingHorizontal: 20,
     paddingTop: 10,
+  },
+  horizontalLine: {
+    height: 0.5,
+    width: '100%',
+    backgroundColor: Colors.black.halfOpacity,
+  },
+  emptyChatsContainer: {
+    height: Dimensions.get('screen').height * 0.8,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  emptyChats: {
+    fontFamily: 'Montserrat-SemiBold',
   },
 });
 

@@ -15,13 +15,14 @@ import wave_2 from '@/assets/images/wave_2.png';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import Avatar from '@/components/Avatar';
 import logo from '@/assets/images/logo_light.png';
-import {clearPersistedState, RootState, useAppDispatch} from '@/store/store';
-import {getUserProfile} from '@/store/userSlice';
+import {RootState, useAppDispatch} from '@/store/store';
+import {getUserProfile, resetUser} from '@/store/userSlice';
 import {useSelector} from 'react-redux';
 import Spacer from '@/components/Spacer';
 import GlobalStyles from '@/styles/GlobalStyles';
 import InputBox from './LocalComponent/InputBox';
 import {logout} from '@/store/authSlice';
+import {clearChats} from '@/store/chatSlice';
 
 function ProfileScreen(): React.JSX.Element {
   const navigation = useNavigation();
@@ -29,7 +30,7 @@ function ProfileScreen(): React.JSX.Element {
   const access_token = useSelector(
     (state: RootState) => state.auth.accessToken,
   );
-  const userData = useSelector((state: RootState) => state.user);
+  const user = useSelector((state: RootState) => state.user);
 
   useEffect(() => {
     getUserProfile({access_token});
@@ -61,7 +62,8 @@ function ProfileScreen(): React.JSX.Element {
           text: 'Iya',
           onPress: async () => {
             dispatch(logout());
-            await clearPersistedState();
+            dispatch(resetUser());
+            dispatch(clearChats());
             navigation.reset({
               index: 0,
               // @ts-ignore
@@ -90,19 +92,24 @@ function ProfileScreen(): React.JSX.Element {
           </View>
         </View>
         <View style={styles.container}>
-          <Text style={styles.name}>{userData.name}</Text>
+          <Text style={styles.name}>{user.name}</Text>
           <Spacer height={10} />
           <View style={styles.emailContainer}>
-            <Text style={styles.email}>{userData.email}</Text>
+            <Text style={styles.email}>{user.email}</Text>
           </View>
           <Spacer height={20} />
-          <InputBox label="Semester" value={userData.semester} />
+          <InputBox
+            label={user.role === 'mahasiswa' ? 'Semester' : 'NIP'}
+            value={user.role === 'mahasiswa' ? user.semester : user.nip}
+          />
           <Spacer height={15} />
-          <InputBox label="Fakultas" value={userData.faculty_name} />
+          <InputBox label="Fakultas" value={user.faculty_name} />
           <Spacer height={15} />
-          <InputBox label="Program Studi" value={userData.major_name} />
+          <InputBox label="Program Studi" value={user.major_name} />
           <Spacer height={15} />
-          <InputBox label="Dosen Wali" value={userData.lecturer_name} />
+          {user.role === 'mahasiswa' && (
+            <InputBox label="Dosen Wali" value={user.lecturer_name} />
+          )}
         </View>
       </View>
 

@@ -3,9 +3,11 @@ import Colors from '@/utils/Colors';
 import {
   addDoc,
   collection,
+  doc,
   onSnapshot,
   orderBy,
   query,
+  updateDoc,
 } from 'firebase/firestore';
 import React, {useCallback, useLayoutEffect, useState} from 'react';
 import {
@@ -44,13 +46,12 @@ function ChatDetailScreen(): React.JSX.Element {
     const unsubscribe = onSnapshot(q, snapshot => {
       if (snapshot.docs.length) {
         setMessages(
-          snapshot.docs.map(doc => {
-            console.log(doc.id);
+          snapshot.docs.map(docuemnt => {
             return {
-              _id: doc.id,
-              createdAt: doc.data().createdAt.toDate(),
-              text: doc.data().text,
-              user: doc.data().user,
+              _id: docuemnt.id,
+              createdAt: docuemnt.data().createdAt.toDate(),
+              text: docuemnt.data().text,
+              user: docuemnt.data().user,
             };
           }),
         );
@@ -81,6 +82,11 @@ function ChatDetailScreen(): React.JSX.Element {
         createdAt,
         text,
         user,
+      }).then(() => {
+        const chatDocRef = doc(database, 'chats', chatId);
+        updateDoc(chatDocRef, {
+          updatedAt: createdAt,
+        });
       });
       dispatch(updateChatDate({access_token, id: chatId, date: createdAt}));
     },

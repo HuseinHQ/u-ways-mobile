@@ -30,6 +30,13 @@ const id = {
   LecturerId: {
     NULL: 'Dosen wali tidak boleh kosong',
   },
+  nip: {
+    NULL: 'NIP tidak boleh kosong',
+    EMPTY: 'NIP tidak boleh kosong',
+  },
 };
+
+export type ErrorKey = keyof typeof id;
+export type SubErrorKey<K extends ErrorKey> = keyof (typeof id)[K];
 
 export default id;

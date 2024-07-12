@@ -11,11 +11,22 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import GlobalStyles from '@/styles/GlobalStyles';
 import {useRoute} from '@react-navigation/native';
+import {useSelector} from 'react-redux';
+import {RootState} from '@/store/store';
 
-const Tab = createBottomTabNavigator();
+export type TabNavigatorParamList = {
+  Home: Readonly<object | undefined>;
+  MyHealth?: undefined;
+  Chat: undefined;
+  Profile: undefined;
+};
+
+const Tab = createBottomTabNavigator<TabNavigatorParamList>();
 
 function TabNavigator(): React.JSX.Element {
   const route = useRoute();
+  const selectRole = useSelector((state: RootState) => state.user.role);
+
   return (
     <Tab.Navigator
       sceneContainerStyle={styles.container}
@@ -41,19 +52,21 @@ function TabNavigator(): React.JSX.Element {
           ),
         }}
       />
-      <Tab.Screen
-        name="MyHealth"
-        component={MyHealthScreen}
-        options={{
-          tabBarIcon: ({focused}) => (
-            <MaterialCommunityIcons
-              name={focused ? 'heart' : 'heart-outline'}
-              size={24}
-              color={focused ? Colors.primary : Colors.black.halfOpacity}
-            />
-          ),
-        }}
-      />
+      {selectRole === 'mahasiswa' && (
+        <Tab.Screen
+          name="MyHealth"
+          component={MyHealthScreen}
+          options={{
+            tabBarIcon: ({focused}) => (
+              <MaterialCommunityIcons
+                name={focused ? 'heart' : 'heart-outline'}
+                size={24}
+                color={focused ? Colors.primary : Colors.black.halfOpacity}
+              />
+            ),
+          }}
+        />
+      )}
       <Tab.Screen
         name="Chat"
         component={ChatScreen}
