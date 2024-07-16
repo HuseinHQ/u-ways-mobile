@@ -19,6 +19,7 @@ import EditProfileScreen from '@/screens/EditProfileScreen';
 import ChatDetailScreen from '@/screens/ChatDetailScreen';
 import {NavigatorScreenParams} from '@react-navigation/native';
 import Page0 from '@/screens/CompleteBiodataScreen/Page0';
+import StudentsScreen from '@/screens/StudentsScreen';
 
 export type RootStackParamList = {
   SplashScreen: undefined;
@@ -32,6 +33,7 @@ export type RootStackParamList = {
   QuestionCompleteScreen: undefined;
   EditProfileScreen: undefined;
   ChatDetailScreen: undefined;
+  StudentsScreen: undefined;
   Page0: undefined;
   Page1: undefined;
   Page2: {nip?: string} | undefined;
@@ -91,6 +93,11 @@ function StackNavigator() {
         name="ChatDetailScreen"
         component={ChatDetailScreen}
         options={{headerShown: true}}
+      />
+      <Stack.Screen
+        name="StudentsScreen"
+        component={StudentsScreen}
+        options={{headerShown: false}}
       />
 
       {/* Complete Biodata Screen */}

@@ -33,7 +33,7 @@ function HomeScreen(): React.JSX.Element {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const dispatch = useAppDispatch();
   const isBioComplete = useSelector(
-    (state: RootState) => state.user.is_bio_complete,
+    (state: RootState) => state.auth.isBioComplete,
   );
   const is_bio_complete = useSelector(
     (state: RootState) => state.user.is_bio_complete,
@@ -45,7 +45,7 @@ function HomeScreen(): React.JSX.Element {
 
   useFocusEffect(
     useCallback(() => {
-      if (!isBioComplete && !is_bio_complete) {
+      if (!isBioComplete || !is_bio_complete) {
         setModalVisible(true);
       } else {
         dispatch(getUserProfile({access_token}));

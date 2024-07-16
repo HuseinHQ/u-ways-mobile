@@ -21,10 +21,10 @@ import styles from './styles';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {RootState, useAppDispatch} from '@/store/store';
 import {register, clearErrors as clearAuthErrors} from '@/store/authSlice';
+import {clearErrors as clearUserErrors} from '@/store/userSlice';
 import {useSelector} from 'react-redux';
 
 import Toast from 'react-native-toast-message';
-import id from '@/utils/text';
 import useErrorToast from '@/hooks/useToastError';
 import {RootStackParamList} from '@/navigator/StackNavigator';
 
@@ -42,10 +42,16 @@ function RegisterScreen(): React.JSX.Element {
   const userErrors = useSelector((state: RootState) => state.user.errors);
   const authLoading = useSelector((state: RootState) => state.auth.loading);
   const userLoading = useSelector((state: RootState) => state.user.loading);
+
   useErrorToast({
     errors: authErrors,
     title: 'Register Error',
     dispatchFunction: clearAuthErrors,
+  });
+  useErrorToast({
+    errors: userErrors,
+    title: 'Register Error',
+    dispatchFunction: clearUserErrors,
   });
 
   const onChangeText = (name: string) => (value: string) => {

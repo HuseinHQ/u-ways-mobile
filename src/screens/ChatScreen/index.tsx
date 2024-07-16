@@ -1,5 +1,5 @@
 import Colors from '@/utils/Colors';
-import React, {useLayoutEffect, useMemo} from 'react';
+import React, {useEffect, useLayoutEffect, useMemo} from 'react';
 import {
   Dimensions,
   FlatList,
@@ -25,6 +25,10 @@ function ChatScreen(): React.JSX.Element {
   const chats = useSelector((state: RootState) => state.chat.data);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const memoizedChats = useMemo(() => chats, [JSON.stringify(chats)]);
+
+  useEffect(() => {
+    dispatch(getChats({access_token}));
+  }, [access_token, dispatch]);
 
   useLayoutEffect(() => {
     const unsubscribeFunctions = memoizedChats.map((chat: any) => {

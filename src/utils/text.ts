@@ -14,7 +14,7 @@ const id = {
   name: {
     NULL: 'Nama tidak boleh kosong',
     EMPTY: 'Nama tidak boleh kosong',
-    LENGTH: 'Minimal dan maksimal karakter password adalah 8 dan 255',
+    LENGTH: 'Minimal dan maksimal karakter nama adalah 8 dan 255',
   },
   semester: {
     NULL: 'Semester tidak boleh kosong',
@@ -33,6 +33,14 @@ const id = {
   nip: {
     NULL: 'NIP tidak boleh kosong',
     EMPTY: 'NIP tidak boleh kosong',
+  },
+  npm: {
+    NULL: 'NPM tidak boleh kosong',
+    EMPTY: 'NPM tidak boleh kosong',
+  },
+  cohort: {
+    NULL: 'Cohort tidak boleh kosong',
+    EMPTY: 'Cohort tidak boleh kosong',
   },
 };
 

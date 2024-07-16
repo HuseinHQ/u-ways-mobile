@@ -33,7 +33,7 @@ function FeatureList(): React.JSX.Element {
       title: 'Mahasiswa',
       image: image1,
       show: selectRole === 'dosen',
-      onPress: () => {},
+      onPress: () => navigation.navigate('StudentsScreen'),
     },
     {
       title: 'Konseling',
