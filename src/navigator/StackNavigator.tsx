@@ -32,7 +32,7 @@ export type RootStackParamList = {
   QuestionnaireScreen: undefined;
   QuestionCompleteScreen: undefined;
   EditProfileScreen: undefined;
-  ChatDetailScreen: undefined;
+  ChatDetailScreen: {title: string; chatId: number} | undefined;
   StudentsScreen: undefined;
   Page0: undefined;
   Page1: undefined;
@@ -92,7 +92,10 @@ function StackNavigator() {
       <Stack.Screen
         name="ChatDetailScreen"
         component={ChatDetailScreen}
-        options={{headerShown: true}}
+        options={({route}) => ({
+          headerShown: true,
+          title: route.params?.title ?? 'Chat Detail',
+        })}
       />
       <Stack.Screen
         name="StudentsScreen"

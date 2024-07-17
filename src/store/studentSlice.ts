@@ -40,7 +40,6 @@ export const getStudents = createAsyncThunk(
         url: `${baseUrl}/students${cohort ? '?cohort=' + cohort : ''}`,
         headers: {access_token},
       });
-      console.log(data);
 
       return data;
     } catch (err) {

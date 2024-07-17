@@ -46,7 +46,9 @@ function ArticleDetailScreen() {
         backgroundColor={Colors.grey.darkest}
       />
       <View style={styles.imageContainer}>
-        <Image source={{uri: articleDetail.imageUrl}} style={styles.image} />
+        {articleDetail.imageUrl && (
+          <Image source={{uri: articleDetail.imageUrl}} style={styles.image} />
+        )}
         <View style={styles.overlay} />
         <Text style={styles.title}>{articleDetail.title}</Text>
         <TouchableOpacity

@@ -1,6 +1,7 @@
 import Colors from '@/utils/Colors';
 import React, {useEffect, useLayoutEffect, useMemo} from 'react';
 import {
+  ActivityIndicator,
   Dimensions,
   FlatList,
   SafeAreaView,
@@ -25,6 +26,7 @@ function ChatScreen(): React.JSX.Element {
   const chats = useSelector((state: RootState) => state.chat.data);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const memoizedChats = useMemo(() => chats, [JSON.stringify(chats)]);
+  const loading = useSelector((state: RootState) => state.chat.loading);
 
   useEffect(() => {
     dispatch(getChats({access_token}));
@@ -63,9 +65,14 @@ function ChatScreen(): React.JSX.Element {
           </>
         )}
       />
-      {!chats.length && (
+      {!chats.length && !loading && (
         <View style={styles.emptyChatsContainer}>
           <Text style={styles.emptyChats}>Anda belum memiliki mahasiswa</Text>
+        </View>
+      )}
+      {loading && (
+        <View style={styles.emptyChatsContainer}>
+          <ActivityIndicator size={40} />
         </View>
       )}
     </SafeAreaView>

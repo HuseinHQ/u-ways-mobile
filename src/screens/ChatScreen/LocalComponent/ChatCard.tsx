@@ -1,6 +1,7 @@
+import {RootStackParamList} from '@/navigator/StackNavigator';
 import {RootState} from '@/store/store';
 import Colors from '@/utils/Colors';
-import {useNavigation} from '@react-navigation/native';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 import moment from 'moment';
 import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
@@ -8,13 +9,15 @@ import {useSelector} from 'react-redux';
 
 function ChatCard({item}: any): React.JSX.Element {
   const user = useSelector((state: RootState) => state.user);
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   return (
     <TouchableOpacity
       onPress={() =>
-        // @ts-ignore
-        navigation.navigate('ChatDetailScreen', {chatId: item.chatId})
+        navigation.navigate('ChatDetailScreen', {
+          chatId: item.chatId,
+          title: item.user.name,
+        })
       }
       style={styles.container}>
       <View style={styles.avatar}>

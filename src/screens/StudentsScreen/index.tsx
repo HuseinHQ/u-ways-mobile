@@ -35,7 +35,9 @@ function StudentsScreen(): React.JSX.Element {
     dispatch(getStudents({access_token, cohort: value}));
   };
 
-  useEffect(() => {}, [access_token, dispatch]);
+  useEffect(() => {
+    dispatch(getStudents({access_token}));
+  }, [access_token, dispatch]);
 
   useEffect(() => {
     navigation.setOptions({
@@ -71,12 +73,12 @@ function StudentsScreen(): React.JSX.Element {
               student: {id: number; name: string; npm: string},
               index: number,
             ) => (
-              <>
-                <StudentItem student={student} key={student.id} />
+              <React.Fragment key={student.id}>
+                <StudentItem student={student} />
                 <Spacer
                   height={index === selectStudents.length - 1 ? 40 : 10}
                 />
-              </>
+              </React.Fragment>
             ),
           )}
         </ScrollView>
