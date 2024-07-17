@@ -42,6 +42,10 @@ const id = {
     NULL: 'Cohort tidak boleh kosong',
     EMPTY: 'Cohort tidak boleh kosong',
   },
+  score: {
+    MIN: 'Minimal Score adalah 0',
+    MAX: 'Maximal Score adalah 100',
+  },
 };
 
 export type ErrorKey = keyof typeof id;

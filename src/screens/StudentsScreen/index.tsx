@@ -1,6 +1,14 @@
 import Colors from '@/utils/Colors';
 import React, {useEffect} from 'react';
-import {Image, SafeAreaView, StatusBar, StyleSheet, View} from 'react-native';
+import {
+  Image,
+  SafeAreaView,
+  StatusBar,
+  StyleSheet,
+  View,
+  ScrollView,
+  Dimensions,
+} from 'react-native';
 import Header from './LocalComponent/Header';
 import {useSelector} from 'react-redux';
 import {RootState, useAppDispatch} from '@/store/store';
@@ -23,9 +31,11 @@ function StudentsScreen(): React.JSX.Element {
   );
   const navigation = useNavigation();
 
-  useEffect(() => {
-    dispatch(getStudents({access_token}));
-  }, [access_token, dispatch]);
+  const onclickPagination = (value: number) => {
+    dispatch(getStudents({access_token, cohort: value}));
+  };
+
+  useEffect(() => {}, [access_token, dispatch]);
 
   useEffect(() => {
     navigation.setOptions({
@@ -48,18 +58,28 @@ function StudentsScreen(): React.JSX.Element {
 
       <Spacer height={20} />
 
-      <Pagination data={selectPagination} />
+      <Pagination data={selectPagination} onClick={onclickPagination} />
 
-      <Spacer height={10} />
+      <Spacer height={20} />
 
       {!selectStudents.length ? (
         <EmptyData />
       ) : (
-        selectStudents.map(
-          (student: {id: number; name: string; npm: string}) => (
-            <StudentItem student={student} key={student.id} />
-          ),
-        )
+        <ScrollView style={styles.studentsContainer}>
+          {selectStudents.map(
+            (
+              student: {id: number; name: string; npm: string},
+              index: number,
+            ) => (
+              <>
+                <StudentItem student={student} key={student.id} />
+                <Spacer
+                  height={index === selectStudents.length - 1 ? 40 : 10}
+                />
+              </>
+            ),
+          )}
+        </ScrollView>
       )}
     </SafeAreaView>
   );
@@ -74,9 +94,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
   },
+  studentsContainer: {
+    height: Dimensions.get('screen').height / 1.75,
+  },
   image: {
-    width: 200,
-    height: 200,
+    width: 188,
+    height: 188,
     resizeMode: 'contain',
   },
 });

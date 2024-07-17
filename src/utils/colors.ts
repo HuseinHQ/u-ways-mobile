@@ -24,6 +24,7 @@ const Colors = {
   black: {
     default: '#000000',
     halfOpacity: 'rgba(0,0,0,0.5)',
+    lowOpacity: 'rgba(0,0,0,0.1)',
   },
 };
 

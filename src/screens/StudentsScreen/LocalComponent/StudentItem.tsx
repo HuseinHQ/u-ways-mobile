@@ -1,7 +1,7 @@
 import GlobalStyles from '@/styles/GlobalStyles';
 import Colors from '@/utils/Colors';
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity} from 'react-native';
 
 type StudentItemProps = {
   student: {
@@ -13,12 +13,12 @@ type StudentItemProps = {
 
 function StudentItem({student}: StudentItemProps): React.JSX.Element {
   return (
-    <View style={styles.container}>
+    <TouchableOpacity style={styles.container}>
       <Text style={styles.name} numberOfLines={1} ellipsizeMode="tail">
         {student.name}
       </Text>
       <Text style={styles.npm}>{student.npm}</Text>
-    </View>
+    </TouchableOpacity>
   );
 }
 

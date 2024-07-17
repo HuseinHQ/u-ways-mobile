@@ -2,11 +2,31 @@ import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import axios from 'axios';
 
 const baseUrl = process.env.BACKEND_URL;
-const initialState = {
+
+type Student = {
+  id: number;
+  name: string;
+  npm: string;
+};
+
+type InitialState = {
+  loading: boolean;
+  data: Student[] | [];
+  errors: any;
+  pagination: {
+    cohortList: number[];
+    cohort: number | null;
+  };
+};
+
+const initialState: InitialState = {
   loading: false,
   data: [],
   errors: null,
-  pagination: {},
+  pagination: {
+    cohortList: [],
+    cohort: null,
+  },
 };
 
 export const getStudents = createAsyncThunk(
@@ -20,6 +40,7 @@ export const getStudents = createAsyncThunk(
         url: `${baseUrl}/students${cohort ? '?cohort=' + cohort : ''}`,
         headers: {access_token},
       });
+      console.log(data);
 
       return data;
     } catch (err) {
