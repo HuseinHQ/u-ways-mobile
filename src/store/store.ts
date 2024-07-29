@@ -8,6 +8,7 @@ import majorReducer from './majorSlice';
 import articleReducer from './articleSlice';
 import chatReducer from './chatSlice';
 import studentReducer from './studentSlice';
+import adminReducer from './adminSlice';
 import {
   FLUSH,
   PAUSE,
@@ -29,6 +30,7 @@ const rootReducer = combineReducers({
   article: articleReducer,
   chat: chatReducer,
   student: studentReducer,
+  admin: adminReducer,
 });
 
 const persistConfig = {

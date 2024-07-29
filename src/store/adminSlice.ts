@@ -54,6 +54,7 @@ const adminSlice = createSlice({
         state.errors = null;
       })
       .addCase(getDashboardData.rejected, (state, action) => {
+        state.loading = false;
         state.errors = action.payload as Errors;
       });
   },

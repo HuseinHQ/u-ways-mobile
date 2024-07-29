@@ -20,6 +20,10 @@ import ChatDetailScreen from '@/screens/ChatDetailScreen';
 import {NavigatorScreenParams} from '@react-navigation/native';
 import Page0 from '@/screens/CompleteBiodataScreen/Page0';
 import StudentsScreen from '@/screens/StudentsScreen';
+import FacultyScreen from '@/screens/FacultyScreen';
+import MajorScreen from '@/screens/MajorScreen';
+import LecturerScreen from '@/screens/LecturerScreen';
+import StudentScreen from '@/screens/StudentScreen';
 
 export type RootStackParamList = {
   SplashScreen: undefined;
@@ -57,6 +61,10 @@ export type RootStackParamList = {
         lecturer?: {id: number; name: string};
       }
     | undefined;
+  FacultyScreen: undefined;
+  MajorScreen: undefined;
+  LecturerScreen: undefined;
+  StudentScreen: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -110,6 +118,11 @@ function StackNavigator() {
       <Stack.Screen name="Page3" component={Page3} />
       <Stack.Screen name="Page4" component={Page4} />
       <Stack.Screen name="Page5" component={Page5} />
+
+      <Stack.Screen name="FacultyScreen" component={FacultyScreen} />
+      <Stack.Screen name="MajorScreen" component={MajorScreen} />
+      <Stack.Screen name="LecturerScreen" component={LecturerScreen} />
+      <Stack.Screen name="StudentScreen" component={StudentScreen} />
     </Stack.Navigator>
   );
 }

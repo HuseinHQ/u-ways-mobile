@@ -28,6 +28,8 @@ import {RootState, useAppDispatch} from '@/store/store';
 import {getUserProfile} from '@/store/userSlice';
 import {RootStackParamList} from '@/navigator/StackNavigator';
 import EditArticle from './LocalComponent/EditArticle';
+import InfoCard from './LocalComponent/InfoCard';
+import EditData from './LocalComponent/EditData';
 
 function HomeScreen(): React.JSX.Element {
   const [modalVisible, setModalVisible] = useState(false);
@@ -80,7 +82,11 @@ function HomeScreen(): React.JSX.Element {
         <ScrollView showsVerticalScrollIndicator={false}>
           <Header />
           <Spacer height={20} />
+          <InfoCard />
+          <Spacer height={20} />
           <EditArticle />
+          <Spacer height={20} />
+          <EditData />
         </ScrollView>
       </SafeAreaView>
     );

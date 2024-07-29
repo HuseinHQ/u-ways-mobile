@@ -9,16 +9,35 @@ import {useNavigation} from '@react-navigation/native';
 type CustomHeaderProps = {
   title: string;
   description?: string;
+  titleColor?: string;
 };
 
 function CustomHeader({
   title,
   description,
+  titleColor = Colors.primary,
 }: CustomHeaderProps): React.JSX.Element {
   const navigation = useNavigation();
   const goBack = () => {
     navigation.goBack();
   };
+
+  const styles = StyleSheet.create({
+    topContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    title: {
+      fontFamily: 'Montserrat-Bold',
+      fontSize: 24,
+      color: titleColor,
+    },
+    description: {
+      fontFamily: 'Montserrat-Medium',
+      fontSize: 13,
+      marginTop: 3,
+    },
+  });
 
   return (
     <View>
@@ -34,22 +53,5 @@ function CustomHeader({
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  topContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  title: {
-    fontFamily: 'Montserrat-Bold',
-    fontSize: 24,
-    color: Colors.primary,
-  },
-  description: {
-    fontFamily: 'Montserrat-Medium',
-    fontSize: 13,
-    marginTop: 3,
-  },
-});
 
 export default CustomHeader;

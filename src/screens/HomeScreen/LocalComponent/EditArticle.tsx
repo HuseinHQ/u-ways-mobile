@@ -12,7 +12,7 @@ import Colors from '@/utils/Colors';
 import Spacer from '@/components/Spacer';
 import Fonts from '@/styles/Fonts';
 
-function EditArticle() {
+function EditArticle(): React.JSX.Element {
   return (
     <View>
       <Text style={Fonts.subtitle}>Edit Artikel</Text>
