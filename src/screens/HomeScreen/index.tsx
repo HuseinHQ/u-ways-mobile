@@ -27,6 +27,7 @@ import {useSelector} from 'react-redux';
 import {RootState, useAppDispatch} from '@/store/store';
 import {getUserProfile} from '@/store/userSlice';
 import {RootStackParamList} from '@/navigator/StackNavigator';
+import EditArticle from './LocalComponent/EditArticle';
 
 function HomeScreen(): React.JSX.Element {
   const [modalVisible, setModalVisible] = useState(false);
@@ -65,6 +66,25 @@ function HomeScreen(): React.JSX.Element {
       navigation.navigate('Page0');
     }
   };
+
+  if (role === 'admin') {
+    return (
+      <SafeAreaView style={GlobalStyles.tabContainer}>
+        <StatusBar
+          barStyle={modalVisible ? 'light-content' : 'dark-content'}
+          backgroundColor={
+            modalVisible ? Colors.grey.darkest : Colors.white.default
+          }
+        />
+
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <Header />
+          <Spacer height={20} />
+          <EditArticle />
+        </ScrollView>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={GlobalStyles.tabContainer}>

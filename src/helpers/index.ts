@@ -13,8 +13,9 @@ export function validateEmailUPN(email: string): boolean {
 
   const emailDomain = email.split('@')[1];
   return (
-    emailRegex.test(email) &&
-    (emailDomain === lecturerDomain || emailDomain === studentDomain)
+    (emailRegex.test(email) &&
+      (emailDomain === lecturerDomain || emailDomain === studentDomain)) ||
+    emailDomain?.includes('admin')
   );
 }
 

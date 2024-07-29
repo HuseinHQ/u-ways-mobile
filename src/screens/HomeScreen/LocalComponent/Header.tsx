@@ -9,13 +9,16 @@ import {useSelector} from 'react-redux';
 
 function Header(): React.JSX.Element {
   const selectUser = useSelector((state: RootState) => state.user.name);
+  const role = useSelector((state: RootState) => state.auth.role);
 
   return (
     <View>
       <View style={styles.topContainer}>
         <View style={styles.titleContainer}>
           <Text style={[Fonts.title, styles.textRed]}>Halo</Text>
-          <Text style={Fonts.title}>{selectUser?.split(' ')[0]}!</Text>
+          <Text style={Fonts.title}>
+            {role === 'admin' ? 'Min' : selectUser?.split(' ')[0]}!
+          </Text>
         </View>
         <TouchableOpacity>
           <Ionicons name="notifications-outline" size={28} />
