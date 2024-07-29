@@ -6,7 +6,8 @@ const baseUrl = process.env.BACKEND_URL;
 type Student = {
   id: number;
   name: string;
-  npm: string;
+  npm?: string;
+  email?: string;
 };
 
 type InitialState = {
@@ -34,7 +35,6 @@ export const getStudents = createAsyncThunk(
   async (props: {access_token: string; cohort?: number}, {rejectWithValue}) => {
     try {
       const {access_token, cohort} = props;
-      console.log(`${baseUrl}/students${cohort ? '?cohort=' + cohort : ''}`);
       const {data} = await axios({
         method: 'GET',
         url: `${baseUrl}/students${cohort ? '?cohort=' + cohort : ''}`,
@@ -42,6 +42,24 @@ export const getStudents = createAsyncThunk(
       });
 
       return data;
+    } catch (err) {
+      return rejectWithValue((err as any)?.response?.data?.errors);
+    }
+  },
+);
+
+export const getAllStudents = createAsyncThunk(
+  'students/all',
+  async (props: {access_token: string; search?: string}, {rejectWithValue}) => {
+    try {
+      const {access_token, search} = props;
+      const {data} = await axios({
+        method: 'GET',
+        url: `${baseUrl}/students/all${search ? '?search=' + search : ''}`,
+        headers: {access_token},
+      });
+
+      return data.data;
     } catch (err) {
       return rejectWithValue((err as any)?.response?.data?.errors);
     }
@@ -64,6 +82,18 @@ const studentSlice = createSlice({
         state.errors = null;
       })
       .addCase(getStudents.rejected, (state, action) => {
+        state.loading = false;
+        state.errors = action.payload as any;
+      })
+      .addCase(getAllStudents.pending, state => {
+        state.loading = true;
+      })
+      .addCase(getAllStudents.fulfilled, (state, action) => {
+        state.loading = false;
+        state.data = action.payload;
+        state.errors = null;
+      })
+      .addCase(getAllStudents.rejected, (state, action) => {
         state.loading = false;
         state.errors = action.payload as any;
       });

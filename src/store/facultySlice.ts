@@ -5,14 +5,18 @@ const baseUrl = process.env.BACKEND_URL;
 
 export const getFaculties = createAsyncThunk(
   'faculties',
-  async ({access_token}: {access_token: string}, {rejectWithValue}) => {
+  async (
+    {access_token, search}: {access_token: string; search?: string},
+    {rejectWithValue},
+  ) => {
     try {
       const {data} = await axios({
         method: 'GET',
-        url: baseUrl + '/faculties',
+        url: `${baseUrl}/faculties${search ? `?search=${search}` : ''}`,
         headers: {access_token},
         timeout: 5000,
       });
+      console.log(data.data);
       return data.data;
     } catch (err) {
       return rejectWithValue((err as any)?.response?.data?.errors);

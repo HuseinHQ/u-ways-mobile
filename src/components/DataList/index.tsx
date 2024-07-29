@@ -1,37 +1,93 @@
 import Colors from '@/utils/Colors';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   TextInput,
+  ScrollView,
+  Pressable,
+  BackHandler,
+  Keyboard,
+  ActivityIndicator,
 } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Spacer from '../Spacer';
-import {useDebounce} from '@uidotdev/usehooks';
+import GlobalStyles from '@/styles/GlobalStyles';
+import Fonts from '@/styles/Fonts';
 
 type DataListProp = {
   name: string;
+  data: any[];
+  search?: string;
+  setSearch?: (newValue: any) => void;
+  loading: boolean;
 };
 
-function DataList({name}: DataListProp): React.JSX.Element {
-  const [search, setSearch] = useState('');
-  const [faculties, setFaculties] = useState([]);
-  const debouncedSearch = useDebounce(search, 300);
-
+function DataList({
+  name,
+  data = [],
+  search,
+  setSearch,
+  loading = false,
+}: DataListProp): React.JSX.Element {
+  const [multipleSelect, setMultipleSelect] = useState(false);
+  const [selectedData, setSelectedData] = useState<number[]>([]);
   const onChangeSearchText = (value: string) => {
-    setSearch(value);
+    if (setSearch) {
+      setSearch(value);
+    }
+  };
+  const inputRef = useRef(null);
+
+  const toggleMultipleSelect = (id: number) => {
+    setSelectedData([id]);
+    setMultipleSelect(true);
+  };
+
+  const selectOrDeselectData = (id: number) => {
+    if (selectedData.includes(id)) {
+      const newData = selectedData.filter(item => item !== id);
+      setSelectedData(newData);
+    } else {
+      const newData = [...selectedData, id];
+      setSelectedData(newData);
+    }
   };
 
   useEffect(() => {
-    if (debouncedSearch) {
-      // todo: fetch
+    const backAction = () => {
+      if (multipleSelect) {
+        setMultipleSelect(false);
+        return true; // Prevent default behavior
+      } else {
+        return false; // Allow default behavior
+      }
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+
+    if (!multipleSelect) {
+      setSelectedData([]);
     }
-  }, [debouncedSearch]);
+
+    return () => backHandler.remove();
+  }, [multipleSelect]);
 
   return (
-    <View style={styles.container}>
+    <Pressable
+      style={styles.container}
+      onPress={() => {
+        setMultipleSelect(false);
+        Keyboard.dismiss();
+        // @ts-ignore
+        inputRef.current?.blur();
+      }}>
       <TouchableOpacity style={styles.addBox}>
         <AntDesign name="plussquareo" color={Colors.primary} size={40} />
         <Spacer height={5} />
@@ -39,22 +95,82 @@ function DataList({name}: DataListProp): React.JSX.Element {
       </TouchableOpacity>
 
       <Spacer height={20} />
-      <View style={styles.inputBox}>
-        <AntDesign name="search1" color={Colors.black.halfOpacity} size={18} />
-        <TextInput
-          style={styles.input}
-          placeholder="Pencarian"
-          placeholderTextColor={Colors.black.halfOpacity}
-          value={search}
-          onChangeText={onChangeSearchText}
-        />
-      </View>
-    </View>
+
+      {setSearch && (
+        <>
+          <View style={styles.inputBox}>
+            <AntDesign
+              name="search1"
+              color={Colors.black.halfOpacity}
+              size={18}
+            />
+            <TextInput
+              ref={inputRef}
+              style={styles.input}
+              placeholder="Pencarian"
+              placeholderTextColor={Colors.black.halfOpacity}
+              value={search}
+              onChangeText={onChangeSearchText}
+            />
+          </View>
+          <Spacer height={20} />
+        </>
+      )}
+
+      {loading ? (
+        <View style={GlobalStyles.fullCenter}>
+          <ActivityIndicator size={40} color={Colors.primary} />
+        </View>
+      ) : data.length ? (
+        <ScrollView style={styles.dataContainer}>
+          <View style={styles.listContainer}>
+            {data.map(el => (
+              <View style={styles.dataListContainer}>
+                {multipleSelect && (
+                  <TouchableOpacity
+                    style={styles.checkContainer}
+                    onPress={() => selectOrDeselectData(el.id)}>
+                    {selectedData.includes(el.id) ? (
+                      <FontAwesome name="check-square" size={35} />
+                    ) : (
+                      <FontAwesome name="square-o" size={35} />
+                    )}
+                  </TouchableOpacity>
+                )}
+                <TouchableOpacity
+                  key={el.id}
+                  style={styles.listItem}
+                  onLongPress={() => toggleMultipleSelect(el.id)}>
+                  <Text style={styles.text}>
+                    {el.email || el.name || el.title}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            ))}
+          </View>
+        </ScrollView>
+      ) : (
+        <View style={GlobalStyles.fullCenter}>
+          <Text style={[styles.text, Fonts.black]}>Tidak ada data</Text>
+        </View>
+      )}
+
+      {multipleSelect && (
+        <TouchableOpacity style={styles.deleteButton}>
+          <Text style={styles.text}>Hapus</Text>
+        </TouchableOpacity>
+      )}
+    </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {justifyContent: 'center', alignItems: 'center'},
+  container: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1,
+    marginBottom: 10,
+  },
   addBox: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -80,6 +196,46 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 40,
     color: Colors.black.halfOpacity,
+  },
+  dataContainer: {
+    width: '100%',
+  },
+  dataListContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 15,
+  },
+  checkContainer: {
+    width: 35,
+    height: 35,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  listContainer: {
+    gap: 15,
+    paddingBottom: 20,
+    paddingHorizontal: 2,
+  },
+  listItem: {
+    backgroundColor: Colors.primary,
+    padding: 5,
+    borderRadius: 10,
+    ...GlobalStyles.shadow,
+    flex: 1,
+  },
+  text: {
+    ...Fonts.subtitle,
+    textAlign: 'center',
+    color: Colors.white.default,
+  },
+  deleteButton: {
+    backgroundColor: Colors.primary,
+    padding: 8,
+    borderRadius: 10,
+    ...GlobalStyles.shadow,
+    width: '100%',
+    marginTop: 10,
   },
 });
 

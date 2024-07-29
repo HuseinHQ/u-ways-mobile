@@ -24,6 +24,12 @@ const GlobalStyles = StyleSheet.create({
   alignCenter: {
     alignItems: 'center',
   },
+  fullCenter: {
+    width: '100%',
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   image: {
     width: '100%',
     height: '100%',

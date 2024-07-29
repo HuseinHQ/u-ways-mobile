@@ -6,14 +6,22 @@ const baseUrl = process.env.BACKEND_URL;
 export const getMajors = createAsyncThunk(
   'majors',
   async (
-    props: {access_token: string; FacultyId?: number},
+    props: {access_token: string; FacultyId?: number; search?: string},
     {rejectWithValue},
   ) => {
-    const {access_token, FacultyId} = props;
+    const {access_token, FacultyId, search} = props;
     try {
+      const params = new URLSearchParams();
+      if (FacultyId) {
+        params.append('FacultyId', FacultyId.toString());
+      }
+      if (search) {
+        params.append('search', search);
+      }
+
       const {data} = await axios({
         method: 'GET',
-        url: `${baseUrl}/majors${FacultyId ? '?FacultyId=' + FacultyId : ''}`,
+        url: `${baseUrl}/majors?${params.toString()}`,
         headers: {access_token},
         timeout: 5000,
       });
@@ -54,6 +62,7 @@ const majorSlice = createSlice({
         state.errors = null;
       })
       .addCase(getMajors.rejected, (state, action) => {
+        state.loading = false;
         state.errors = action.payload as any;
       });
   },

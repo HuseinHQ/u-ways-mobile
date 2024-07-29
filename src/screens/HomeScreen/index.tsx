@@ -87,6 +87,7 @@ function HomeScreen(): React.JSX.Element {
           <EditArticle />
           <Spacer height={20} />
           <EditData />
+          <Spacer height={20} />
         </ScrollView>
       </SafeAreaView>
     );

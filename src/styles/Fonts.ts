@@ -1,3 +1,4 @@
+import Colors from '@/utils/Colors';
 import {StyleSheet} from 'react-native';
 
 const Fonts = StyleSheet.create({
@@ -12,6 +13,12 @@ const Fonts = StyleSheet.create({
   text: {
     fontFamily: 'Montserrat-Medium',
     fontSize: 13,
+  },
+  primary: {
+    color: Colors.primary,
+  },
+  black: {
+    color: Colors.black.default,
   },
 });
 

@@ -6,20 +6,25 @@ const baseUrl = process.env.BACKEND_URL;
 export const getAllLecturers = createAsyncThunk(
   'lecturers',
   async (
-    {access_token, FacultyId}: {access_token: string; FacultyId?: string},
+    {
+      access_token,
+      FacultyId,
+      search,
+    }: {access_token: string; FacultyId?: string; search?: string},
     {rejectWithValue},
   ) => {
     try {
-      console.log(
-        `FETCH: ${baseUrl}/lecturers?${
-          FacultyId ? 'FacultyId=' + FacultyId : ''
-        }`,
-      );
+      const params = new URLSearchParams();
+      if (FacultyId) {
+        params.append('FacultyId', FacultyId);
+      }
+      if (search) {
+        params.append('search', search);
+      }
+
       const {data} = await axios({
         method: 'GET',
-        url: `${baseUrl}/lecturers?${
-          FacultyId ? 'FacultyId=' + FacultyId : ''
-        }`,
+        url: `${baseUrl}/lecturers?${params.toString()}`,
         headers: {access_token},
       });
       return data.data;
