@@ -1,5 +1,5 @@
 import Colors from '@/utils/Colors';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Spacer from '../Spacer';
+import {useDebounce} from '@uidotdev/usehooks';
 
 type DataListProp = {
   name: string;
@@ -16,8 +17,18 @@ type DataListProp = {
 
 function DataList({name}: DataListProp): React.JSX.Element {
   const [search, setSearch] = useState('');
+  const [faculties, setFaculties] = useState([]);
+  const debouncedSearch = useDebounce(search, 300);
 
-  const onChangeSearchText = () => {};
+  const onChangeSearchText = (value: string) => {
+    setSearch(value);
+  };
+
+  useEffect(() => {
+    if (debouncedSearch) {
+      // todo: fetch
+    }
+  }, [debouncedSearch]);
 
   return (
     <View style={styles.container}>
