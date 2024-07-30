@@ -24,6 +24,7 @@ import FacultyScreen from '@/screens/FacultyScreen';
 import MajorScreen from '@/screens/MajorScreen';
 import LecturerScreen from '@/screens/LecturerScreen';
 import StudentScreen from '@/screens/StudentScreen';
+import AddFacultyScreen from '@/screens/AddFacultyScreen';
 
 export type RootStackParamList = {
   SplashScreen: undefined;
@@ -38,6 +39,7 @@ export type RootStackParamList = {
   EditProfileScreen: undefined;
   ChatDetailScreen: {title: string; chatId: number} | undefined;
   StudentsScreen: undefined;
+
   Page0: undefined;
   Page1: undefined;
   Page2: {nip?: string} | undefined;
@@ -61,10 +63,20 @@ export type RootStackParamList = {
         lecturer?: {id: number; name: string};
       }
     | undefined;
+
   FacultyScreen: undefined;
+  AddFacultyScreen: undefined;
+  EditFacultyScreen: {id: number} | undefined;
+
   MajorScreen: undefined;
+  AddMajorScreen: undefined;
+  EditMajorScreen: {id: number} | undefined;
+
   LecturerScreen: undefined;
+  EditLecturerScreen: {id: number} | undefined;
+
   StudentScreen: undefined;
+  EditStudentScreen: {id: number} | undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -123,6 +135,8 @@ function StackNavigator() {
       <Stack.Screen name="MajorScreen" component={MajorScreen} />
       <Stack.Screen name="LecturerScreen" component={LecturerScreen} />
       <Stack.Screen name="StudentScreen" component={StudentScreen} />
+
+      <Stack.Screen name="AddFacultyScreen" component={AddFacultyScreen} />
     </Stack.Navigator>
   );
 }

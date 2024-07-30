@@ -25,6 +25,7 @@ type DataListProp = {
   search?: string;
   setSearch?: (newValue: any) => void;
   loading: boolean;
+  onPressAddData?: () => void;
 };
 
 function DataList({
@@ -33,6 +34,7 @@ function DataList({
   search,
   setSearch,
   loading = false,
+  onPressAddData,
 }: DataListProp): React.JSX.Element {
   const [multipleSelect, setMultipleSelect] = useState(false);
   const [selectedData, setSelectedData] = useState<number[]>([]);
@@ -92,13 +94,17 @@ function DataList({
         // @ts-ignore
         inputRef.current?.blur();
       }}>
-      <TouchableOpacity style={styles.addBox}>
-        <AntDesign name="plussquareo" color={Colors.primary} size={40} />
-        <Spacer height={5} />
-        <Text style={styles.tambah}>Tambah {name}</Text>
-      </TouchableOpacity>
+      {onPressAddData && (
+        <>
+          <TouchableOpacity style={styles.addBox} onPress={onPressAddData}>
+            <AntDesign name="plussquareo" color={Colors.primary} size={40} />
+            <Spacer height={5} />
+            <Text style={styles.tambah}>Tambah {name}</Text>
+          </TouchableOpacity>
 
-      <Spacer height={20} />
+          <Spacer height={20} />
+        </>
+      )}
 
       {setSearch && (
         <>

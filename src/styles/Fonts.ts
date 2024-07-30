@@ -10,6 +10,10 @@ const Fonts = StyleSheet.create({
     fontFamily: 'Poppins-SemiBold',
     fontSize: 17,
   },
+  subtitleMontserrat: {
+    fontFamily: 'Montserrat-SemiBold',
+    fontSize: 17,
+  },
   text: {
     fontFamily: 'Montserrat-Medium',
     fontSize: 13,
@@ -19,6 +23,9 @@ const Fonts = StyleSheet.create({
   },
   black: {
     color: Colors.black.default,
+  },
+  white: {
+    color: Colors.white.default,
   },
 });
 

@@ -33,7 +33,11 @@ function MajorScreen(): React.JSX.Element {
         barStyle="dark-content"
       />
 
-      <CustomHeader title="Program Studi" titleColor={Colors.black.default} />
+      <CustomHeader
+        title="Program Studi"
+        titleFontSize={20}
+        titleColor={Colors.black.default}
+      />
 
       <DataList
         name="Program Studi"
@@ -41,6 +45,7 @@ function MajorScreen(): React.JSX.Element {
         search={search}
         setSearch={setSearch}
         loading={loading}
+        onPressAddData={() => {}}
       />
     </SafeAreaView>
   );

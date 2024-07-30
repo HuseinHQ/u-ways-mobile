@@ -1,6 +1,6 @@
 import Colors from '@/utils/Colors';
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View, Pressable} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Spacer from '../Spacer';
 import {TouchableOpacity} from 'react-native-gesture-handler';
@@ -10,12 +10,16 @@ type CustomHeaderProps = {
   title: string;
   description?: string;
   titleColor?: string;
+  onPress?: () => void;
+  titleFontSize?: number;
 };
 
 function CustomHeader({
   title,
   description,
   titleColor = Colors.primary,
+  onPress,
+  titleFontSize = 24,
 }: CustomHeaderProps): React.JSX.Element {
   const navigation = useNavigation();
   const goBack = () => {
@@ -29,7 +33,7 @@ function CustomHeader({
     },
     title: {
       fontFamily: 'Montserrat-Bold',
-      fontSize: 24,
+      fontSize: titleFontSize,
       color: titleColor,
     },
     description: {
@@ -40,7 +44,7 @@ function CustomHeader({
   });
 
   return (
-    <View>
+    <Pressable onPress={onPress}>
       <View style={styles.topContainer}>
         <TouchableOpacity onPress={goBack}>
           <Ionicons name="arrow-back" size={24} />
@@ -49,8 +53,8 @@ function CustomHeader({
         <Text style={styles.title}>{title}</Text>
       </View>
       <Text style={styles.description}>{description}</Text>
-      <Spacer height={20} />
-    </View>
+      {description && <Spacer height={20} />}
+    </Pressable>
   );
 }
 

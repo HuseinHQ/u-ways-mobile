@@ -1,5 +1,6 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import axios from 'axios';
+import Toast from 'react-native-toast-message';
 
 const baseUrl = process.env.BACKEND_URL;
 
@@ -20,6 +21,39 @@ export const getFaculties = createAsyncThunk(
       return data.data;
     } catch (err) {
       return rejectWithValue((err as any)?.response?.data?.errors);
+    }
+  },
+);
+
+export const postFaculty = createAsyncThunk(
+  'faculties/add',
+  async (
+    {
+      access_token,
+      name,
+      successCB,
+    }: {access_token: string; name: string; successCB: () => void},
+    {rejectWithValue, dispatch},
+  ) => {
+    try {
+      const {data} = await axios({
+        method: 'POST',
+        url: baseUrl + '/faculties',
+        headers: {access_token},
+        data: {name},
+      });
+
+      dispatch(getFaculties({access_token}));
+      Toast.show({
+        type: 'success',
+        text1: 'Berhasil',
+        text2: data.data.message,
+      });
+
+      successCB();
+      return true;
+    } catch (err) {
+      return rejectWithValue((err as any)?.response?.data?.message);
     }
   },
 );
@@ -53,6 +87,16 @@ const facultySlice = createSlice({
         state.errors = null;
       })
       .addCase(getFaculties.rejected, (state, action) => {
+        state.errors = action.payload as any;
+      })
+      .addCase(postFaculty.pending, state => {
+        state.loading = true;
+      })
+      .addCase(postFaculty.fulfilled, state => {
+        state.loading = false;
+      })
+      .addCase(postFaculty.rejected, (state, action) => {
+        state.loading = false;
         state.errors = action.payload as any;
       });
   },

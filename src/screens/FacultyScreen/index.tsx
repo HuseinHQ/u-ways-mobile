@@ -1,8 +1,10 @@
 import CustomHeader from '@/components/CustomHeader';
 import DataList from '@/components/DataList';
+import {RootStackParamList} from '@/navigator/StackNavigator';
 import {getFaculties} from '@/store/facultySlice';
 import {RootState, useAppDispatch} from '@/store/store';
 import Colors from '@/utils/Colors';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {useDebounce} from '@uidotdev/usehooks';
 import React, {useEffect, useState} from 'react';
 import {SafeAreaView, StatusBar, StyleSheet} from 'react-native';
@@ -11,6 +13,7 @@ import {useSelector} from 'react-redux';
 function FacultyScreen(): React.JSX.Element {
   const faculties = useSelector((state: RootState) => state.faculty.faculties);
   const dispatch = useAppDispatch();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const access_token = useSelector(
     (state: RootState) => state.auth.accessToken,
   );
@@ -33,7 +36,11 @@ function FacultyScreen(): React.JSX.Element {
         barStyle="dark-content"
       />
 
-      <CustomHeader title="Fakultas" titleColor={Colors.black.default} />
+      <CustomHeader
+        title="Fakultas"
+        titleFontSize={20}
+        titleColor={Colors.black.default}
+      />
 
       <DataList
         name="Fakultas"
@@ -41,6 +48,9 @@ function FacultyScreen(): React.JSX.Element {
         search={search}
         setSearch={setSearch}
         loading={loading}
+        onPressAddData={() => {
+          navigation.navigate('AddFacultyScreen');
+        }}
       />
     </SafeAreaView>
   );

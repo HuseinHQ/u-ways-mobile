@@ -33,7 +33,11 @@ function StudentScreen(): React.JSX.Element {
         barStyle="dark-content"
       />
 
-      <CustomHeader title="Mahasiswa" titleColor={Colors.black.default} />
+      <CustomHeader
+        title="Mahasiswa"
+        titleFontSize={20}
+        titleColor={Colors.black.default}
+      />
 
       <DataList
         name="Mahasiswa"
