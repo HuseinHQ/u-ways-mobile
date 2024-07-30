@@ -110,6 +110,7 @@ function HomeScreen(): React.JSX.Element {
         <FeatureList />
         <Spacer height={20} />
         <ArticleRecommendation />
+        <Spacer height={20} />
       </ScrollView>
 
       <CustomModal isVisible={modalVisible} onBackdropPress={() => {}}>
