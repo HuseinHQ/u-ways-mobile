@@ -11,6 +11,7 @@ import {
   BackHandler,
   Keyboard,
   ActivityIndicator,
+  Vibration,
 } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -43,8 +44,11 @@ function DataList({
   const inputRef = useRef(null);
 
   const toggleMultipleSelect = (id: number) => {
-    setSelectedData([id]);
-    setMultipleSelect(true);
+    if (!multipleSelect) {
+      Vibration.vibrate(10);
+      setSelectedData([id]);
+      setMultipleSelect(true);
+    }
   };
 
   const selectOrDeselectData = (id: number) => {
@@ -111,6 +115,7 @@ function DataList({
               placeholderTextColor={Colors.black.halfOpacity}
               value={search}
               onChangeText={onChangeSearchText}
+              onPress={() => setMultipleSelect(false)}
             />
           </View>
           <Spacer height={20} />
@@ -125,7 +130,7 @@ function DataList({
         <ScrollView style={styles.dataContainer}>
           <View style={styles.listContainer}>
             {data.map(el => (
-              <View style={styles.dataListContainer}>
+              <View key={el.id} style={styles.dataListContainer}>
                 {multipleSelect && (
                   <TouchableOpacity
                     style={styles.checkContainer}
@@ -138,7 +143,6 @@ function DataList({
                   </TouchableOpacity>
                 )}
                 <TouchableOpacity
-                  key={el.id}
                   style={styles.listItem}
                   onLongPress={() => toggleMultipleSelect(el.id)}>
                   <Text style={styles.text}>
