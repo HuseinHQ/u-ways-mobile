@@ -37,6 +37,7 @@ function StudentScreen(): React.JSX.Element {
         title="Mahasiswa"
         titleFontSize={20}
         titleColor={Colors.black.default}
+        leftButtonType="menu"
       />
 
       <DataList

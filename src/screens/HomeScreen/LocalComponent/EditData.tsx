@@ -14,13 +14,13 @@ import {
 import feature_1 from '@/assets/images/feature_1.png';
 import feature_2 from '@/assets/images/feature_2.png';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
-import {RootStackParamList} from '@/navigator/StackNavigator';
+import {DrawerParamList} from '@/navigator/DrawerNavigator';
 
 type DataList = {
   id: number;
   name: string;
   image: ImageSourcePropType;
-  goToScreen: keyof RootStackParamList;
+  goToScreen: keyof DrawerParamList;
 };
 
 const dataList: DataList[] = [
@@ -31,11 +31,11 @@ const dataList: DataList[] = [
 ];
 
 function EditData(): React.JSX.Element {
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const navigation = useNavigation<NavigationProp<DrawerParamList>>();
 
   return (
     <View>
-      <Text style={Fonts.subtitle}>Edit Artikel</Text>
+      <Text style={Fonts.subtitle}>Edit Data</Text>
 
       <Spacer height={10} />
 

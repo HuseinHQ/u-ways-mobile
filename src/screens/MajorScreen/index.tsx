@@ -37,6 +37,7 @@ function MajorScreen(): React.JSX.Element {
         title="Program Studi"
         titleFontSize={20}
         titleColor={Colors.black.default}
+        leftButtonType="menu"
       />
 
       <DataList

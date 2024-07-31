@@ -40,6 +40,7 @@ function FacultyScreen(): React.JSX.Element {
         title="Fakultas"
         titleFontSize={20}
         titleColor={Colors.black.default}
+        leftButtonType="menu"
       />
 
       <DataList

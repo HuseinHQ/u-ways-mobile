@@ -13,6 +13,7 @@ import GlobalStyles from '@/styles/GlobalStyles';
 import {useRoute} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 import {RootState} from '@/store/store';
+import DrawerNavigator from './DrawerNavigator';
 
 export type TabNavigatorParamList = {
   Home: Readonly<object | undefined>;
@@ -25,7 +26,7 @@ const Tab = createBottomTabNavigator<TabNavigatorParamList>();
 
 function TabNavigator(): React.JSX.Element {
   const route = useRoute();
-  const selectRole = useSelector((state: RootState) => state.user.role);
+  const selectRole = useSelector((state: RootState) => state.auth.role);
 
   return (
     <Tab.Navigator
@@ -39,7 +40,7 @@ function TabNavigator(): React.JSX.Element {
       }}>
       <Tab.Screen
         name="Home"
-        component={HomeScreen}
+        component={selectRole === 'admin' ? DrawerNavigator : HomeScreen}
         initialParams={route.params}
         options={{
           tabBarLabel: 'Beranda',
@@ -50,6 +51,8 @@ function TabNavigator(): React.JSX.Element {
               color={focused ? Colors.primary : Colors.black.halfOpacity}
             />
           ),
+          tabBarStyle:
+            selectRole === 'admin' ? {display: 'none'} : styles.tabBarStyle,
         }}
       />
       {selectRole === 'mahasiswa' && (
@@ -67,19 +70,21 @@ function TabNavigator(): React.JSX.Element {
           }}
         />
       )}
-      <Tab.Screen
-        name="Chat"
-        component={ChatScreen}
-        options={{
-          tabBarIcon: ({focused}) => (
-            <MaterialCommunityIcons
-              name={focused ? 'chat' : 'chat-outline'}
-              size={24}
-              color={focused ? Colors.primary : Colors.black.halfOpacity}
-            />
-          ),
-        }}
-      />
+      {(selectRole === 'mahasiswa' || selectRole === 'dosen') && (
+        <Tab.Screen
+          name="Chat"
+          component={ChatScreen}
+          options={{
+            tabBarIcon: ({focused}) => (
+              <MaterialCommunityIcons
+                name={focused ? 'chat' : 'chat-outline'}
+                size={24}
+                color={focused ? Colors.primary : Colors.black.halfOpacity}
+              />
+            ),
+          }}
+        />
+      )}
       <Tab.Screen
         name="Profile"
         component={ProfileScreen}

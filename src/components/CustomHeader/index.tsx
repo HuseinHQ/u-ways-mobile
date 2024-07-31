@@ -2,9 +2,10 @@ import Colors from '@/utils/Colors';
 import React from 'react';
 import {StyleSheet, Text, View, Pressable} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import Feather from 'react-native-vector-icons/Feather';
 import Spacer from '../Spacer';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {useNavigation} from '@react-navigation/native';
+import {DrawerActions, useNavigation} from '@react-navigation/native';
 
 type CustomHeaderProps = {
   title: string;
@@ -12,6 +13,7 @@ type CustomHeaderProps = {
   titleColor?: string;
   onPress?: () => void;
   titleFontSize?: number;
+  leftButtonType?: 'back' | 'menu';
 };
 
 function CustomHeader({
@@ -20,10 +22,14 @@ function CustomHeader({
   titleColor = Colors.primary,
   onPress,
   titleFontSize = 24,
+  leftButtonType = 'back',
 }: CustomHeaderProps): React.JSX.Element {
   const navigation = useNavigation();
   const goBack = () => {
     navigation.goBack();
+  };
+  const openDrawer = () => {
+    navigation.dispatch(DrawerActions.openDrawer());
   };
 
   const styles = StyleSheet.create({
@@ -46,8 +52,13 @@ function CustomHeader({
   return (
     <Pressable onPress={onPress}>
       <View style={styles.topContainer}>
-        <TouchableOpacity onPress={goBack}>
-          <Ionicons name="arrow-back" size={24} />
+        <TouchableOpacity
+          onPress={leftButtonType === 'back' ? goBack : openDrawer}>
+          {leftButtonType === 'back' ? (
+            <Ionicons name="arrow-back" size={24} />
+          ) : (
+            <Feather name="menu" size={24} />
+          )}
         </TouchableOpacity>
         <Spacer width={20} />
         <Text style={styles.title}>{title}</Text>

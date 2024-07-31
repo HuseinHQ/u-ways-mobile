@@ -17,7 +17,7 @@ export const getFaculties = createAsyncThunk(
         headers: {access_token},
         timeout: 5000,
       });
-      console.log(data.data);
+
       return data.data;
     } catch (err) {
       return rejectWithValue((err as any)?.response?.data?.errors);

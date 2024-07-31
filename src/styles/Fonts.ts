@@ -6,6 +6,10 @@ const Fonts = StyleSheet.create({
     fontFamily: 'Montserrat-Bold',
     fontSize: 22,
   },
+  title2: {
+    fontFamily: 'Montserrat-Bold',
+    fontSize: 20,
+  },
   subtitle: {
     fontFamily: 'Poppins-SemiBold',
     fontSize: 17,

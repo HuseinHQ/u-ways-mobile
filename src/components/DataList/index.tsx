@@ -26,6 +26,7 @@ type DataListProp = {
   setSearch?: (newValue: any) => void;
   loading: boolean;
   onPressAddData?: () => void;
+  onPressDelete?: () => void;
 };
 
 function DataList({
@@ -35,6 +36,7 @@ function DataList({
   setSearch,
   loading = false,
   onPressAddData,
+  onPressDelete,
 }: DataListProp): React.JSX.Element {
   const [multipleSelect, setMultipleSelect] = useState(false);
   const [selectedData, setSelectedData] = useState<number[]>([]);
@@ -166,7 +168,7 @@ function DataList({
       )}
 
       {multipleSelect && (
-        <TouchableOpacity style={styles.deleteButton}>
+        <TouchableOpacity style={styles.deleteButton} onPress={onPressDelete}>
           <Text style={styles.text}>Hapus</Text>
         </TouchableOpacity>
       )}
