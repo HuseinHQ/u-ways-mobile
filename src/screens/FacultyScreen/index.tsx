@@ -1,7 +1,12 @@
 import CustomHeader from '@/components/CustomHeader';
 import DataList from '@/components/DataList';
+import useErrorToast from '@/hooks/useToastError';
 import {RootStackParamList} from '@/navigator/StackNavigator';
-import {getFaculties} from '@/store/facultySlice';
+import {
+  bulkDeleteFaculties,
+  clearErrors,
+  getFaculties,
+} from '@/store/facultySlice';
 import {RootState, useAppDispatch} from '@/store/store';
 import Colors from '@/utils/Colors';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
@@ -18,8 +23,27 @@ function FacultyScreen(): React.JSX.Element {
     (state: RootState) => state.auth.accessToken,
   );
   const loading = useSelector((state: RootState) => state.faculty.loading);
+  const errors = useSelector((state: RootState) => state.faculty.errors);
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search, 300);
+
+  const onPressDelete = (value: number[], cb: () => void) => {
+    dispatch(
+      bulkDeleteFaculties({
+        access_token,
+        value,
+        callback: cb,
+      }),
+    );
+  };
+
+  const goToDetail = (value: any) => {
+    navigation.navigate('EditFacultyScreen', value);
+  };
+
+  const onRefresh = () => {
+    dispatch(getFaculties({access_token}));
+  };
 
   useEffect(() => {
     dispatch(getFaculties({access_token}));
@@ -28,6 +52,12 @@ function FacultyScreen(): React.JSX.Element {
   useEffect(() => {
     dispatch(getFaculties({access_token, search: debouncedSearch}));
   }, [debouncedSearch, access_token, dispatch]);
+
+  useErrorToast({
+    title: 'Gagal',
+    errors,
+    dispatchFunction: clearErrors,
+  });
 
   return (
     <SafeAreaView style={styles.container}>
@@ -52,6 +82,9 @@ function FacultyScreen(): React.JSX.Element {
         onPressAddData={() => {
           navigation.navigate('AddFacultyScreen');
         }}
+        onPressDelete={onPressDelete}
+        onPressDetail={goToDetail}
+        onRefresh={onRefresh}
       />
     </SafeAreaView>
   );

@@ -46,6 +46,7 @@ const id = {
     MIN: 'Minimal Score adalah 0',
     MAX: 'Maximal Score adalah 100',
   },
+  Lecturers_MajorId_fkey: 'Fakultas/Prodi ini sedang digunakan!',
 };
 
 export type ErrorKey = keyof typeof id;

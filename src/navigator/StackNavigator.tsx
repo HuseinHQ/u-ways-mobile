@@ -21,6 +21,9 @@ import {NavigatorScreenParams} from '@react-navigation/native';
 import Page0 from '@/screens/CompleteBiodataScreen/Page0';
 import StudentsScreen from '@/screens/StudentsScreen';
 import AddFacultyScreen from '@/screens/AddFacultyScreen';
+import EditFacultyScreen from '@/screens/EditFacultyScreen';
+import AddMajorScreen from '@/screens/AddMajorScreen';
+import EditMajorScreen from '@/screens/EditMajorScreen';
 
 export type RootStackParamList = {
   SplashScreen: undefined;
@@ -38,7 +41,7 @@ export type RootStackParamList = {
 
   Page0: undefined;
   Page1: undefined;
-  Page2: {nip?: string} | undefined;
+  Page2: {nip?: string; semester?: number} | undefined;
   Page3:
     | {semester?: number; faculty: {id: number; name: string}; nip?: string}
     | undefined;
@@ -121,6 +124,9 @@ function StackNavigator() {
       <Stack.Screen name="Page5" component={Page5} />
 
       <Stack.Screen name="AddFacultyScreen" component={AddFacultyScreen} />
+      <Stack.Screen name="EditFacultyScreen" component={EditFacultyScreen} />
+      <Stack.Screen name="AddMajorScreen" component={AddMajorScreen} />
+      <Stack.Screen name="EditMajorScreen" component={EditMajorScreen} />
     </Stack.Navigator>
   );
 }

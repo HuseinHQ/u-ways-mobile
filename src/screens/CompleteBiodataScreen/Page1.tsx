@@ -10,16 +10,16 @@ import {
 } from 'react-native';
 import Header from './LocalComponent';
 import Spacer from '@/components/Spacer';
-import {useNavigation} from '@react-navigation/native';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 import styles from './style';
+import {RootStackParamList} from '@/navigator/StackNavigator';
 
 const data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
 
 function Page1(): React.JSX.Element {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   const goToNextPage = (value: number) => {
-    // @ts-ignore
     navigation.navigate('Page2', {
       semester: value,
     });

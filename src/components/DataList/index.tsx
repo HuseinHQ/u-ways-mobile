@@ -6,12 +6,13 @@ import {
   StyleSheet,
   TouchableOpacity,
   TextInput,
-  ScrollView,
   Pressable,
   BackHandler,
   Keyboard,
   ActivityIndicator,
   Vibration,
+  RefreshControl,
+  FlatList,
 } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -26,7 +27,9 @@ type DataListProp = {
   setSearch?: (newValue: any) => void;
   loading: boolean;
   onPressAddData?: () => void;
-  onPressDelete?: () => void;
+  onPressDelete?: (value: number[], cb: () => void) => void;
+  onPressDetail?: (value: any) => void;
+  onRefresh?: () => void;
 };
 
 function DataList({
@@ -36,7 +39,9 @@ function DataList({
   setSearch,
   loading = false,
   onPressAddData,
-  onPressDelete,
+  onPressDelete = () => {},
+  onPressDetail = () => {},
+  onRefresh = () => {},
 }: DataListProp): React.JSX.Element {
   const [multipleSelect, setMultipleSelect] = useState(false);
   const [selectedData, setSelectedData] = useState<number[]>([]);
@@ -53,6 +58,10 @@ function DataList({
       setSelectedData([id]);
       setMultipleSelect(true);
     }
+  };
+
+  const handleDelete = () => {
+    onPressDelete(selectedData, () => setMultipleSelect(false));
   };
 
   const selectOrDeselectData = (id: number) => {
@@ -135,15 +144,20 @@ function DataList({
           <ActivityIndicator size={40} color={Colors.primary} />
         </View>
       ) : data.length ? (
-        <ScrollView style={styles.dataContainer}>
-          <View style={styles.listContainer}>
-            {data.map(el => (
-              <View key={el.id} style={styles.dataListContainer}>
+        <View style={styles.dataContainer}>
+          <FlatList
+            contentContainerStyle={styles.listContainer}
+            data={data}
+            refreshControl={
+              <RefreshControl refreshing={loading} onRefresh={onRefresh} />
+            }
+            renderItem={({item}) => (
+              <View key={item.id} style={styles.dataListContainer}>
                 {multipleSelect && (
                   <TouchableOpacity
                     style={styles.checkContainer}
-                    onPress={() => selectOrDeselectData(el.id)}>
-                    {selectedData.includes(el.id) ? (
+                    onPress={() => selectOrDeselectData(item.id)}>
+                    {selectedData.includes(item.id) ? (
                       <FontAwesome name="check-square" size={35} />
                     ) : (
                       <FontAwesome name="square-o" size={35} />
@@ -152,15 +166,20 @@ function DataList({
                 )}
                 <TouchableOpacity
                   style={styles.listItem}
-                  onLongPress={() => toggleMultipleSelect(el.id)}>
+                  onLongPress={() => toggleMultipleSelect(item.id)}
+                  onPress={
+                    multipleSelect
+                      ? () => selectOrDeselectData(item.id)
+                      : () => onPressDetail(item)
+                  }>
                   <Text style={styles.text}>
-                    {el.email || el.name || el.title}
+                    {item.email || item.name || item.title}
                   </Text>
                 </TouchableOpacity>
               </View>
-            ))}
-          </View>
-        </ScrollView>
+            )}
+          />
+        </View>
       ) : (
         <View style={GlobalStyles.fullCenter}>
           <Text style={[styles.text, Fonts.black]}>Tidak ada data</Text>
@@ -168,8 +187,12 @@ function DataList({
       )}
 
       {multipleSelect && (
-        <TouchableOpacity style={styles.deleteButton} onPress={onPressDelete}>
-          <Text style={styles.text}>Hapus</Text>
+        <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
+          {loading ? (
+            <ActivityIndicator color={Colors.white.default} size={25} />
+          ) : (
+            <Text style={styles.text}>Hapus</Text>
+          )}
         </TouchableOpacity>
       )}
     </Pressable>
@@ -211,6 +234,7 @@ const styles = StyleSheet.create({
   },
   dataContainer: {
     width: '100%',
+    flex: 1,
   },
   dataListContainer: {
     flexDirection: 'row',
@@ -247,7 +271,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     ...GlobalStyles.shadow,
     width: '100%',
-    marginTop: 10,
+    marginVertical: 10,
+    height: 45,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 

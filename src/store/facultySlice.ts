@@ -53,7 +53,110 @@ export const postFaculty = createAsyncThunk(
       successCB();
       return true;
     } catch (err) {
-      return rejectWithValue((err as any)?.response?.data?.message);
+      return rejectWithValue((err as any)?.response?.data?.errors);
+    }
+  },
+);
+
+export const bulkDeleteFaculties = createAsyncThunk(
+  'faculties/bulkdDelte',
+  async (
+    {
+      access_token,
+      value,
+      callback = () => {},
+    }: {
+      access_token: string;
+      value: number[];
+      callback?: () => void;
+    },
+    {rejectWithValue, dispatch},
+  ) => {
+    try {
+      const {data} = await axios({
+        method: 'DELETE',
+        url: baseUrl + '/faculties',
+        headers: {access_token},
+        data: value,
+        timeout: 5000,
+      });
+
+      dispatch(getFaculties({access_token}));
+      Toast.show({
+        text1: 'Berhasil',
+        text2: data.data.message,
+      });
+      callback();
+      return true;
+    } catch (err) {
+      callback();
+      return rejectWithValue((err as any)?.response?.data?.errors);
+    }
+  },
+);
+
+export const editFaculty = createAsyncThunk(
+  'faculties/edit',
+  async (
+    {
+      access_token,
+      id: identifier,
+      name,
+      successCB = () => {},
+    }: {
+      access_token: string;
+      id: number;
+      name: string;
+      successCB?: () => void;
+    },
+    {rejectWithValue, dispatch},
+  ) => {
+    try {
+      const {data} = await axios({
+        method: 'PUT',
+        url: baseUrl + '/faculties/' + identifier,
+        headers: {access_token},
+        data: {name},
+      });
+
+      dispatch(getFaculties({access_token}));
+      Toast.show({
+        text1: 'Berhasil',
+        text2: data.data.message,
+      });
+
+      successCB();
+      return true;
+    } catch (err) {
+      return rejectWithValue((err as any)?.response?.data?.errors);
+    }
+  },
+);
+
+export const deleteFaculty = createAsyncThunk(
+  'faculties/delete',
+  async (
+    {
+      access_token,
+      id: identifier,
+      successCB = () => {},
+    }: {access_token: string; id: number; successCB?: () => void},
+    {rejectWithValue, dispatch},
+  ) => {
+    try {
+      const {data} = await axios({
+        method: 'DELETE',
+        url: baseUrl + '/faculties/' + identifier,
+        headers: {access_token},
+        timeout: 5000,
+      });
+
+      dispatch(getFaculties({access_token}));
+      successCB();
+      Toast.show({text1: 'Berhasil', text2: data.data.message});
+      return data.data;
+    } catch (err) {
+      return rejectWithValue((err as any)?.response?.data?.errors);
     }
   },
 );
@@ -96,6 +199,36 @@ const facultySlice = createSlice({
         state.loading = false;
       })
       .addCase(postFaculty.rejected, (state, action) => {
+        state.loading = false;
+        state.errors = action.payload as any;
+      })
+      .addCase(bulkDeleteFaculties.pending, state => {
+        state.loading = true;
+      })
+      .addCase(bulkDeleteFaculties.fulfilled, state => {
+        state.loading = false;
+      })
+      .addCase(bulkDeleteFaculties.rejected, (state, action) => {
+        state.loading = false;
+        state.errors = action.payload as any;
+      })
+      .addCase(editFaculty.pending, state => {
+        state.loading = true;
+      })
+      .addCase(editFaculty.fulfilled, state => {
+        state.loading = false;
+      })
+      .addCase(editFaculty.rejected, (state, action) => {
+        state.loading = false;
+        state.errors = action.payload as any;
+      })
+      .addCase(deleteFaculty.pending, state => {
+        state.loading = true;
+      })
+      .addCase(deleteFaculty.fulfilled, state => {
+        state.loading = false;
+      })
+      .addCase(deleteFaculty.rejected, (state, action) => {
         state.loading = false;
         state.errors = action.payload as any;
       });

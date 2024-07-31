@@ -39,6 +39,12 @@ const GlobalStyles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 10,
   },
+  bgBlue: {
+    backgroundColor: Colors.blue.default,
+  },
+  bgPrimary: {
+    backgroundColor: Colors.primary,
+  },
 });
 
 export default GlobalStyles;
