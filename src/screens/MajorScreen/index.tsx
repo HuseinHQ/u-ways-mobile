@@ -1,5 +1,6 @@
 import CustomHeader from '@/components/CustomHeader';
 import DataList from '@/components/DataList';
+import useSearch from '@/hooks/useSearch';
 import useErrorToast from '@/hooks/useToastError';
 import {RootStackParamList} from '@/navigator/StackNavigator';
 import {bulkDeleteMajors, clearErrors, getMajors} from '@/store/majorSlice';
@@ -7,7 +8,7 @@ import {RootState, useAppDispatch} from '@/store/store';
 import Colors from '@/utils/Colors';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {useDebounce} from '@uidotdev/usehooks';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {SafeAreaView, StatusBar, StyleSheet} from 'react-native';
 import {useSelector} from 'react-redux';
 
@@ -19,7 +20,7 @@ function MajorScreen(): React.JSX.Element {
   );
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const loading = useSelector((state: RootState) => state.major.loading);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useSearch();
   const debouncedSearch = useDebounce(search, 300);
   const errors = useSelector((state: RootState) => state.major.errors);
   useErrorToast({

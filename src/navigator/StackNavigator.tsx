@@ -24,6 +24,8 @@ import AddFacultyScreen from '@/screens/AddFacultyScreen';
 import EditFacultyScreen from '@/screens/EditFacultyScreen';
 import AddMajorScreen from '@/screens/AddMajorScreen';
 import EditMajorScreen from '@/screens/EditMajorScreen';
+import EditLecturerScreen from '@/screens/EditLecturerScreen';
+import EditStudentScreen from '@/screens/EditStudentScreen';
 
 export type RootStackParamList = {
   SplashScreen: undefined;
@@ -127,6 +129,8 @@ function StackNavigator() {
       <Stack.Screen name="EditFacultyScreen" component={EditFacultyScreen} />
       <Stack.Screen name="AddMajorScreen" component={AddMajorScreen} />
       <Stack.Screen name="EditMajorScreen" component={EditMajorScreen} />
+      <Stack.Screen name="EditLecturerScreen" component={EditLecturerScreen} />
+      <Stack.Screen name="EditStudentScreen" component={EditStudentScreen} />
     </Stack.Navigator>
   );
 }

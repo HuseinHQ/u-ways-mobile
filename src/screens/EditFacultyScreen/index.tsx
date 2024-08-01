@@ -15,6 +15,7 @@ import {
   View,
   TouchableOpacity,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
 import {useSelector} from 'react-redux';
 
@@ -54,8 +55,26 @@ function EditFacultyScreen(): React.JSX.Element {
   };
 
   const handleDelete = () => {
-    dispatch(
-      deleteFaculty({access_token, id, successCB: () => navigation.goBack()}),
+    Alert.alert(
+      'Apakah Anda yakin ingin mendelete data?',
+      'Aksi ini tidak dapat dibatalkan!',
+      [
+        {
+          text: 'Batal',
+        },
+        {
+          text: 'Iya',
+          onPress: async () => {
+            dispatch(
+              deleteFaculty({
+                access_token,
+                id,
+                successCB: () => navigation.goBack(),
+              }),
+            );
+          },
+        },
+      ],
     );
   };
 

@@ -1,5 +1,11 @@
+import {
+  handleFulfilled,
+  handlePending,
+  handleRejected,
+} from '@/helpers/builderHandler';
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import axios from 'axios';
+import Toast from 'react-native-toast-message';
 
 const baseUrl = process.env.BACKEND_URL;
 
@@ -34,6 +40,98 @@ export const getAllLecturers = createAsyncThunk(
   },
 );
 
+export const deleteLecturer = createAsyncThunk(
+  'lecturers/delete',
+  async (
+    {
+      access_token,
+      id,
+      callback = () => {},
+    }: {access_token: string; id: number; callback: () => void},
+    {rejectWithValue, dispatch},
+  ) => {
+    try {
+      const {data} = await axios({
+        method: 'DELETE',
+        url: baseUrl + '/lecturers/' + id,
+        headers: {access_token},
+        timeout: 5000,
+      });
+
+      dispatch(getAllLecturers({access_token}));
+      callback();
+      Toast.show({text1: 'Berhasil', text2: data.data.message});
+      return true;
+    } catch (err) {
+      return rejectWithValue((err as any)?.response?.data?.errors);
+    }
+  },
+);
+
+export const bulkDeleteLecturers = createAsyncThunk(
+  'lecturers/bulkDelete',
+  async (
+    {
+      access_token,
+      ids,
+      callback = () => {},
+    }: {access_token: string; ids: number[]; callback?: () => void},
+    {rejectWithValue, dispatch},
+  ) => {
+    try {
+      const {data} = await axios({
+        method: 'DELETE',
+        url: baseUrl + '/lecturers',
+        data: ids,
+        headers: {access_token},
+        timeout: 5000,
+      });
+
+      dispatch(getAllLecturers({access_token}));
+      Toast.show({text1: 'Berhasil', text2: data.data.message});
+      callback();
+      return true;
+    } catch (err) {
+      return rejectWithValue((err as any)?.response?.data?.errors);
+    }
+  },
+);
+
+export const editLecturer = createAsyncThunk(
+  'lecturers/edit',
+  async (
+    {
+      access_token,
+      id,
+      lecturerData,
+      callback = () => {},
+    }: {
+      access_token: string;
+      id: number;
+      lecturerData: {name: string; email: string; nip: string; MajorId: number};
+      callback: () => void;
+    },
+    {rejectWithValue, dispatch},
+  ) => {
+    try {
+      const {data} = await axios({
+        method: 'PUT',
+        url: baseUrl + '/lecturers/' + id,
+        data: lecturerData,
+        headers: {access_token},
+        timeout: 5000,
+      });
+
+      dispatch(getAllLecturers({access_token}));
+      callback();
+      Toast.show({text1: 'Berhasil', text2: data.data.message});
+      return true;
+    } catch (err) {
+      return rejectWithValue((err as any)?.response?.data?.errors);
+    }
+  },
+);
+
 type Lecturer = {
   id: number;
   name: string;
@@ -50,6 +148,9 @@ const lecturerSlice = createSlice({
     clearErrors: state => {
       state.errors = null;
     },
+    setErrors: (state, action) => {
+      state.errors = action.payload;
+    },
   },
   extraReducers: builder => {
     builder
@@ -62,12 +163,18 @@ const lecturerSlice = createSlice({
         state.loading = false;
         state.errors = null;
       })
-      .addCase(getAllLecturers.rejected, (state, action) => {
-        state.loading = false;
-        state.errors = action.payload as any;
-      });
+      .addCase(getAllLecturers.rejected, handleRejected)
+      .addCase(deleteLecturer.pending, handlePending)
+      .addCase(deleteLecturer.fulfilled, handleFulfilled)
+      .addCase(deleteLecturer.rejected, handleRejected)
+      .addCase(bulkDeleteLecturers.pending, handlePending)
+      .addCase(bulkDeleteLecturers.fulfilled, handleFulfilled)
+      .addCase(bulkDeleteLecturers.rejected, handleRejected)
+      .addCase(editLecturer.pending, handlePending)
+      .addCase(editLecturer.fulfilled, handleFulfilled)
+      .addCase(editLecturer.rejected, handleRejected);
   },
 });
 
-export const {clearErrors} = lecturerSlice.actions;
+export const {clearErrors, setErrors} = lecturerSlice.actions;
 export default lecturerSlice.reducer;

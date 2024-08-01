@@ -1,5 +1,6 @@
 import CustomHeader from '@/components/CustomHeader';
 import DataList from '@/components/DataList';
+import useSearch from '@/hooks/useSearch';
 import useErrorToast from '@/hooks/useToastError';
 import {RootStackParamList} from '@/navigator/StackNavigator';
 import {
@@ -11,7 +12,7 @@ import {RootState, useAppDispatch} from '@/store/store';
 import Colors from '@/utils/Colors';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {useDebounce} from '@uidotdev/usehooks';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {SafeAreaView, StatusBar, StyleSheet} from 'react-native';
 import {useSelector} from 'react-redux';
 
@@ -24,7 +25,7 @@ function FacultyScreen(): React.JSX.Element {
   );
   const loading = useSelector((state: RootState) => state.faculty.loading);
   const errors = useSelector((state: RootState) => state.faculty.errors);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useSearch();
   const debouncedSearch = useDebounce(search, 300);
 
   const onPressDelete = (value: number[], cb: () => void) => {

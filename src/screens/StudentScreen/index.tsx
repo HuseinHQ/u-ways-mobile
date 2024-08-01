@@ -1,22 +1,45 @@
 import CustomHeader from '@/components/CustomHeader';
 import DataList from '@/components/DataList';
+import useSearch from '@/hooks/useSearch';
+import useErrorToast from '@/hooks/useToastError';
+import {RootStackParamList} from '@/navigator/StackNavigator';
 import {RootState, useAppDispatch} from '@/store/store';
-import {getAllStudents} from '@/store/studentSlice';
+import {
+  bulkDeleteStudents,
+  clearErrors,
+  getAllStudents,
+} from '@/store/studentSlice';
 import Colors from '@/utils/Colors';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {useDebounce} from '@uidotdev/usehooks';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {SafeAreaView, StatusBar, StyleSheet} from 'react-native';
 import {useSelector} from 'react-redux';
 
 function StudentScreen(): React.JSX.Element {
   const students = useSelector((state: RootState) => state.student.data);
   const dispatch = useAppDispatch();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const access_token = useSelector(
     (state: RootState) => state.auth.accessToken,
   );
-  const loading = useSelector((state: RootState) => state.lecturer.loading);
-  const [search, setSearch] = useState('');
+  const loading = useSelector((state: RootState) => state.student.loading);
+  const errors = useSelector((state: RootState) => state.student.errors);
+  const [search, setSearch] = useSearch();
   const debouncedSearch = useDebounce(search, 300);
+
+  const goToDetail = (value: any) => {
+    navigation.navigate('EditStudentScreen', value);
+  };
+
+  const handleDelete = (ids: number[], cb: () => void) => {
+    dispatch(bulkDeleteStudents({access_token, ids, callback: cb}));
+    cb();
+  };
+
+  const handleRefresh = () => {
+    dispatch(getAllStudents({access_token}));
+  };
 
   useEffect(() => {
     dispatch(getAllStudents({access_token}));
@@ -25,6 +48,12 @@ function StudentScreen(): React.JSX.Element {
   useEffect(() => {
     dispatch(getAllStudents({access_token, search: debouncedSearch}));
   }, [debouncedSearch, access_token, dispatch]);
+
+  useErrorToast({
+    title: 'Gagal',
+    errors,
+    dispatchFunction: clearErrors,
+  });
 
   return (
     <SafeAreaView style={styles.container}>
@@ -46,6 +75,9 @@ function StudentScreen(): React.JSX.Element {
         search={search}
         setSearch={setSearch}
         loading={loading}
+        onPressDetail={goToDetail}
+        onPressDelete={handleDelete}
+        onRefresh={handleRefresh}
       />
     </SafeAreaView>
   );

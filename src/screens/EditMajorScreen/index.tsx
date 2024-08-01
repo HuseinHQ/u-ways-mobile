@@ -17,6 +17,7 @@ import {
   View,
   TouchableOpacity,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import {useSelector} from 'react-redux';
@@ -63,8 +64,26 @@ function EditMajorScreen(): React.JSX.Element {
   };
 
   const handleDelete = () => {
-    dispatch(
-      deleteMajor({access_token, id, successCB: () => navigation.goBack()}),
+    Alert.alert(
+      'Apakah Anda yakin ingin mendelete data?',
+      'Aksi ini tidak dapat dibatalkan!',
+      [
+        {
+          text: 'Batal',
+        },
+        {
+          text: 'Iya',
+          onPress: async () => {
+            dispatch(
+              deleteMajor({
+                access_token,
+                id,
+                successCB: () => navigation.goBack(),
+              }),
+            );
+          },
+        },
+      ],
     );
   };
 

@@ -162,6 +162,7 @@ function EditProfileScreen(): React.JSX.Element {
           userData.role === 'mahasiswa' ? 'semester' : 'nip',
         )}
         keyboardType="number-pad"
+        editable={userData.role === 'dosen'}
       />
       <Text style={styles.label}>Fakultas:</Text>
       <Spacer height={10} />
@@ -208,6 +209,10 @@ function EditProfileScreen(): React.JSX.Element {
           <Text style={styles.label}>Dosen Wali:</Text>
           <Spacer height={10} />
           <DropDownPicker
+            disabled
+            disabledStyle={{borderColor: Colors.black.halfOpacity}}
+            textStyle={{color: Colors.black.halfOpacity}}
+            showArrowIcon={false}
             open={openLecturerDropdown}
             value={LecturerId}
             items={

@@ -13,6 +13,8 @@ import {
   Vibration,
   RefreshControl,
   FlatList,
+  Alert,
+  ScrollView,
 } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -61,7 +63,21 @@ function DataList({
   };
 
   const handleDelete = () => {
-    onPressDelete(selectedData, () => setMultipleSelect(false));
+    Alert.alert(
+      'Apakah Anda yakin ingin mendelete data?',
+      'Aksi ini tidak dapat dibatalkan!',
+      [
+        {
+          text: 'Batal',
+        },
+        {
+          text: 'Iya',
+          onPress: async () => {
+            onPressDelete(selectedData, () => setMultipleSelect(false));
+          },
+        },
+      ],
+    );
   };
 
   const selectOrDeselectData = (id: number) => {
@@ -172,7 +188,10 @@ function DataList({
                       ? () => selectOrDeselectData(item.id)
                       : () => onPressDetail(item)
                   }>
-                  <Text style={styles.text}>
+                  <Text
+                    style={styles.text}
+                    numberOfLines={1}
+                    ellipsizeMode="tail">
                     {item.email || item.name || item.title}
                   </Text>
                 </TouchableOpacity>
@@ -181,9 +200,15 @@ function DataList({
           />
         </View>
       ) : (
-        <View style={GlobalStyles.fullCenter}>
+        <ScrollView
+          refreshControl={
+            <RefreshControl refreshing={loading} onRefresh={onRefresh} />
+          }
+          contentContainerStyle={GlobalStyles.fullCenter}
+          // eslint-disable-next-line react-native/no-inline-styles
+          style={{width: '100%'}}>
           <Text style={[styles.text, Fonts.black]}>Tidak ada data</Text>
-        </View>
+        </ScrollView>
       )}
 
       {multipleSelect && (
@@ -259,6 +284,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     ...GlobalStyles.shadow,
     flex: 1,
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   text: {
     ...Fonts.subtitle,

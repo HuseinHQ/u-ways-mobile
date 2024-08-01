@@ -32,10 +32,15 @@ function InputBox({
           value={value}
           onChangeText={setValue}
           keyboardType={keyboardType}
-          style={styles.input}
+          style={[styles.input, !editable && styles.disabledText]}
           editable={editable}
         />
-        <View style={styles.horizontalLine} />
+        <View
+          style={[
+            styles.horizontalLine,
+            !editable && styles.disabledHorizontalLine,
+          ]}
+        />
       </View>
       <Spacer height={15} />
     </>
@@ -54,10 +59,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 0,
     paddingVertical: 5,
   },
+  disabledText: {
+    color: Colors.black.halfOpacity,
+  },
   horizontalLine: {
     width: '100%',
     height: 0.7,
     backgroundColor: Colors.black.default,
+  },
+  disabledHorizontalLine: {
+    backgroundColor: Colors.black.halfOpacity,
   },
 });
 

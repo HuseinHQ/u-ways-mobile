@@ -1,6 +1,6 @@
 import Colors from '@/utils/Colors';
 import React from 'react';
-import {StyleSheet, Text, View, Pressable} from 'react-native';
+import {StyleSheet, Text, View, Pressable, Keyboard} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Feather from 'react-native-vector-icons/Feather';
 import Spacer from '../Spacer';
@@ -29,6 +29,7 @@ function CustomHeader({
     navigation.goBack();
   };
   const openDrawer = () => {
+    Keyboard.dismiss();
     navigation.dispatch(DrawerActions.openDrawer());
   };
 
