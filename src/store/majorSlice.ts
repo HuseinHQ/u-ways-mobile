@@ -23,7 +23,7 @@ export const getMajors = createAsyncThunk(
       const {data} = await axios({
         method: 'GET',
         url: `${baseUrl}/majors?${params.toString()}`,
-        headers: {access_token},
+        headers: {'X-Access-Token': access_token},
         timeout: 5000,
       });
       return data.data;
@@ -53,7 +53,7 @@ export const postMajor = createAsyncThunk(
       const {data} = await axios({
         method: 'POST',
         url: baseUrl + '/majors',
-        headers: {access_token},
+        headers: {'X-Access-Token': access_token},
         data: {name, FacultyId},
       });
 
@@ -90,7 +90,7 @@ export const bulkDeleteMajors = createAsyncThunk(
       const {data} = await axios({
         method: 'DELETE',
         url: baseUrl + '/majors',
-        headers: {access_token},
+        headers: {'X-Access-Token': access_token},
         data: value,
         timeout: 5000,
       });
@@ -132,7 +132,7 @@ export const editMajor = createAsyncThunk(
       const {data} = await axios({
         method: 'PUT',
         url: baseUrl + '/majors/' + identifier,
-        headers: {access_token},
+        headers: {'X-Access-Token': access_token},
         data: {name, FacultyId},
       });
 
@@ -164,7 +164,7 @@ export const deleteMajor = createAsyncThunk(
       const {data} = await axios({
         method: 'DELETE',
         url: baseUrl + '/majors/' + identifier,
-        headers: {access_token},
+        headers: {'X-Access-Token': access_token},
         timeout: 5000,
       });
 

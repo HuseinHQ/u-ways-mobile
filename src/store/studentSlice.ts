@@ -44,7 +44,7 @@ export const getStudents = createAsyncThunk(
       const {data} = await axios({
         method: 'GET',
         url: `${baseUrl}/students${cohort ? '?cohort=' + cohort : ''}`,
-        headers: {access_token},
+        headers: {'X-Access-Token': access_token},
       });
 
       return data;
@@ -62,7 +62,7 @@ export const getAllStudents = createAsyncThunk(
       const {data} = await axios({
         method: 'GET',
         url: `${baseUrl}/students/all${search ? '?search=' + search : ''}`,
-        headers: {access_token},
+        headers: {'X-Access-Token': access_token},
       });
 
       return data.data;
@@ -86,7 +86,7 @@ export const deleteStudent = createAsyncThunk(
       const {data} = await axios({
         method: 'DELETE',
         url: baseUrl + '/students/' + id,
-        headers: {access_token},
+        headers: {'X-Access-Token': access_token},
         timeout: 5000,
       });
 
@@ -115,7 +115,7 @@ export const bulkDeleteStudents = createAsyncThunk(
         method: 'DELETE',
         url: baseUrl + '/students',
         data: ids,
-        headers: {access_token},
+        headers: {'X-Access-Token': access_token},
         timeout: 5000,
       });
 
@@ -158,7 +158,7 @@ export const editStudent = createAsyncThunk(
         method: 'PUT',
         url: baseUrl + '/students/' + id,
         data: studentData,
-        headers: {access_token},
+        headers: {'X-Access-Token': access_token},
         timeout: 5000,
       });
 

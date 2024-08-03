@@ -14,7 +14,7 @@ export const getFaculties = createAsyncThunk(
       const {data} = await axios({
         method: 'GET',
         url: `${baseUrl}/faculties${search ? `?search=${search}` : ''}`,
-        headers: {access_token},
+        headers: {'X-Access-Token': access_token},
         timeout: 5000,
       });
 
@@ -39,7 +39,7 @@ export const postFaculty = createAsyncThunk(
       const {data} = await axios({
         method: 'POST',
         url: baseUrl + '/faculties',
-        headers: {access_token},
+        headers: {'X-Access-Token': access_token},
         data: {name},
       });
 
@@ -76,7 +76,7 @@ export const bulkDeleteFaculties = createAsyncThunk(
       const {data} = await axios({
         method: 'DELETE',
         url: baseUrl + '/faculties',
-        headers: {access_token},
+        headers: {'X-Access-Token': access_token},
         data: value,
         timeout: 5000,
       });
@@ -115,7 +115,7 @@ export const editFaculty = createAsyncThunk(
       const {data} = await axios({
         method: 'PUT',
         url: baseUrl + '/faculties/' + identifier,
-        headers: {access_token},
+        headers: {'X-Access-Token': access_token},
         data: {name},
       });
 
@@ -147,7 +147,7 @@ export const deleteFaculty = createAsyncThunk(
       const {data} = await axios({
         method: 'DELETE',
         url: baseUrl + '/faculties/' + identifier,
-        headers: {access_token},
+        headers: {'X-Access-Token': access_token},
         timeout: 5000,
       });
 

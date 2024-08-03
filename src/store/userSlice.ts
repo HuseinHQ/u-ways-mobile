@@ -17,7 +17,7 @@ export const getUserProfile = createAsyncThunk(
       const {data} = await axios({
         method: 'GET',
         url: baseUrl + '/user',
-        headers: {access_token},
+        headers: {'X-Access-Token': access_token},
         timeout: 5000,
       });
       const params = {is_bio_complete: data.data.is_bio_complete};
@@ -41,7 +41,7 @@ export const updateUserProfile = createAsyncThunk(
       const {data: response} = await axios({
         method: 'PUT',
         url: `${baseUrl}/user`,
-        headers: {access_token},
+        headers: {'X-Access-Token': access_token},
         data,
         timeout: 5000,
       });
@@ -74,7 +74,10 @@ export const completeBiodata = createAsyncThunk(
         method: 'POST',
         url: baseUrl + '/user/complete-data',
         data: formData,
-        headers: {access_token, 'Content-Type': 'application/json'},
+        headers: {
+          'X-Access-Token': access_token,
+          'Content-Type': 'application/json',
+        },
         timeout: 5000,
       });
       dispatch(authBioComplete(true));

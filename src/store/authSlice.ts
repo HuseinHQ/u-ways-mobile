@@ -72,7 +72,7 @@ export const refreshToken = createAsyncThunk(
       const {data} = await axios({
         method: 'GET',
         url: baseUrl + '/auth/refresh-token',
-        headers: {refresh_token},
+        headers: {'X-Refresh-Token': refresh_token},
         timeout: 5000,
       });
       successCallback(data.data.access_token);

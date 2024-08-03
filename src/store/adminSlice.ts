@@ -28,7 +28,7 @@ export const getDashboardData = createAsyncThunk(
       const {data} = await axios({
         method: 'GET',
         url: `${baseUrl}/admin/dashboard`,
-        headers: {access_token},
+        headers: {'X-Access-Token': access_token},
       });
       return data.data;
     } catch (err) {

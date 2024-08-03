@@ -56,7 +56,7 @@ export const getArticles = createAsyncThunk(
       const {data} = await axios({
         method: 'GET',
         url: `${baseUrl}/articles?${params.toString()}`,
-        headers: {access_token},
+        headers: {'X-Access-Token': access_token},
         timeout: 5000,
       });
 
@@ -82,7 +82,7 @@ export const getArticleDetail = createAsyncThunk(
       const {data} = await axios({
         method: 'GET',
         url: `${baseUrl}/articles/${id}`,
-        headers: {access_token},
+        headers: {'X-Access-Token': access_token},
         timeout: 5000,
       });
 

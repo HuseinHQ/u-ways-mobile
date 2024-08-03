@@ -140,7 +140,7 @@ function EditStudentScreen(): React.JSX.Element {
           const {data} = await axios({
             method: 'GET',
             url: `${process.env.BACKEND_URL}/students/${id}`,
-            headers: {access_token},
+            headers: {'X-Access-Token': access_token},
             timeout: 500,
           });
 

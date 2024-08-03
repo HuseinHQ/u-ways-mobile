@@ -11,7 +11,7 @@ export const getChats = createAsyncThunk(
       const {data} = await axios({
         method: 'GET',
         url: baseUrl + '/chats',
-        headers: {access_token},
+        headers: {'X-Access-Token': access_token},
       });
 
       return data.data;
@@ -34,7 +34,10 @@ export const updateChatDate = createAsyncThunk(
         method: 'PATCH',
         url: baseUrl + '/chats/' + chatId,
         data: {date},
-        headers: {access_token, 'Content-Type': 'application/json'},
+        headers: {
+          'X-Access-Token': access_token,
+          'Content-Type': 'application/json',
+        },
       });
 
       dispatch(getChats({access_token}));
