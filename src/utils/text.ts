@@ -46,6 +46,24 @@ const id = {
     MIN: 'Minimal Score adalah 0',
     MAX: 'Maximal Score adalah 100',
   },
+  title: {
+    LENGTH: 'Minimal dan maksimal karakter judul adalah 8 dan 255',
+    NULL: 'Judul tidak boleh kosong',
+    EMPTY: 'Judul tidak boleh kosong',
+  },
+  abstract: {
+    LENGTH: 'Minimal dan maksimal karakter abstrak adalah 8 dan 255',
+    NULL: 'Abstrak tidak boleh kosong',
+    EMPTY: 'Abstrak tidak boleh kosong',
+  },
+  description: {
+    NULL: 'Deskripsi tidak boleh kosong',
+    EMPTY: 'Deskripsi tidak boleh kosong',
+  },
+  author: {
+    NULL: 'Penulis tidak boleh kosong',
+    EMPTY: 'Penulis tidak boleh kosong',
+  },
   Lecturers_MajorId_fkey: 'Fakultas/Prodi ini sedang digunakan!',
   Students_LecturerId_fkey: 'Dosen masih memiliki mahasiswa aktif',
 };

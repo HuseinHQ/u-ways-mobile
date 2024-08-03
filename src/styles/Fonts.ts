@@ -31,6 +31,18 @@ const Fonts = StyleSheet.create({
   white: {
     color: Colors.white.default,
   },
+  medium: {
+    fontSize: 16,
+  },
+  small: {
+    fontSize: 12,
+  },
+  montserratSemiBold: {
+    fontFamily: 'Montserrat-SemiBold',
+  },
+  center: {
+    textAlign: 'center',
+  },
 });
 
 export default Fonts;

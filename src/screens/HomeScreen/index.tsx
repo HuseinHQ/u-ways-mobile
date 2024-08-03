@@ -48,16 +48,18 @@ function HomeScreen(): React.JSX.Element {
 
   useFocusEffect(
     useCallback(() => {
-      if (!isBioComplete || !is_bio_complete) {
-        setModalVisible(true);
-      } else {
-        dispatch(getUserProfile({access_token}));
-      }
+      if (role !== 'admin') {
+        if (!isBioComplete || !is_bio_complete) {
+          setModalVisible(true);
+        } else {
+          dispatch(getUserProfile({access_token}));
+        }
 
-      if (isBioComplete) {
-        setModalVisible(false);
+        if (isBioComplete) {
+          setModalVisible(false);
+        }
       }
-    }, [isBioComplete, is_bio_complete, dispatch, access_token]),
+    }, [isBioComplete, is_bio_complete, dispatch, access_token, role]),
   );
 
   const goToNextPage = () => {

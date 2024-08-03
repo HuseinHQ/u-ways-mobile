@@ -26,6 +26,8 @@ import AddMajorScreen from '@/screens/AddMajorScreen';
 import EditMajorScreen from '@/screens/EditMajorScreen';
 import EditLecturerScreen from '@/screens/EditLecturerScreen';
 import EditStudentScreen from '@/screens/EditStudentScreen';
+import EditArticleScreen from '@/screens/EditArticleScreen';
+import AddArticleScreen from '@/screens/AddArticleScreen';
 
 export type RootStackParamList = {
   SplashScreen: undefined;
@@ -34,7 +36,7 @@ export type RootStackParamList = {
   RegisterScreen: undefined;
   Main: NavigatorScreenParams<TabNavigatorParamList> | undefined;
   ArticlesScreen: undefined;
-  ArticleDetailScreen: {id: number | null | undefined} | undefined;
+  ArticleDetailScreen: {id: number; editMode?: boolean} | undefined;
   QuestionnaireScreen: undefined;
   QuestionCompleteScreen: undefined;
   EditProfileScreen: undefined;
@@ -71,6 +73,8 @@ export type RootStackParamList = {
   EditMajorScreen: {id: number} | undefined;
   EditLecturerScreen: {id: number} | undefined;
   EditStudentScreen: {id: number} | undefined;
+  AddArticleScreen: undefined;
+  EditArticleScreen: {id: number} | undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -131,6 +135,8 @@ function StackNavigator() {
       <Stack.Screen name="EditMajorScreen" component={EditMajorScreen} />
       <Stack.Screen name="EditLecturerScreen" component={EditLecturerScreen} />
       <Stack.Screen name="EditStudentScreen" component={EditStudentScreen} />
+      <Stack.Screen name="AddArticleScreen" component={AddArticleScreen} />
+      <Stack.Screen name="EditArticleScreen" component={EditArticleScreen} />
     </Stack.Navigator>
   );
 }

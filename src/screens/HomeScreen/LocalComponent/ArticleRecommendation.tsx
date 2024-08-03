@@ -59,7 +59,9 @@ function ArticleRecommendation(): React.JSX.Element {
                   navigation.navigate('ArticleDetailScreen', {id: item.id})
                 }
                 style={styles.featureItem}>
-                <Image source={{uri: item.imageUrl}} style={styles.image} />
+                {item?.imageUrl && (
+                  <Image source={{uri: item.imageUrl}} style={styles.image} />
+                )}
                 <View style={styles.overlay} />
                 <Text
                   style={[

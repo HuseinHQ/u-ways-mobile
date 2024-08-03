@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  TextInputProps,
   View,
 } from 'react-native';
 
@@ -15,7 +16,7 @@ type InputBoxProps = {
   setValue: (value: string) => void;
   keyboardType?: KeyboardTypeOptions;
   editable?: boolean;
-};
+} & TextInputProps;
 
 function InputBox({
   label,
@@ -23,6 +24,7 @@ function InputBox({
   setValue,
   keyboardType = 'default',
   editable = true,
+  ...props
 }: InputBoxProps): React.JSX.Element {
   return (
     <>
@@ -31,9 +33,10 @@ function InputBox({
         <TextInput
           value={value}
           onChangeText={setValue}
-          keyboardType={keyboardType}
           style={styles.input}
+          keyboardType={keyboardType}
           editable={editable}
+          {...props}
         />
         <View style={styles.horizontalLine} />
       </View>

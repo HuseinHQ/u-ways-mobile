@@ -16,6 +16,14 @@ const useErrorToast = (data: useErrorToastProps) => {
 
   useFocusEffect(
     useCallback(() => {
+      if (errors === 'null') {
+        return Toast.show({
+          type: 'error',
+          text1: title,
+          text2: 'No Internet Access',
+        });
+      }
+
       if (errors) {
         const key = Object.keys(errors)[0];
         if (key === 'code') {

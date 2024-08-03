@@ -11,15 +11,21 @@ import edit_artikel from '@/assets/images/edit_artikel.png';
 import Colors from '@/utils/Colors';
 import Spacer from '@/components/Spacer';
 import Fonts from '@/styles/Fonts';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
+import {DrawerParamList} from '@/navigator/DrawerNavigator';
 
 function EditArticle(): React.JSX.Element {
+  const navigation = useNavigation<NavigationProp<DrawerParamList>>();
+
   return (
     <View>
       <Text style={Fonts.subtitle}>Edit Artikel</Text>
 
       <Spacer height={10} />
 
-      <TouchableOpacity style={styles.container}>
+      <TouchableOpacity
+        style={styles.container}
+        onPress={() => navigation.navigate('ManageArticleScreen')}>
         <Image source={edit_artikel} style={styles.image} />
         <Text style={styles.text}>by U-WAYS</Text>
       </TouchableOpacity>

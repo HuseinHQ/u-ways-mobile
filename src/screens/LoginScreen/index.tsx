@@ -16,7 +16,6 @@ import id from '@/utils/text';
 import {useSelector} from 'react-redux';
 import {RootState, useAppDispatch} from '@/store/store';
 import {login, clearErrors as clearAuthErrors} from '@/store/authSlice';
-import {clearErrors as clearUserErrors} from '@/store/userSlice';
 import useErrorToast from '@/hooks/useToastError';
 
 function LoginScreen(): React.JSX.Element {
@@ -24,17 +23,11 @@ function LoginScreen(): React.JSX.Element {
   const authLoading = useSelector((state: RootState) => state.auth.loading);
   const userLoading = useSelector((state: RootState) => state.user.loading);
   const authErrors = useSelector((state: RootState) => state.auth.errors);
-  const userErrors = useSelector((state: RootState) => state.user.errors);
   const dispatch = useAppDispatch();
   useErrorToast({
     errors: authErrors,
     title: 'Login Error',
     dispatchFunction: clearAuthErrors,
-  });
-  useErrorToast({
-    errors: userErrors,
-    title: 'Login Error',
-    dispatchFunction: clearUserErrors,
   });
 
   const [form, setForm] = useState({
@@ -95,7 +88,7 @@ function LoginScreen(): React.JSX.Element {
       <SafeAreaView style={styles.container}>
         <StatusBar barStyle="light-content" backgroundColor={Colors.primary} />
         <Text style={[Fonts.title, styles.title]}>U-WAYS</Text>
-        <Image source={image} style={styles.image} />
+        {image && <Image source={image} style={styles.image} />}
 
         <View style={styles.innerContainer}>
           <View style={styles.textContainer}>

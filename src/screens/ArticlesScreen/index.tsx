@@ -52,16 +52,20 @@ function ArticlesScreen(): React.JSX.Element {
               <View style={styles.topContent}>
                 <Text style={styles.title}>{item.title}</Text>
                 <TouchableOpacity
-                  onPress={() =>
-                    navigation.navigate('ArticleDetailScreen', {id: item.id})
-                  }
+                  onPress={() => {
+                    if (item?.id) {
+                      navigation.navigate('ArticleDetailScreen', {id: item.id});
+                    }
+                  }}
                   style={styles.button}>
                   <Text style={styles.lihat}>Lihat</Text>
                 </TouchableOpacity>
               </View>
               <Spacer height={10} />
               <View style={styles.imageContainer}>
-                <Image source={{uri: item.imageUrl}} style={styles.image} />
+                {item?.imageUrl && (
+                  <Image source={{uri: item.imageUrl}} style={styles.image} />
+                )}
               </View>
               <View>
                 <Text style={styles.abstract}>{item.abstract}</Text>
