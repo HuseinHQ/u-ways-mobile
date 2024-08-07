@@ -326,28 +326,33 @@ export const postArticleImage = createAsyncThunk(
   },
 );
 
+const initialState: ArticleState = {
+  data: [],
+  detail: {
+    id: null,
+    title: '',
+    abstract: '',
+    description: '',
+    author: '',
+    imageUrl: '',
+    createdAt: '',
+    updatedAt: '',
+  },
+  pagination: {},
+  loading: false,
+  imageLoading: false,
+  errors: null,
+};
+
 const articleSlice = createSlice({
   name: 'article',
-  initialState: {
-    data: [],
-    detail: {
-      id: null,
-      title: '',
-      abstract: '',
-      description: '',
-      author: '',
-      imageUrl: '',
-      createdAt: '',
-      updatedAt: '',
-    },
-    pagination: {},
-    loading: false,
-    imageLoading: false,
-    errors: null,
-  } as ArticleState,
+  initialState,
   reducers: {
     clearErrors: state => {
       state.errors = null;
+    },
+    clearArticleDetail: state => {
+      state.detail = initialState.detail;
     },
   },
   extraReducers: builder => {
@@ -400,5 +405,5 @@ const articleSlice = createSlice({
   },
 });
 
-export const {clearErrors} = articleSlice.actions;
+export const {clearErrors, clearArticleDetail} = articleSlice.actions;
 export default articleSlice.reducer;

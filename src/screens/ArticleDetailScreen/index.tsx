@@ -18,10 +18,12 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Alert,
+  RefreshControl,
 } from 'react-native';
 import {useSelector} from 'react-redux';
 import {RootState, useAppDispatch} from '@/store/store';
 import {
+  clearArticleDetail,
   deleteArticle,
   getArticleDetail,
   postArticleImage,
@@ -55,12 +57,9 @@ function ArticleDetailScreen() {
   const refRBSheet = useRef();
 
   useEffect(() => {
+    dispatch(clearArticleDetail());
     dispatch(getArticleDetail({access_token, id}));
   }, [dispatch, access_token, id]);
-
-  if (loading) {
-    return <></>;
-  }
 
   const handleEdit = () => {
     navigation.navigate('EditArticleScreen', {id});
@@ -119,8 +118,18 @@ function ArticleDetailScreen() {
       </View>
 
       <View style={styles.mainContainer}>
-        {/* eslint-disable-next-line react-native/no-inline-styles */}
-        <ScrollView style={{flex: 1}}>
+        <ScrollView
+          // eslint-disable-next-line react-native/no-inline-styles
+          style={{flex: 1}}
+          refreshControl={
+            <RefreshControl
+              refreshing={loading}
+              onRefresh={() => {
+                dispatch(clearArticleDetail());
+                dispatch(getArticleDetail({access_token, id}));
+              }}
+            />
+          }>
           {/* <View style={styles.strip} /> */}
           <Text style={styles.paragraph}>{articleDetail.description}</Text>
         </ScrollView>
