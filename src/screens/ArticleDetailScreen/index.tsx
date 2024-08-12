@@ -92,11 +92,11 @@ function ArticleDetailScreen() {
         backgroundColor={Colors.grey.darkest}
       />
       <View style={styles.imageContainer}>
-        {articleDetail.imageUrl && !imageLoading && (
+        {articleDetail?.imageUrl && !imageLoading && (
           <Image source={{uri: articleDetail.imageUrl}} style={styles.image} />
         )}
         <View style={styles.overlay} />
-        <Text style={styles.title}>{articleDetail.title}</Text>
+        <Text style={styles.title}>{articleDetail?.title}</Text>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           style={styles.back}>
@@ -104,7 +104,7 @@ function ArticleDetailScreen() {
         </TouchableOpacity>
 
         <View style={styles.author}>
-          <Text style={styles.authorText}>Oleh {articleDetail.author}</Text>
+          <Text style={styles.authorText}>Oleh {articleDetail?.author}</Text>
         </View>
 
         {editMode && (
@@ -131,7 +131,7 @@ function ArticleDetailScreen() {
             />
           }>
           {/* <View style={styles.strip} /> */}
-          <Text style={styles.paragraph}>{articleDetail.description}</Text>
+          <Text style={styles.paragraph}>{articleDetail?.description}</Text>
         </ScrollView>
 
         <View style={styles.buttonContainer}>

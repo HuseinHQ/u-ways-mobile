@@ -28,6 +28,8 @@ import EditLecturerScreen from '@/screens/EditLecturerScreen';
 import EditStudentScreen from '@/screens/EditStudentScreen';
 import EditArticleScreen from '@/screens/EditArticleScreen';
 import AddArticleScreen from '@/screens/AddArticleScreen';
+import AddQuizScreen from '@/screens/AddQuizScreen';
+import EditQuizScreen from '@/screens/EditQuizScreen';
 
 export type RootStackParamList = {
   SplashScreen: undefined;
@@ -75,6 +77,8 @@ export type RootStackParamList = {
   EditStudentScreen: {id: number} | undefined;
   AddArticleScreen: undefined;
   EditArticleScreen: {id: number} | undefined;
+  AddQuizScreen: undefined;
+  EditQuizScreen: {id: number} | undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -137,6 +141,8 @@ function StackNavigator() {
       <Stack.Screen name="EditStudentScreen" component={EditStudentScreen} />
       <Stack.Screen name="AddArticleScreen" component={AddArticleScreen} />
       <Stack.Screen name="EditArticleScreen" component={EditArticleScreen} />
+      <Stack.Screen name="AddQuizScreen" component={AddQuizScreen} />
+      <Stack.Screen name="EditQuizScreen" component={EditQuizScreen} />
     </Stack.Navigator>
   );
 }

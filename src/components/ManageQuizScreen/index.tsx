@@ -3,11 +3,8 @@ import DataList from '@/components/DataList';
 import useSearch from '@/hooks/useSearch';
 import useErrorToast from '@/hooks/useToastError';
 import {RootStackParamList} from '@/navigator/StackNavigator';
-import {
-  bulkDeleteArticles,
-  clearErrors,
-  getArticles,
-} from '@/store/articleSlice';
+import {bulkDeleteQuizzes, getAllQuizzes} from '@/store/quizActions';
+import {clearErrors} from '@/store/quizSlice';
 import {RootState, useAppDispatch} from '@/store/store';
 import Colors from '@/utils/Colors';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
@@ -17,21 +14,17 @@ import {SafeAreaView, StatusBar, StyleSheet} from 'react-native';
 import {useSelector} from 'react-redux';
 
 function ManageQuizScreen(): React.JSX.Element {
-  const articles = useSelector((state: RootState) => state.article.data);
+  const quizzes = useSelector((state: RootState) => state.quiz.data);
   const dispatch = useAppDispatch();
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const access_token = useSelector(
-    (state: RootState) => state.auth.accessToken,
-  );
-  const loading = useSelector((state: RootState) => state.article.loading);
-  const errors = useSelector((state: RootState) => state.article.errors);
+  const loading = useSelector((state: RootState) => state.quiz.loading);
+  const errors = useSelector((state: RootState) => state.quiz.errors);
   const [search, setSearch] = useSearch();
   const debouncedSearch = useDebounce(search, 300);
 
   const onPressDelete = (value: number[], cb: () => void) => {
     dispatch(
-      bulkDeleteArticles({
-        access_token,
+      bulkDeleteQuizzes({
         value,
         callback: cb,
       }),
@@ -39,20 +32,16 @@ function ManageQuizScreen(): React.JSX.Element {
   };
 
   const goToDetail = (value: any) => {
-    navigation.navigate('ArticleDetailScreen', {id: value.id, editMode: true});
+    navigation.navigate('EditQuizScreen', {id: value.id});
   };
 
   const onRefresh = () => {
-    dispatch(getArticles({access_token}));
+    dispatch(getAllQuizzes({}));
   };
 
   useEffect(() => {
-    dispatch(getArticles({access_token}));
-  }, [access_token, dispatch]);
-
-  useEffect(() => {
-    dispatch(getArticles({access_token, search: debouncedSearch}));
-  }, [debouncedSearch, access_token, dispatch]);
+    dispatch(getAllQuizzes({search: debouncedSearch}));
+  }, [debouncedSearch, dispatch]);
 
   useErrorToast({
     title: 'Gagal',
@@ -76,12 +65,12 @@ function ManageQuizScreen(): React.JSX.Element {
 
       <DataList
         name="Kuis"
-        data={articles}
+        data={quizzes}
         search={search}
         setSearch={setSearch}
         loading={loading}
         onPressAddData={() => {
-          navigation.navigate('AddArticleScreen');
+          navigation.navigate('AddQuizScreen');
         }}
         onPressDelete={onPressDelete}
         onPressDetail={goToDetail}

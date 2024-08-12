@@ -9,6 +9,7 @@ import articleReducer from './articleSlice';
 import chatReducer from './chatSlice';
 import studentReducer from './studentSlice';
 import adminReducer from './adminSlice';
+import quizReducer from './quizSlice';
 import {
   FLUSH,
   PAUSE,
@@ -31,6 +32,7 @@ const rootReducer = combineReducers({
   chat: chatReducer,
   student: studentReducer,
   admin: adminReducer,
+  quiz: quizReducer,
 });
 
 const persistConfig = {
