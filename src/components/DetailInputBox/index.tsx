@@ -60,6 +60,7 @@ function DetailInputBox({
 
   if (data.length === 0) {
     return (
+      // eslint-disable-next-line react-native/no-inline-styles
       <Pressable onPress={onPress} style={{paddingBottom: 10}}>
         <TouchableOpacity
           style={styles.addButton}
