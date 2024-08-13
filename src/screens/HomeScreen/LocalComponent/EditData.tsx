@@ -28,6 +28,7 @@ const dataList: DataList[] = [
   {id: 2, name: 'Program Studi', image: feature_2, goToScreen: 'MajorScreen'},
   {id: 3, name: 'Dosen', image: feature_1, goToScreen: 'LecturerScreen'},
   {id: 4, name: 'Mahasiswa', image: feature_2, goToScreen: 'StudentScreen'},
+  {id: 5, name: 'Kuesioner', image: feature_1, goToScreen: 'ManageQuizScreen'},
 ];
 
 function EditData(): React.JSX.Element {

@@ -44,6 +44,9 @@ const GlobalStyles = StyleSheet.create({
   bgPrimary: {
     backgroundColor: Colors.primary,
   },
+  bgGreen: {
+    backgroundColor: Colors.green.default,
+  },
 });
 
 export default GlobalStyles;

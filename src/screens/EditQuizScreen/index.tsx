@@ -99,21 +99,52 @@ function EditQuizScreen(): React.JSX.Element {
     }));
   };
 
-  const setQuizDetailValue = (value: SetQuizDetailValue) => {
+  const setQuizDetailValue = (
+    value: SetQuizDetailValue,
+    callback = () => {},
+  ) => {
     const updatedDetails = [...quizData.details];
     const {partIndex, questionIndex, field, fieldValue} = value;
     if (field === 'partName') {
-      updatedDetails[partIndex] = {
-        ...updatedDetails[partIndex],
-        partName: fieldValue,
-      };
+      if (fieldValue === 'delete') {
+        updatedDetails.splice(partIndex, 1);
+      } else if (fieldValue === 'add') {
+        if (updatedDetails[partIndex + 1]) {
+          updatedDetails.splice(partIndex + 1, 0, {
+            partName: '',
+            questions: [''],
+          });
+        } else {
+          updatedDetails.push({partName: '', questions: ['']});
+        }
+      } else {
+        updatedDetails[partIndex] = {
+          ...updatedDetails[partIndex],
+          partName: fieldValue,
+        };
+      }
     } else if (field === 'questions' && questionIndex !== undefined) {
       const updatedQuestions = [...updatedDetails[partIndex].questions];
-      updatedQuestions[questionIndex] = fieldValue;
+      if (fieldValue === 'enter') {
+        if (updatedQuestions[questionIndex]) {
+          updatedQuestions.splice(questionIndex, 0, '');
+        } else {
+          updatedQuestions.push('');
+        }
+      } else if (fieldValue === 'delete') {
+        updatedQuestions.splice(questionIndex, 1);
+      } else {
+        updatedQuestions[questionIndex] = fieldValue;
+      }
       updatedDetails[partIndex] = {
         ...updatedDetails[partIndex],
         questions: updatedQuestions,
       };
+      if (fieldValue === 'enter' || fieldValue === 'delete') {
+        setTimeout(() => {
+          callback();
+        }, 1);
+      }
     }
     setQuizData(prevState => ({
       ...prevState,
@@ -225,7 +256,9 @@ function EditQuizScreen(): React.JSX.Element {
           {loading ? (
             <ActivityIndicator size={24} color={Colors.white.default} />
           ) : (
-            <Text style={[Fonts.white, Fonts.subtitleMontserrat]}>Hapus</Text>
+            <Text style={[Fonts.white, Fonts.subtitleMontserrat]}>
+              Hapus Kuis
+            </Text>
           )}
         </TouchableOpacity>
       </View>

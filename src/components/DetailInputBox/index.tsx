@@ -1,12 +1,23 @@
 import {QuizDetail, SetQuizDetailValue} from '@/types/quiz';
 import Colors from '@/utils/Colors';
-import React from 'react';
-import {Pressable, StyleSheet, Text, TextInput, View} from 'react-native';
+import React, {useRef, useState} from 'react';
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 type DetailInputBoxProps = {
   data: QuizDetail[];
   onPress?: () => void;
-  setQuizDetailValue: (value: SetQuizDetailValue) => void;
+  setQuizDetailValue: (
+    value: SetQuizDetailValue,
+    callback?: () => void,
+  ) => void;
 };
 
 function DetailInputBox({
@@ -14,6 +25,51 @@ function DetailInputBox({
   onPress = () => {},
   setQuizDetailValue = () => {},
 }: DetailInputBoxProps): React.JSX.Element {
+  const [enterPressed, setEnterPressed] = useState(false);
+  const questionRefs = useRef<(TextInput | null)[][]>([]);
+
+  const deletePartName = (index: number) => {
+    setQuizDetailValue({
+      field: 'partName',
+      fieldValue: 'delete',
+      partIndex: index,
+    });
+  };
+
+  const onChangeTextHandler =
+    (partNameIdx: number, questionIdx: number) => (val: string) => {
+      if (!enterPressed) {
+        setQuizDetailValue({
+          field: 'questions',
+          fieldValue: val,
+          partIndex: partNameIdx,
+          questionIndex: questionIdx,
+        });
+      } else {
+        setEnterPressed(false);
+      }
+    };
+
+  const addNewPartHandler = (index: number) => () => {
+    setQuizDetailValue({
+      field: 'partName',
+      fieldValue: 'add',
+      partIndex: index,
+    });
+  };
+
+  if (data.length === 0) {
+    return (
+      <Pressable onPress={onPress} style={{paddingBottom: 10}}>
+        <TouchableOpacity
+          style={styles.addButton}
+          onPress={addNewPartHandler(0)}>
+          <Ionicons name="add-circle" color={Colors.green.default} size={24} />
+        </TouchableOpacity>
+      </Pressable>
+    );
+  }
+
   return (
     <Pressable onPress={onPress}>
       {data.map((item, index) => (
@@ -31,6 +87,13 @@ function DetailInputBox({
                 })
               }
             />
+            <TouchableOpacity onPress={() => deletePartName(index)}>
+              <Ionicons
+                name="remove-circle"
+                size={24}
+                color={Colors.red.default}
+              />
+            </TouchableOpacity>
           </View>
           {item.questions.map((question, idx) => (
             <View key={idx} style={styles.questionContainer}>
@@ -38,20 +101,75 @@ function DetailInputBox({
                 {idx + 1}.
               </Text>
               <TextInput
+                ref={el => {
+                  if (!questionRefs.current[index]) {
+                    questionRefs.current[index] = [];
+                  }
+                  questionRefs.current[index][idx] = el;
+                }}
                 value={question}
                 style={[styles.question, styles.rightQuestion]}
                 multiline={true}
-                onChangeText={val => {
-                  setQuizDetailValue({
-                    field: 'questions',
-                    fieldValue: val,
-                    partIndex: index,
-                    questionIndex: idx,
-                  });
+                onChangeText={onChangeTextHandler(index, idx)}
+                onKeyPress={({nativeEvent}) => {
+                  if (nativeEvent.key === 'Enter') {
+                    setEnterPressed(true);
+                    const insertIndex = idx + 1;
+                    setQuizDetailValue(
+                      {
+                        field: 'questions',
+                        fieldValue: 'enter',
+                        partIndex: index,
+                        questionIndex: insertIndex,
+                      },
+                      () => {
+                        if (
+                          questionRefs.current[index] &&
+                          questionRefs.current[index][insertIndex]
+                        ) {
+                          questionRefs.current[index][insertIndex]?.focus();
+                        }
+                      },
+                    );
+                  } else if (nativeEvent.key === 'Backspace') {
+                    if (question === '') {
+                      setQuizDetailValue(
+                        {
+                          field: 'questions',
+                          fieldValue: 'delete',
+                          partIndex: index,
+                          questionIndex: idx,
+                        },
+                        () => {
+                          if (
+                            questionRefs.current[index] &&
+                            questionRefs.current[index][idx - 1]
+                          ) {
+                            questionRefs.current[index][idx - 1]?.focus();
+                          } else if (
+                            questionRefs.current[index] &&
+                            questionRefs.current[index][idx + 1]
+                          ) {
+                            questionRefs.current[index][idx + 1]?.focus();
+                          }
+                        },
+                      );
+                    }
+                  }
                 }}
               />
             </View>
           ))}
+
+          <TouchableOpacity
+            style={styles.addButton}
+            onPress={addNewPartHandler(index)}>
+            <Ionicons
+              name="add-circle"
+              color={Colors.green.default}
+              size={24}
+            />
+          </TouchableOpacity>
         </View>
       ))}
     </Pressable>
@@ -80,6 +198,7 @@ const styles = StyleSheet.create({
   },
   questionContainer: {
     flexDirection: 'row',
+    alignItems: 'flex-start',
   },
   question: {
     fontFamily: 'Montserrat-Regular',
@@ -94,6 +213,10 @@ const styles = StyleSheet.create({
     color: Colors.black.default,
     margin: 0,
     padding: 0,
+  },
+  addButton: {
+    marginTop: 5,
+    alignSelf: 'center',
   },
 });
 

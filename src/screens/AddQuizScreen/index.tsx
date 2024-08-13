@@ -1,48 +1,50 @@
 import CustomHeader from '@/components/CustomHeader';
-import ImageInput from '@/components/ImageInput';
+import DetailInputBox from '@/components/DetailInputBox';
 import InputBox from '@/components/InputBox';
+import Spacer from '@/components/Spacer';
 import useErrorToast from '@/hooks/useToastError';
-import {clearErrors, postArticle} from '@/store/articleSlice';
+import {DrawerParamList} from '@/navigator/DrawerNavigator';
+import {createQuiz} from '@/store/quizActions';
+import {clearErrors} from '@/store/quizSlice';
 import {RootState, useAppDispatch} from '@/store/store';
 import Fonts from '@/styles/Fonts';
 import GlobalStyles from '@/styles/GlobalStyles';
+import {QuizRequest, SetQuizDetailValue} from '@/types/quiz';
 import Colors from '@/utils/Colors';
-import {useNavigation} from '@react-navigation/native';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 import React, {useState} from 'react';
 import {
-  ActivityIndicator,
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
   Text,
+  SafeAreaView,
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  ActivityIndicator,
+  Pressable,
+  Keyboard,
+  ScrollView,
 } from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
-import {ImageOrVideo} from 'react-native-image-crop-picker';
+import DropDownPicker from 'react-native-dropdown-picker';
 import {useSelector} from 'react-redux';
 
-type ArticleData = {
-  title: string;
-  abstract: string;
-  description: string;
-  author: string;
-};
-
 function AddQuizScreen(): React.JSX.Element {
-  const [articleData, setArticleData] = useState<ArticleData>({
+  const [quizData, setQuizData] = useState<QuizRequest>({
     title: '',
-    abstract: '',
-    description: '',
-    author: '',
+    details: [],
+    semester: 0,
+    part: 0,
+    startTime: undefined,
+    endTime: undefined,
   });
-  const [image, setImage] = useState<ImageOrVideo | null>(null);
+  const [openDropdown, setOpenDropdown] = useState([false]);
+  const [partData, setPartData] = useState([
+    {label: 'Awal', value: 0},
+    {label: 'Akhir', value: 1},
+  ]);
   const dispatch = useAppDispatch();
-  const navigation = useNavigation();
-  const access_token = useSelector(
-    (state: RootState) => state.auth.accessToken,
-  );
-  const loading = useSelector((state: RootState) => state.article.loading);
-  const errors = useSelector((state: RootState) => state.article.errors);
+  const navigation = useNavigation<NavigationProp<DrawerParamList>>();
+  const loading = useSelector((state: RootState) => state.quiz.loading);
+  const errors = useSelector((state: RootState) => state.quiz.errors);
   useErrorToast({
     title: 'Gagal',
     errors,
@@ -51,70 +53,156 @@ function AddQuizScreen(): React.JSX.Element {
 
   const submitHandler = () => {
     dispatch(
-      postArticle({
-        access_token,
-        articleData,
-        image,
-        successCB: () => navigation.goBack(),
+      createQuiz({
+        requestBody: quizData,
+        callback: () => navigation.goBack(),
       }),
     );
   };
 
-  const setValue = (name: keyof ArticleData) => (value: string) => {
-    setArticleData(prevState => ({
+  const setValue = (name: keyof QuizRequest) => (value: any) => {
+    setQuizData(prevState => ({
       ...prevState,
-      [name]: value,
+      [name]: typeof value === 'function' ? value() : value,
     }));
+  };
+
+  const setQuizDetailValue = (
+    value: SetQuizDetailValue,
+    callback = () => {},
+  ) => {
+    const updatedDetails = [...quizData.details];
+    const {partIndex, questionIndex, field, fieldValue} = value;
+    if (field === 'partName') {
+      if (fieldValue === 'delete') {
+        updatedDetails.splice(partIndex, 1);
+      } else if (fieldValue === 'add') {
+        if (updatedDetails[partIndex + 1]) {
+          updatedDetails.splice(partIndex + 1, 0, {
+            partName: '',
+            questions: [''],
+          });
+        } else {
+          updatedDetails.push({partName: '', questions: ['']});
+        }
+      } else {
+        updatedDetails[partIndex] = {
+          ...updatedDetails[partIndex],
+          partName: fieldValue,
+        };
+      }
+    } else if (field === 'questions' && questionIndex !== undefined) {
+      const updatedQuestions = [...updatedDetails[partIndex].questions];
+      if (fieldValue === 'enter') {
+        if (updatedQuestions[questionIndex]) {
+          updatedQuestions.splice(questionIndex, 0, '');
+        } else {
+          updatedQuestions.push('');
+        }
+      } else if (fieldValue === 'delete') {
+        updatedQuestions.splice(questionIndex, 1);
+      } else {
+        updatedQuestions[questionIndex] = fieldValue;
+      }
+      updatedDetails[partIndex] = {
+        ...updatedDetails[partIndex],
+        questions: updatedQuestions,
+      };
+      if (fieldValue === 'enter' || fieldValue === 'delete') {
+        setTimeout(() => {
+          callback();
+        }, 1);
+      }
+    }
+    setQuizData(prevState => ({
+      ...prevState,
+      details: updatedDetails,
+    }));
+  };
+
+  const setOpenDropdownIndex = (index: number) => () => {
+    setOpenDropdown(prevState => {
+      const newState = [...prevState];
+      newState[index] = !newState[index];
+      return newState;
+    });
+  };
+
+  const closeAllDropdown = () => {
+    setOpenDropdown([false]);
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar
-        backgroundColor={Colors.white.default}
-        barStyle="dark-content"
-      />
-
       <CustomHeader
-        title="Tambah Artikel"
-        titleFontSize={20}
+        title="Tambah Kuesioner"
         titleColor={Colors.black.default}
+        titleFontSize={20}
+        onPress={() => {
+          Keyboard.dismiss();
+          closeAllDropdown();
+        }}
       />
 
-      <ScrollView style={styles.scrollView}>
+      <ScrollView>
         <InputBox
-          value={articleData.title}
+          value={quizData.title}
           label="Judul"
           setValue={setValue('title')}
+          onPress={closeAllDropdown}
         />
         <InputBox
-          value={articleData.author}
-          label="Penulis"
-          setValue={setValue('author')}
+          value={quizData.semester.toString()}
+          label="Semester"
+          setValue={setValue('semester')}
+          onPress={closeAllDropdown}
+          keyboardType="number-pad"
         />
-        <InputBox
-          value={articleData.abstract}
-          label="Abstrak"
-          setValue={setValue('abstract')}
+
+        <Text style={styles.label}>Bagian:</Text>
+        <Spacer height={10} />
+        <DropDownPicker
+          open={openDropdown[0]}
+          value={quizData.part}
+          items={partData}
+          setOpen={setOpenDropdownIndex(0)}
+          setValue={setValue('part')}
+          setItems={setPartData}
+          placeholder="Awal/Akhir"
         />
-        <InputBox
-          value={articleData.description}
-          label="Isi Artikel"
-          setValue={setValue('description')}
-          multiline={true}
+
+        <Spacer height={15} />
+        <Text style={styles.label}>Detail:</Text>
+        <Spacer height={10} />
+        <DetailInputBox
+          data={quizData.details}
+          setQuizDetailValue={setQuizDetailValue}
         />
-        <ImageInput image={image} setImage={setImage} />
       </ScrollView>
 
-      <TouchableOpacity
-        style={styles.button}
-        disabled={loading}
-        onPress={submitHandler}>
-        {loading ? (
-          <ActivityIndicator size={20} color={Colors.white.default} />
-        ) : (
-          <Text style={[Fonts.subtitleMontserrat, Fonts.white]}>Tambahkan</Text>
-        )}
-      </TouchableOpacity>
+      <Pressable
+        onPress={() => {
+          closeAllDropdown();
+          Keyboard.dismiss();
+        }}
+        // eslint-disable-next-line react-native/no-inline-styles
+        style={{flex: 1}}
+      />
+
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity
+          style={[styles.button, GlobalStyles.bgGreen]}
+          onPress={submitHandler}
+          disabled={loading}>
+          {loading ? (
+            <ActivityIndicator size={24} color={Colors.white.default} />
+          ) : (
+            <Text style={[Fonts.white, Fonts.subtitleMontserrat]}>
+              Tambahkan
+            </Text>
+          )}
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 }
@@ -127,15 +215,22 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
     flex: 1,
   },
-  scrollView: {flex: 1},
+  buttonContainer: {
+    marginTop: 20,
+    flexDirection: 'row',
+    gap: 20,
+  },
   button: {
-    backgroundColor: Colors.green.default,
+    flex: 1,
     height: 50,
     ...GlobalStyles.shadow,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 15,
-    marginTop: 20,
+  },
+  label: {
+    fontFamily: 'Montserrat-SemiBold',
+    fontSize: 16,
   },
 });
 

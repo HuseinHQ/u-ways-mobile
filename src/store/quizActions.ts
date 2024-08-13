@@ -54,7 +54,13 @@ export const getQuizDetail = createAsyncThunk(
 
 export const createQuiz = createAsyncThunk(
   'quiz/createQuiz',
-  async (requestBody: QuizRequest, {getState, rejectWithValue, dispatch}) => {
+  async (
+    {
+      requestBody,
+      callback = () => {},
+    }: {requestBody: QuizRequest; callback?: () => void},
+    {getState, rejectWithValue, dispatch},
+  ) => {
     const state = getState() as RootState;
     const accessToken = state.auth.accessToken;
 
@@ -73,6 +79,7 @@ export const createQuiz = createAsyncThunk(
         text1: 'Berhasil',
         text2: data.data.message,
       });
+      callback();
 
       return true;
     } catch (error: any) {
