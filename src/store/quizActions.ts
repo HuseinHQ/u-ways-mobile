@@ -9,7 +9,7 @@ const baseUrl = process.env.BACKEND_URL + '/quizzes';
 
 export const getAllQuizzes = createAsyncThunk(
   'quiz/getAllQuizzes',
-  async ({search}: {search?: string}, {getState, rejectWithValue}) => {
+  async ({search}: {search?: string} = {}, {getState, rejectWithValue}) => {
     const state = getState() as RootState;
     const accessToken = state.auth.accessToken;
 
@@ -192,7 +192,10 @@ export const editQuiz = createAsyncThunk(
 
 export const getStudentQuiz = createAsyncThunk(
   'quiz/getStudentQuiz',
-  async (_, {getState, rejectWithValue}) => {
+  async (
+    {callback = () => {}}: {callback?: () => void},
+    {getState, rejectWithValue},
+  ) => {
     const state = getState() as RootState;
     const accessToken = state.auth.accessToken;
 
@@ -204,8 +207,10 @@ export const getStudentQuiz = createAsyncThunk(
         timeout: 5000,
       });
 
+      callback();
       return data.data;
     } catch (error: any) {
+      console.log(error);
       return rejectWithValue(error.response.data.errors);
     }
   },

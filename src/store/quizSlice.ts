@@ -13,7 +13,7 @@ import {
   handlePending,
   handleRejected,
 } from '@/helpers/builderHandler';
-import {Quiz} from '@/types/quiz';
+import {Quiz, QuizDetail} from '@/types/quiz';
 
 const initialState = {
   data: [] as Quiz[],
@@ -30,7 +30,17 @@ const initialState = {
     createdAt: '',
     updatedAt: '',
   },
-  studentQuiz: {} as Quiz,
+  studentQuiz: {
+    id: 0,
+    title: '',
+    details: [] as QuizDetail[],
+    semester: 0,
+    part: 0,
+    startTime: undefined,
+    endTime: undefined,
+    createdAt: '',
+    updatedAt: '',
+  },
 };
 
 const quizSlice = createSlice({

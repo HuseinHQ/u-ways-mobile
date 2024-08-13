@@ -14,8 +14,37 @@ import {
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
+
+// number images
 import number1 from '@/assets/images/number/1.png';
-import {useNavigation} from '@react-navigation/native';
+import number2 from '@/assets/images/number/2.png';
+import number3 from '@/assets/images/number/3.png';
+import number4 from '@/assets/images/number/4.png';
+import number5 from '@/assets/images/number/5.png';
+import number6 from '@/assets/images/number/6.png';
+import number7 from '@/assets/images/number/7.png';
+import number8 from '@/assets/images/number/8.png';
+import number9 from '@/assets/images/number/9.png';
+import number0 from '@/assets/images/number/0.png';
+import {RootStackParamList} from '@/navigator/StackNavigator';
+import {useAppDispatch} from '@/store/store';
+import {getStudentQuiz} from '@/store/quizActions';
+
+const numberImages = {
+  '0': number0,
+  '1': number1,
+  '2': number2,
+  '3': number3,
+  '4': number4,
+  '5': number5,
+  '6': number6,
+  '7': number7,
+  '8': number8,
+  '9': number9,
+} as const;
+
+type NumberKey = keyof typeof numberImages;
 
 const questionnaireData = [
   {
@@ -45,11 +74,15 @@ const questionnaireData = [
 ];
 
 function QuestionnaireCard(): React.JSX.Element {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const dispatch = useAppDispatch();
 
-  const goto = (page: string) => () => {
-    // @ts-ignore
-    navigation.navigate(page);
+  const handleAddNewQuestionnaire = () => {
+    dispatch(
+      getStudentQuiz({
+        callback: () => navigation.navigate('QuestionnaireScreen'),
+      }),
+    );
   };
 
   return (
@@ -62,6 +95,7 @@ function QuestionnaireCard(): React.JSX.Element {
               <View style={styles.verticalLine} />
             </View>
             <View style={styles.innerCardContainer}>
+              {/* eslint-disable-next-line react-native/no-inline-styles */}
               <View style={{flexDirection: 'row'}}>
                 <TouchableOpacity>
                   <Text style={styles.title}>Kuesioner {index + 1}</Text>
@@ -70,7 +104,16 @@ function QuestionnaireCard(): React.JSX.Element {
               <Spacer height={5} />
               <TouchableOpacity style={styles.innerCard}>
                 <View style={styles.imageContainer}>
-                  <Image source={number1} style={GlobalStyles.image} />
+                  {item.semester
+                    .toString()
+                    .split('')
+                    .map((number, idx) => (
+                      <Image
+                        key={idx}
+                        source={numberImages[number as NumberKey]}
+                        style={styles.image}
+                      />
+                    ))}
                 </View>
                 <View style={styles.contentContainer}>
                   <Text style={styles.semester}>
@@ -100,7 +143,8 @@ function QuestionnaireCard(): React.JSX.Element {
           </View>
           <View style={styles.innerCardContainer}>
             <TouchableOpacity
-              onPress={goto('QuestionnaireScreen')}
+              onPress={handleAddNewQuestionnaire}
+              // eslint-disable-next-line react-native/no-inline-styles
               style={{alignSelf: 'center'}}>
               <FontAwesome name="plus" size={40} color={Colors.primary} />
             </TouchableOpacity>
@@ -149,7 +193,7 @@ const styles = StyleSheet.create({
   innerCard: {
     backgroundColor: Colors.white.default,
     paddingVertical: 15,
-    paddingHorizontal: 20,
+    paddingHorizontal: 15,
     borderRadius: 5,
     ...GlobalStyles.shadow,
     flexDirection: 'row',
@@ -157,8 +201,13 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   imageContainer: {
-    width: 40,
-    height: 60,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  image: {
+    height: 36,
+    width: 24,
+    resizeMode: 'cover',
   },
   contentContainer: {
     justifyContent: 'space-between',
