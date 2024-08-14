@@ -12,21 +12,33 @@ import {
   Dimensions,
   Text,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import GlobalStyles from '@/styles/GlobalStyles';
 import Colors from '@/utils/Colors';
 import Spacer from '@/components/Spacer';
-import {useNavigation} from '@react-navigation/native';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
-import {RootState} from '@/store/store';
+import {RootState, useAppDispatch} from '@/store/store';
+import {getQuizDetail} from '@/store/quizActions';
+import useErrorToast from '@/hooks/useToastError';
+import {clearErrors} from '@/store/quizSlice';
 
 const possibleAnswer = [1, 2, 3, 4, 5];
 
+type RouteParams = {
+  id: number;
+};
+
 function QuestionnaireScreen(): React.JSX.Element {
   const [answer, setAnswer] = useState<number[][]>([]);
-  console.log(answer);
-  const studentQuiz = useSelector((state: RootState) => state.quiz.studentQuiz);
+  const studentQuiz = useSelector((state: RootState) => state.quiz.detail);
+  const loading = useSelector((state: RootState) => state.quiz.loading);
+  const errors = useSelector((state: RootState) => state.quiz.errors);
   const navigation = useNavigation();
+  const dispatch = useAppDispatch();
+  const route = useRoute<RouteProp<{params: RouteParams}, 'params'>>();
+  const {id} = route.params;
 
   const onClickAnswer =
     (data: {partIdx: number; questionIdx: number; newValue: number}) => () => {
@@ -48,6 +60,10 @@ function QuestionnaireScreen(): React.JSX.Element {
   };
 
   useEffect(() => {
+    dispatch(getQuizDetail({id}));
+  }, [dispatch, id]);
+
+  useEffect(() => {
     if (studentQuiz.details) {
       const newAnswers = studentQuiz.details.map(part =>
         new Array(part.questions.length).fill(0),
@@ -55,6 +71,20 @@ function QuestionnaireScreen(): React.JSX.Element {
       setAnswer(newAnswers);
     }
   }, [studentQuiz.details]);
+
+  useErrorToast({
+    title: 'Error',
+    errors,
+    dispatchFunction: clearErrors,
+  });
+
+  if (loading) {
+    return (
+      <View style={GlobalStyles.fullCenter}>
+        <ActivityIndicator size="large" color={Colors.primary} />
+      </View>
+    );
+  }
 
   return (
     <SafeAreaView>

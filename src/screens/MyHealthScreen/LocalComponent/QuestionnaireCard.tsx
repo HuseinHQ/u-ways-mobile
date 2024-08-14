@@ -3,8 +3,9 @@ import {formatDates} from '@/helpers';
 import GlobalStyles from '@/styles/GlobalStyles';
 import Colors from '@/utils/Colors';
 import 'moment/locale/id';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
+  ActivityIndicator,
   Image,
   ScrollView,
   StyleSheet,
@@ -28,8 +29,9 @@ import number8 from '@/assets/images/number/8.png';
 import number9 from '@/assets/images/number/9.png';
 import number0 from '@/assets/images/number/0.png';
 import {RootStackParamList} from '@/navigator/StackNavigator';
-import {useAppDispatch} from '@/store/store';
+import {RootState, useAppDispatch} from '@/store/store';
 import {getStudentQuiz} from '@/store/quizActions';
+import {useSelector} from 'react-redux';
 
 const numberImages = {
   '0': number0,
@@ -46,110 +48,93 @@ const numberImages = {
 
 type NumberKey = keyof typeof numberImages;
 
-const questionnaireData = [
-  {
-    semester: 1,
-    part: 1,
-    startDate: new Date('2024-09-01'),
-    endDate: new Date('2024-09-07'),
-  },
-  {
-    semester: 1,
-    part: 2,
-    startDate: new Date('2024-09-01'),
-    endDate: new Date('2024-09-07'),
-  },
-  {
-    semester: 2,
-    part: 1,
-    startDate: new Date('2024-09-01'),
-    endDate: new Date('2024-09-07'),
-  },
-  {
-    semester: 2,
-    part: 2,
-    startDate: new Date('2024-09-01'),
-    endDate: new Date('2024-09-07'),
-  },
-];
-
 function QuestionnaireCard(): React.JSX.Element {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const dispatch = useAppDispatch();
+  const quiz = useSelector((state: RootState) => state.quiz.studentQuiz);
+  const quizLoading = useSelector((state: RootState) => state.quiz.loading);
+  // const quizLoading = true;
 
-  const handleAddNewQuestionnaire = () => {
-    dispatch(
-      getStudentQuiz({
-        callback: () => navigation.navigate('QuestionnaireScreen'),
-      }),
-    );
+  const goToQuestionnaire = (id: number) => {
+    navigation.navigate('QuestionnaireScreen', {id});
   };
+
+  useEffect(() => {
+    dispatch(getStudentQuiz({}));
+  }, [dispatch]);
 
   return (
     <View style={styles.container}>
       <ScrollView style={styles.scrollViewContainer}>
-        {questionnaireData?.map((item, index) => (
-          <View key={index} style={styles.card}>
-            <View style={styles.timeline}>
-              <FontAwesome name="circle" size={15} color={Colors.primary} />
-              <View style={styles.verticalLine} />
-            </View>
-            <View style={styles.innerCardContainer}>
-              {/* eslint-disable-next-line react-native/no-inline-styles */}
-              <View style={{flexDirection: 'row'}}>
-                <TouchableOpacity>
-                  <Text style={styles.title}>Kuesioner {index + 1}</Text>
-                </TouchableOpacity>
+        {!quizLoading && quiz.length && (
+          <Text style={styles.title2}>Kuis Tersedia</Text>
+        )}
+        {quizLoading && (
+          <>
+            <Spacer height={40} />
+            <ActivityIndicator color={Colors.primary} size={30} />
+          </>
+        )}
+        {!quizLoading &&
+          quiz?.map((item, index) => (
+            <View key={item.id} style={styles.card}>
+              <View style={styles.timeline}>
+                <FontAwesome name="circle" size={15} color={Colors.primary} />
+                {index !== quiz.length - 1 && (
+                  <View style={styles.verticalLine} />
+                )}
               </View>
-              <Spacer height={5} />
-              <TouchableOpacity style={styles.innerCard}>
-                <View style={styles.imageContainer}>
-                  {item.semester
-                    .toString()
-                    .split('')
-                    .map((number, idx) => (
-                      <Image
-                        key={idx}
-                        source={numberImages[number as NumberKey]}
-                        style={styles.image}
-                      />
-                    ))}
+              <View style={styles.innerCardContainer}>
+                {/* eslint-disable-next-line react-native/no-inline-styles */}
+                <View style={{flexDirection: 'row'}}>
+                  {/* <TouchableOpacity> */}
+                  <Text style={styles.title}>Kuesioner {index + 1}</Text>
+                  {/* </TouchableOpacity> */}
                 </View>
-                <View style={styles.contentContainer}>
-                  <Text style={styles.semester}>
-                    Semester {item.semester + ' - ' + item.part}
-                  </Text>
-                  <View style={styles.timeContainer}>
-                    <Text style={styles.dateText}>
-                      {formatDates(item.startDate, item.endDate)}
-                    </Text>
-                    <MaterialCommunityIcons
-                      name="timer-outline"
-                      size={18}
-                      color={Colors.black.default}
-                    />
+                <Spacer height={5} />
+                <TouchableOpacity
+                  style={styles.innerCard}
+                  onPress={() => goToQuestionnaire(item.id)}>
+                  <View style={styles.imageContainer}>
+                    {item.semester
+                      .toString()
+                      .split('')
+                      .map((number, idx) => (
+                        <Image
+                          key={idx}
+                          source={numberImages[number as NumberKey]}
+                          style={styles.image}
+                        />
+                      ))}
                   </View>
-                </View>
-              </TouchableOpacity>
-              <Spacer
-                height={index === questionnaireData.length - 1 ? 20 : 10}
-              />
+                  <View style={styles.contentContainer}>
+                    <Text style={styles.semester}>
+                      Semester {item.semester + ' - ' + (item.part + 1)}
+                    </Text>
+                    <View style={styles.timeContainer}>
+                      <Text style={styles.dateText}>
+                        {item.startTime && item.endTime
+                          ? formatDates(item.startTime, item.endTime)
+                          : 'Tersedia'}
+                      </Text>
+                      <MaterialCommunityIcons
+                        name="timer-outline"
+                        size={18}
+                        color={Colors.black.default}
+                      />
+                    </View>
+                  </View>
+                </TouchableOpacity>
+                <Spacer height={index === quiz.length - 1 ? 20 : 10} />
+              </View>
             </View>
-          </View>
-        ))}
-        <View style={styles.card}>
-          <View style={styles.timeline}>
-            <FontAwesome name="circle" size={15} color={Colors.primary} />
-          </View>
-          <View style={styles.innerCardContainer}>
-            <TouchableOpacity
-              onPress={handleAddNewQuestionnaire}
-              // eslint-disable-next-line react-native/no-inline-styles
-              style={{alignSelf: 'center'}}>
-              <FontAwesome name="plus" size={40} color={Colors.primary} />
-            </TouchableOpacity>
-          </View>
-        </View>
+          ))}
+        {!quiz.length && !quizLoading && (
+          <>
+            <Spacer height={40} />
+            <Text style={styles.title2}>Belum ada kuis yang tersedia</Text>
+          </>
+        )}
         <Spacer height={40} />
       </ScrollView>
     </View>
@@ -172,6 +157,12 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-SemiBold',
     fontSize: 16,
     color: Colors.primary,
+  },
+  title2: {
+    fontFamily: 'Poppins-SemiBold',
+    fontSize: 17,
+    textAlign: 'center',
+    marginBottom: 10,
   },
   card: {
     marginHorizontal: 3,

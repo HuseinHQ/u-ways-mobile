@@ -6,13 +6,13 @@ export type QuizDetail = {
 export type Quiz = {
   id: number;
   title: string;
-  details: QuizDetail[];
+  details?: QuizDetail[];
   semester: number;
   part: number;
   startTime?: Date;
   endTime?: Date;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 };
 
 export type QuizRequest = {

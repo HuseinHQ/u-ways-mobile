@@ -39,7 +39,7 @@ export type RootStackParamList = {
   Main: NavigatorScreenParams<TabNavigatorParamList> | undefined;
   ArticlesScreen: undefined;
   ArticleDetailScreen: {id: number; editMode?: boolean} | undefined;
-  QuestionnaireScreen: undefined;
+  QuestionnaireScreen: {id: number} | undefined;
   QuestionCompleteScreen: undefined;
   EditProfileScreen: undefined;
   ChatDetailScreen: {title: string; chatId: number} | undefined;

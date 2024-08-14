@@ -16,13 +16,13 @@ import {
 import {Quiz, QuizDetail} from '@/types/quiz';
 
 const initialState = {
-  data: [] as Quiz[],
+  data: <Quiz[]>[],
   loading: false,
   errors: null,
   detail: {
     id: 0,
     title: '',
-    details: [],
+    details: <QuizDetail[]>[],
     semester: 0,
     part: 0,
     startTime: undefined,
@@ -30,17 +30,7 @@ const initialState = {
     createdAt: '',
     updatedAt: '',
   },
-  studentQuiz: {
-    id: 0,
-    title: '',
-    details: [] as QuizDetail[],
-    semester: 0,
-    part: 0,
-    startTime: undefined,
-    endTime: undefined,
-    createdAt: '',
-    updatedAt: '',
-  },
+  studentQuiz: <Quiz[]>[],
 };
 
 const quizSlice = createSlice({
