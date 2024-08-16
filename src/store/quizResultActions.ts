@@ -24,3 +24,28 @@ export const getAllQuizResluts = createAsyncThunk(
     }
   },
 );
+
+export const createQuizResult = createAsyncThunk(
+  'quizResult/createQuizResult',
+  async (
+    data: {quizId: number; score: number},
+    {getState, rejectWithValue},
+  ) => {
+    const state = getState() as RootState;
+    const accessToken = state.auth.accessToken;
+
+    try {
+      const response = await axios({
+        method: 'POST',
+        url: baseUrl,
+        headers: {'X-Access-Token': accessToken},
+        data,
+        timeout: 5000,
+      });
+
+      return response.data.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response.data.errors);
+    }
+  },
+);

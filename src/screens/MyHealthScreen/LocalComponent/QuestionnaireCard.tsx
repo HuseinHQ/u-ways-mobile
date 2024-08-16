@@ -96,7 +96,7 @@ function QuestionnaireCard(): React.JSX.Element {
                   style={styles.innerCard}
                   onPress={() => goToQuestionnaire(item.id)}>
                   <View style={styles.imageContainer}>
-                    {item.semester
+                    {(index + 1)
                       .toString()
                       .split('')
                       .map((number, idx) => (
@@ -109,7 +109,10 @@ function QuestionnaireCard(): React.JSX.Element {
                   </View>
                   <View style={styles.contentContainer}>
                     <Text style={styles.semester}>
-                      Semester {item.semester + ' - ' + (item.part + 1)}
+                      Semester{' '}
+                      {item.semester +
+                        ' - ' +
+                        (item.part === 0 ? 'awal' : 'akhir')}
                     </Text>
                     <View style={styles.timeContainer}>
                       <Text style={styles.dateText}>

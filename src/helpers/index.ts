@@ -1,6 +1,7 @@
 import moment from 'moment';
 import validateInput from './validateInput';
 import validateRegister from './validateRegister';
+import countScore from './countScore';
 
 export function validateEmailUPN(email: string): boolean {
   const lecturerDomain = 'upnjatim.ac.id';
@@ -48,4 +49,4 @@ export function formatDates(startDate: Date, endDate: Date): string {
   }
 }
 
-export {validateInput, validateRegister};
+export {validateInput, validateRegister, countScore};

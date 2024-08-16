@@ -17,12 +17,20 @@ import {
 import GlobalStyles from '@/styles/GlobalStyles';
 import Colors from '@/utils/Colors';
 import Spacer from '@/components/Spacer';
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import {
+  NavigationProp,
+  RouteProp,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 import {RootState, useAppDispatch} from '@/store/store';
 import {getQuizDetail} from '@/store/quizActions';
 import useErrorToast from '@/hooks/useToastError';
 import {clearErrors} from '@/store/quizSlice';
+import {RootStackParamList} from '@/navigator/StackNavigator';
+import {countScore} from '@/helpers';
+import Toast from 'react-native-toast-message';
 
 const possibleAnswer = [1, 2, 3, 4, 5];
 
@@ -35,7 +43,7 @@ function QuestionnaireScreen(): React.JSX.Element {
   const studentQuiz = useSelector((state: RootState) => state.quiz.detail);
   const loading = useSelector((state: RootState) => state.quiz.loading);
   const errors = useSelector((state: RootState) => state.quiz.errors);
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const dispatch = useAppDispatch();
   const route = useRoute<RouteProp<{params: RouteParams}, 'params'>>();
   const {id} = route.params;
@@ -54,9 +62,12 @@ function QuestionnaireScreen(): React.JSX.Element {
       });
     };
 
-  const onSubmitHandler = () => {
-    // @ts-ignore
-    navigation.navigate('QuestionCompleteScreen');
+  const onSubmitHandler = async () => {
+    const score = countScore(answer);
+    if (score !== false) {
+      // fetch to backend
+      // dispatch()
+    }
   };
 
   useEffect(() => {
@@ -89,7 +100,9 @@ function QuestionnaireScreen(): React.JSX.Element {
   return (
     <SafeAreaView>
       <Header
-        title={`Semester ${studentQuiz.semester} - ${studentQuiz.part + 1}`}
+        title={`Semester ${studentQuiz.semester} - ${
+          studentQuiz.part === 0 ? 'Awal' : 'Akhir'
+        }`}
         withBackButton
       />
 
@@ -161,14 +174,15 @@ function QuestionnaireScreen(): React.JSX.Element {
                   </View>
                 </View>
               ))}
+              {index === studentQuiz.details.length - 1 && (
+                <TouchableOpacity
+                  onPress={onSubmitHandler}
+                  style={styles.submitButton}>
+                  <Text style={styles.submit}>Submit</Text>
+                </TouchableOpacity>
+              )}
             </View>
           ))}
-
-          <TouchableOpacity
-            onPress={onSubmitHandler}
-            style={styles.submitButton}>
-            <Text style={styles.submit}>Submit</Text>
-          </TouchableOpacity>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -240,6 +254,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
     ...GlobalStyles.shadow,
+    marginBottom: 80,
   },
   submit: {
     fontFamily: 'Poppins-SemiBold',
