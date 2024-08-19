@@ -5,8 +5,15 @@ import React from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import image from '@/assets/images/history.png';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
+import {RootStackParamList} from '@/navigator/StackNavigator';
 
 function HistoryCard(): React.JSX.Element {
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const goToHistory = () => {
+    navigation.navigate('QuizHistoryScreen');
+  };
+
   return (
     <View style={styles.container}>
       <View>
@@ -25,7 +32,7 @@ function HistoryCard(): React.JSX.Element {
 
         <Spacer height={15} />
 
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={goToHistory}>
           <Text style={styles.buttonText}>Lihat Riwayat</Text>
         </TouchableOpacity>
       </View>

@@ -11,6 +11,9 @@ const initialState = {
   data: <QuizResult[]>[],
   loading: false,
   errors: null,
+  summary: {
+    scoreAverage: 0,
+  },
 };
 
 const quizResultSlice = createSlice({
@@ -23,7 +26,12 @@ const quizResultSlice = createSlice({
   },
   extraReducers: builder => {
     builder.addCase(getAllQuizResluts.pending, handlePending);
-    builder.addCase(getAllQuizResluts.fulfilled, handleFulfilled);
+    builder.addCase(getAllQuizResluts.fulfilled, (state, action) => {
+      state.loading = false;
+      state.errors = null;
+      state.data = action.payload.data;
+      state.summary = action.payload.summary;
+    });
     builder.addCase(getAllQuizResluts.rejected, handleRejected);
     builder.addCase(createQuizResult.pending, handlePending);
     builder.addCase(createQuizResult.fulfilled, handleFulfilled);

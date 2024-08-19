@@ -17,6 +17,7 @@ const Colors = {
     lightest: '#EBEBEB',
     darker: '#D9D9D9',
     darkest: 'rgba(255, 255, 255, 0.14)',
+    bg: '#EFF3F6',
   },
   blue: {
     default: '#1A47BA',
@@ -25,6 +26,7 @@ const Colors = {
     default: '#000000',
     halfOpacity: 'rgba(0,0,0,0.5)',
     lowOpacity: 'rgba(0,0,0,0.1)',
+    circleBg: 'rgb(55, 54, 59)',
   },
 };
 

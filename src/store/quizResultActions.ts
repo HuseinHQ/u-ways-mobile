@@ -2,7 +2,7 @@ import {createAsyncThunk} from '@reduxjs/toolkit';
 import {RootState} from './store';
 import axios from 'axios';
 import Toast from 'react-native-toast-message';
-import {QuizResultReq} from '@/types/quizResult';
+import {QuizResult, QuizResultReq} from '@/types/quizResult';
 
 const baseUrl = process.env.BACKEND_URL + '/quiz-results';
 
@@ -20,7 +20,7 @@ export const getAllQuizResluts = createAsyncThunk(
         timeout: 5000,
       });
 
-      return data.data;
+      return data;
     } catch (error: any) {
       return rejectWithValue(error.response.data.errors);
     }
@@ -57,6 +57,34 @@ export const createQuizResult = createAsyncThunk(
         text2: response.data.data.message,
       });
       callback(response?.data?.data?.newQuizId);
+      return true;
+    } catch (error: any) {
+      return rejectWithValue(error.response.data.errors);
+    }
+  },
+);
+
+export const getQuizResult = createAsyncThunk(
+  'quizResult/getQuizResult',
+  async (
+    {
+      id,
+      callback = () => {},
+    }: {id: number; callback: (value: QuizResult) => void},
+    {getState, rejectWithValue},
+  ) => {
+    const state = getState() as RootState;
+    const accessToken = state.auth.accessToken;
+
+    try {
+      const {data} = await axios({
+        method: 'GET',
+        url: `${baseUrl}/${id}`,
+        headers: {'X-Access-Token': accessToken},
+        timeout: 5000,
+      });
+
+      callback(data.data);
       return true;
     } catch (error: any) {
       return rejectWithValue(error.response.data.errors);
