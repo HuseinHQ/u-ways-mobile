@@ -71,9 +71,7 @@ function QuestionnaireScreen(): React.JSX.Element {
 
   const onSubmitHandler = async () => {
     const score = countScore(answer);
-    console.log(score);
     if (score !== false) {
-      console.log('masuk');
       dispatch(
         createQuizResult({
           data: {
