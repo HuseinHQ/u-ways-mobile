@@ -27,10 +27,11 @@ import {useSelector} from 'react-redux';
 import {RootState, useAppDispatch} from '@/store/store';
 import {getQuizDetail} from '@/store/quizActions';
 import useErrorToast from '@/hooks/useToastError';
-import {clearErrors} from '@/store/quizSlice';
+import {clearErrors as clearQuizErrors} from '@/store/quizSlice';
+import {clearErrors as quizResultClearErrors} from '@/store/quizResultSlice';
 import {RootStackParamList} from '@/navigator/StackNavigator';
 import {countScore} from '@/helpers';
-import Toast from 'react-native-toast-message';
+import {createQuizResult} from '@/store/quizResultActions';
 
 const possibleAnswer = [1, 2, 3, 4, 5];
 
@@ -42,7 +43,13 @@ function QuestionnaireScreen(): React.JSX.Element {
   const [answer, setAnswer] = useState<number[][]>([]);
   const studentQuiz = useSelector((state: RootState) => state.quiz.detail);
   const loading = useSelector((state: RootState) => state.quiz.loading);
-  const errors = useSelector((state: RootState) => state.quiz.errors);
+  const quizResultLoading = useSelector(
+    (state: RootState) => state.quizResult.loading,
+  );
+  const quizErrors = useSelector((state: RootState) => state.quiz.errors);
+  const quizResultErrors = useSelector(
+    (state: RootState) => state.quizResult.errors,
+  );
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const dispatch = useAppDispatch();
   const route = useRoute<RouteProp<{params: RouteParams}, 'params'>>();
@@ -64,9 +71,25 @@ function QuestionnaireScreen(): React.JSX.Element {
 
   const onSubmitHandler = async () => {
     const score = countScore(answer);
+    console.log(score);
     if (score !== false) {
-      // fetch to backend
-      // dispatch()
+      console.log('masuk');
+      dispatch(
+        createQuizResult({
+          data: {
+            semester: studentQuiz.semester,
+            part: studentQuiz.part,
+            score: score as number,
+            answer,
+          },
+          callback: (value: number) =>
+            navigation.navigate('QuestionCompleteScreen', {
+              id: value,
+              semester: studentQuiz.semester,
+              part: studentQuiz.part,
+            }),
+        }),
+      );
     }
   };
 
@@ -85,8 +108,14 @@ function QuestionnaireScreen(): React.JSX.Element {
 
   useErrorToast({
     title: 'Error',
-    errors,
-    dispatchFunction: clearErrors,
+    errors: quizResultErrors,
+    dispatchFunction: quizResultClearErrors,
+  });
+
+  useErrorToast({
+    title: 'Error',
+    errors: quizErrors,
+    dispatchFunction: clearQuizErrors,
   });
 
   if (loading) {
@@ -177,8 +206,13 @@ function QuestionnaireScreen(): React.JSX.Element {
               {index === studentQuiz.details.length - 1 && (
                 <TouchableOpacity
                   onPress={onSubmitHandler}
-                  style={styles.submitButton}>
-                  <Text style={styles.submit}>Submit</Text>
+                  style={styles.submitButton}
+                  disabled={quizResultLoading}>
+                  {quizResultLoading ? (
+                    <ActivityIndicator color={Colors.white.default} />
+                  ) : (
+                    <Text style={styles.submit}>Submit</Text>
+                  )}
                 </TouchableOpacity>
               )}
             </View>

@@ -8,6 +8,7 @@ function countScore(values: number[][]): number | boolean {
     for (const num of subArray) {
       if (num === 0) {
         Toast.show({
+          type: 'error',
           text1: 'Mohon isi semua pertanyaan',
           text2: 'Tidak boleh ada jawaban yang kosong!',
         });

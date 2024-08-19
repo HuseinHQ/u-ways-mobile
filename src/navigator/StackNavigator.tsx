@@ -30,6 +30,7 @@ import EditArticleScreen from '@/screens/EditArticleScreen';
 import AddArticleScreen from '@/screens/AddArticleScreen';
 import AddQuizScreen from '@/screens/AddQuizScreen';
 import EditQuizScreen from '@/screens/EditQuizScreen';
+import QuestionnaireResultScreen from '@/screens/QuestionnaireResultScreen';
 
 export type RootStackParamList = {
   SplashScreen: undefined;
@@ -40,7 +41,10 @@ export type RootStackParamList = {
   ArticlesScreen: undefined;
   ArticleDetailScreen: {id: number; editMode?: boolean} | undefined;
   QuestionnaireScreen: {id: number} | undefined;
-  QuestionCompleteScreen: undefined;
+  QuestionnaireResultScreen: {id: number} | undefined;
+  QuestionCompleteScreen:
+    | {id: number; semester: number; part: number}
+    | undefined;
   EditProfileScreen: undefined;
   ChatDetailScreen: {title: string; chatId: number} | undefined;
   StudentsScreen: undefined;
@@ -105,6 +109,10 @@ function StackNavigator() {
       <Stack.Screen
         name="QuestionnaireScreen"
         component={QuestionnaireScreen}
+      />
+      <Stack.Screen
+        name="QuestionnaireResultScreen"
+        component={QuestionnaireResultScreen}
       />
       <Stack.Screen
         name="QuestionCompleteScreen"

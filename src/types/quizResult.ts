@@ -8,3 +8,10 @@ export type QuizResult = {
   answer: number[][];
   updatedAt: string;
 };
+
+export type QuizResultReq = {
+  semester: number;
+  part: number;
+  score: number;
+  answer: number[][];
+};

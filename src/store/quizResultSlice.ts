@@ -1,5 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit';
-import {getAllQuizResluts} from './quizResultActions';
+import {createQuizResult, getAllQuizResluts} from './quizResultActions';
 import {
   handleFulfilled,
   handlePending,
@@ -25,6 +25,9 @@ const quizResultSlice = createSlice({
     builder.addCase(getAllQuizResluts.pending, handlePending);
     builder.addCase(getAllQuizResluts.fulfilled, handleFulfilled);
     builder.addCase(getAllQuizResluts.rejected, handleRejected);
+    builder.addCase(createQuizResult.pending, handlePending);
+    builder.addCase(createQuizResult.fulfilled, handleFulfilled);
+    builder.addCase(createQuizResult.rejected, handleRejected);
   },
 });
 

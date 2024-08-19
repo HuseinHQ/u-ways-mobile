@@ -1,6 +1,8 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import {RootState} from './store';
 import axios from 'axios';
+import Toast from 'react-native-toast-message';
+import {QuizResultReq} from '@/types/quizResult';
 
 const baseUrl = process.env.BACKEND_URL + '/quiz-results';
 
@@ -28,8 +30,14 @@ export const getAllQuizResluts = createAsyncThunk(
 export const createQuizResult = createAsyncThunk(
   'quizResult/createQuizResult',
   async (
-    data: {quizId: number; score: number},
-    {getState, rejectWithValue},
+    {
+      data,
+      callback = () => {},
+    }: {
+      data: QuizResultReq;
+      callback?: (id: number) => void;
+    },
+    {getState, rejectWithValue, dispatch},
   ) => {
     const state = getState() as RootState;
     const accessToken = state.auth.accessToken;
@@ -43,7 +51,13 @@ export const createQuizResult = createAsyncThunk(
         timeout: 5000,
       });
 
-      return response.data.data;
+      dispatch(getAllQuizResluts());
+      Toast.show({
+        text1: 'Berhasil',
+        text2: response.data.data.message,
+      });
+      callback(response?.data?.data?.newQuizId);
+      return true;
     } catch (error: any) {
       return rejectWithValue(error.response.data.errors);
     }
