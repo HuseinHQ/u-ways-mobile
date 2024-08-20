@@ -2,6 +2,7 @@ const Colors = {
   primary: '#CE1212',
   white: {
     default: '#FFFFFF',
+    halfOpacity: 'rgba(255, 255, 255, 0.5)',
   },
   red: {
     default: '#CE1212',

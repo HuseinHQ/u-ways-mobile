@@ -3934,6 +3934,7 @@ __metadata:
     react: 18.2.0
     react-native: 0.74.2
     react-native-circular-progress: ^1.4.0
+    react-native-document-picker: ^9.3.0
     react-native-dotenv: ^3.4.11
     react-native-dropdown-picker: ^5.4.6
     react-native-gesture-handler: ^2.18.0
@@ -9373,6 +9374,22 @@ __metadata:
   version: 2.2.1
   resolution: "react-native-communications@npm:2.2.1"
   checksum: 0b1a63a116a34866d06790b0dd1153ff622aba148a8ad7d87e18e0ba6c2cfa545210be0d04f3428341a72fbcbd09ac95ea38b92197856cb0fda67bca2321e07b
+  languageName: node
+  linkType: hard
+
+"react-native-document-picker@npm:^9.3.0":
+  version: 9.3.0
+  resolution: "react-native-document-picker@npm:9.3.0"
+  dependencies:
+    invariant: ^2.2.4
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+    react-native-windows: "*"
+  peerDependenciesMeta:
+    react-native-windows:
+      optional: true
+  checksum: 622c9bd3a17b7b92ff6b13571ccf2a916dd2477f2aa8c22b79e4b204156742ba95680dea912ee5ee56718f13c537107f5937e5bcf88d93cdf2142d508dc16351
   languageName: node
   linkType: hard
 

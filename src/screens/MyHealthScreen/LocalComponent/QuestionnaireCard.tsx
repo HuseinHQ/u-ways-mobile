@@ -66,7 +66,7 @@ function QuestionnaireCard(): React.JSX.Element {
   return (
     <View style={styles.container}>
       <ScrollView style={styles.scrollViewContainer}>
-        {!quizLoading && quiz.length && (
+        {!quizLoading && Array.isArray(quiz) && quiz.length > 0 && (
           <Text style={styles.title2}>Kuis Tersedia</Text>
         )}
         {quizLoading && (
