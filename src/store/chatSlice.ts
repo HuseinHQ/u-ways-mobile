@@ -1,5 +1,6 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import axios from 'axios';
+import {RootState} from './store';
 
 const baseUrl = process.env.BACKEND_URL;
 
@@ -36,6 +37,31 @@ export const updateChatDate = createAsyncThunk(
         data: {date},
         headers: {
           'X-Access-Token': access_token,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      dispatch(getChats({access_token}));
+    } catch (err) {
+      return rejectWithValue((err as any)?.response?.data?.errors);
+    }
+  },
+);
+
+export const postImageFile = createAsyncThunk(
+  'chats/postImage',
+  async (props: {file: any}, {rejectWithValue, dispatch, getState}) => {
+    try {
+      const state = getState() as RootState;
+      const accessToken = state.auth.accessToken;
+      const {access_token, id, image} = props;
+
+      const {data} = await axios({
+        method: 'POST',
+        url: baseUrl + '/chats/file',
+        data: {image},
+        headers: {
+          'X-Access-Token': accessToken,
           'Content-Type': 'application/json',
         },
       });
