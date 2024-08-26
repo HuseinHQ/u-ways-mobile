@@ -11,6 +11,7 @@ import studentReducer from './studentSlice';
 import adminReducer from './adminSlice';
 import quizReducer from './quizSlice';
 import quizResultReducer from './quizResultSlice';
+import carouselReducer from './carouselSlice';
 import {
   FLUSH,
   PAUSE,
@@ -35,6 +36,7 @@ const rootReducer = combineReducers({
   admin: adminReducer,
   quiz: quizReducer,
   quizResult: quizResultReducer,
+  carousel: carouselReducer,
 });
 
 const persistConfig = {

@@ -1,55 +1,72 @@
-import React, {useState} from 'react';
-import {Dimensions, Image, StyleSheet, View} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  ActivityIndicator,
+  Dimensions,
+  Image,
+  StyleSheet,
+  View,
+} from 'react-native';
 import Carousel from 'react-native-reanimated-carousel';
-import Hero1 from '@/assets/images/hero_1.png';
-import Hero2 from '@/assets/images/hero_2.png';
-import Hero3 from '@/assets/images/hero_3.png';
-import Hero4 from '@/assets/images/hero_4.png';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Colors from '@/utils/Colors';
 import Spacer from '@/components/Spacer';
+import {useSelector} from 'react-redux';
+import {RootState, useAppDispatch} from '@/store/store';
+import {getAllCarousels} from '@/store/carouselActions';
+import useErrorToast from '@/hooks/useToastError';
+import {clearErrors} from '@/store/carouselSlice';
 
 const width = Dimensions.get('window').width;
-const carouselData = [
-  {
-    image: Hero1,
-  },
-  {
-    image: Hero2,
-  },
-  {
-    image: Hero3,
-  },
-  {
-    image: Hero4,
-  },
-];
+const imagePrefixUrl = process.env.BACKEND_URL + '/uploads';
 
 function CustomCarousel(): React.JSX.Element {
   const [carouselIndex, setCarouselIndex] = useState(0);
+  const carousels = useSelector((state: RootState) => state.carousel.data);
+  const loading = useSelector((state: RootState) => state.carousel.loading);
+  const errors = useSelector((state: RootState) => state.carousel.errors);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(getAllCarousels());
+  }, [dispatch]);
+
+  useErrorToast({
+    title: 'Gagal Mengambil Data Carousel',
+    errors,
+    dispatchFunction: clearErrors,
+  });
 
   return (
     <>
       <View>
-        <Carousel
-          loop
-          width={width}
-          height={width / 2}
-          autoPlayInterval={5000}
-          autoPlay={true}
-          data={carouselData}
-          scrollAnimationDuration={1000}
-          onSnapToItem={index => setCarouselIndex(index)}
-          renderItem={({index, item}) => (
-            <View key={index} style={styles.carouselItem}>
-              <Image source={item.image} style={styles.image} />
-            </View>
-          )}
-        />
+        {loading ? (
+          <View style={styles.emptyContainer}>
+            <ActivityIndicator size={24} color={Colors.primary} />
+          </View>
+        ) : (
+          <Carousel
+            loop
+            width={width}
+            height={width / 2}
+            autoPlayInterval={5000}
+            autoPlay={true}
+            data={carousels}
+            scrollAnimationDuration={1000}
+            onSnapToItem={index => setCarouselIndex(index)}
+            renderItem={({index, item}) => (
+              <View key={index} style={styles.carouselItem}>
+                <Image
+                  source={{uri: imagePrefixUrl + item.imageUrl}}
+                  style={styles.image}
+                />
+              </View>
+            )}
+          />
+        )}
       </View>
       <Spacer height={10} />
       <View style={styles.bullet}>
-        {carouselData.map((item, index) => (
+        {carousels.map((_, index) => (
           <FontAwesome
             key={index}
             name="circle"
@@ -79,6 +96,11 @@ const styles = StyleSheet.create({
   bullet: {
     flexDirection: 'row',
     gap: 5,
+    justifyContent: 'center',
+  },
+  emptyContainer: {
+    flex: 1,
+    height: width / 2,
     justifyContent: 'center',
   },
 });

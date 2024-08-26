@@ -11,15 +11,15 @@ import {
   ScrollView,
   ActivityIndicator,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 import {RootState, useAppDispatch} from '@/store/store';
 import {getArticles} from '@/store/articleSlice';
+import {RootStackParamList} from '@/navigator/StackNavigator';
 
 function ArticleRecommendation(): React.JSX.Element {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const goToArticlesScreen = () => {
-    // @ts-ignore
     navigation.navigate('ArticlesScreen');
   };
   const articleLoading = useSelector(
@@ -44,14 +44,16 @@ function ArticleRecommendation(): React.JSX.Element {
         </TouchableOpacity>
       </View>
       <Spacer height={10} />
-      <ScrollView
-        showsHorizontalScrollIndicator={false}
-        horizontal
-        style={styles.featureContainer}>
-        {articleLoading ? (
-          <ActivityIndicator />
-        ) : (
-          selectArticles?.map((item, index) => (
+      {articleLoading ? (
+        <View style={styles.emptyContainer}>
+          <ActivityIndicator size={24} color={Colors.primary} />
+        </View>
+      ) : (
+        <ScrollView
+          showsHorizontalScrollIndicator={false}
+          horizontal={!articleLoading}
+          style={styles.featureContainer}>
+          {selectArticles?.map((item, index) => (
             <React.Fragment key={index}>
               <TouchableOpacity
                 onPress={() =>
@@ -73,9 +75,9 @@ function ArticleRecommendation(): React.JSX.Element {
               </TouchableOpacity>
               {index !== selectArticles.length - 1 && <Spacer width={10} />}
             </React.Fragment>
-          ))
-        )}
-      </ScrollView>
+          ))}
+        </ScrollView>
+      )}
     </View>
   );
 }
@@ -130,6 +132,12 @@ const styles = StyleSheet.create({
   textVariant2: {
     bottom: 10,
     left: 10,
+  },
+  emptyContainer: {
+    flex: 1,
+    height: 150,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
