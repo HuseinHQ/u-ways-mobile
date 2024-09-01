@@ -5,6 +5,8 @@ import {
   deleteQuiz,
   editQuiz,
   getAllQuizzes,
+  getAvailableQuiz,
+  getNewQuiz,
   getQuizDetail,
   getStudentQuiz,
 } from './quizActions';
@@ -13,7 +15,7 @@ import {
   handlePending,
   handleRejected,
 } from '@/helpers/builderHandler';
-import {Quiz, QuizDetail} from '@/types/quiz';
+import {AvailableQuiz, NewQuiz, Quiz, QuizDetail} from '@/types/quiz';
 
 const initialState = {
   data: <Quiz[]>[],
@@ -30,7 +32,8 @@ const initialState = {
     createdAt: '',
     updatedAt: '',
   },
-  studentQuiz: <Quiz[]>[],
+  studentQuiz: <AvailableQuiz[]>[],
+  newQuiz: <NewQuiz[]>[],
 };
 
 const quizSlice = createSlice({
@@ -75,6 +78,18 @@ const quizSlice = createSlice({
       state.studentQuiz = action.payload;
     });
     builder.addCase(getStudentQuiz.rejected, handleRejected);
+    builder.addCase(getAvailableQuiz.pending, handlePending);
+    builder.addCase(getAvailableQuiz.fulfilled, (state, action) => {
+      handleFulfilled(state);
+      state.studentQuiz = action.payload;
+    });
+    builder.addCase(getAvailableQuiz.rejected, handleRejected);
+    builder.addCase(getNewQuiz.pending, handlePending);
+    builder.addCase(getNewQuiz.fulfilled, (state, action) => {
+      handleFulfilled(state);
+      state.newQuiz = action.payload;
+    });
+    builder.addCase(getNewQuiz.rejected, handleRejected);
   },
 });
 

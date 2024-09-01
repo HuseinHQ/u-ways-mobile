@@ -24,6 +24,7 @@ import {QuizResult} from '@/types/quizResult';
 import useErrorToast from '@/hooks/useToastError';
 import {clearErrors} from '@/store/quizResultSlice';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {scoreDescription} from '@/helpers';
 
 type RouteParams = {
   id: number;
@@ -55,61 +56,65 @@ function QuestionnaireResultScreen(): React.JSX.Element {
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="transparent" />
 
-      <View style={styles.imageContainer}>
-        <Image source={banner} style={GlobalStyles.image} />
-        <View style={styles.additionalImage} />
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={24} />
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.mainContainer}>
-        <View style={styles.titleContainer}>
-          <Text style={styles.titleLeft}>Halo</Text>
-          <Text style={styles.titleRight}>{selectUser?.split(' ')[0]}</Text>
+      <ScrollView>
+        <View style={styles.imageContainer}>
+          <Image source={banner} style={GlobalStyles.image} />
+          <View style={styles.additionalImage} />
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => navigation.goBack()}>
+            <Ionicons name="arrow-back" size={24} />
+          </TouchableOpacity>
         </View>
 
-        <Text style={styles.subtitle}>Lihat hasil kuesioner Anda!</Text>
-
-        <View style={styles.horizontalLine} />
-
-        <Spacer height={20} />
-
-        <ScrollView horizontal={true}>
-          {data?.map((item, index) => (
-            <View key={index} style={styles.card}>
-              <Text style={styles.cardTitle}>{item.title}</Text>
-              <Spacer height={10} />
-              <Text style={styles.cardDescription}>{item.description}</Text>
-            </View>
-          ))}
-        </ScrollView>
-
-        <View style={styles.card2}>
-          <View>
-            <Text style={styles.cardTitle2}>Skor</Text>
-            <Text style={styles.cardDescription2}>Rata - Rata</Text>
+        <View style={styles.mainContainer}>
+          <View style={styles.titleContainer}>
+            <Text style={styles.titleLeft}>Halo</Text>
+            <Text style={styles.titleRight}>{selectUser?.split(' ')[0]}</Text>
           </View>
 
-          <AnimatedCircularProgress
-            fill={+detail.score || 0}
-            size={100}
-            width={10}
-            backgroundColor={Colors.black.circleBg}
-            tintColor={Colors.primary}
-            rotation={180}>
-            {() =>
-              loading ? (
-                <ActivityIndicator color={Colors.primary} />
-              ) : (
-                <Text>{detail.score}%</Text>
-              )
-            }
-          </AnimatedCircularProgress>
+          <Text style={styles.subtitle}>Lihat hasil kuesioner Anda!</Text>
+
+          <View style={styles.horizontalLine} />
+
+          <Spacer height={20} />
+
+          <ScrollView horizontal={true}>
+            {data?.map((item, index) => (
+              <View key={index} style={styles.card}>
+                <Text style={styles.cardTitle}>{item.title}</Text>
+                <Spacer height={10} />
+                <Text style={styles.cardDescription}>{item.description}</Text>
+              </View>
+            ))}
+          </ScrollView>
+
+          <View style={styles.card2}>
+            <View>
+              <Text style={styles.cardTitle2}>Skor Anda: {detail.score}</Text>
+              <Text style={styles.cardDescription2}>
+                {scoreDescription(+detail.score)}
+              </Text>
+            </View>
+
+            {/* <AnimatedCircularProgress
+              fill={(+detail.score / 27) * 100}
+              size={100}
+              width={10}
+              backgroundColor={Colors.black.circleBg}
+              tintColor={Colors.primary}
+              rotation={180}>
+              {() =>
+                loading ? (
+                  <ActivityIndicator color={Colors.primary} />
+                ) : (
+                  <Text>{detail.score}%</Text>
+                )
+              }
+            </AnimatedCircularProgress> */}
+          </View>
         </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -190,13 +195,13 @@ const styles = StyleSheet.create({
   },
   cardTitle2: {
     fontFamily: 'Poppins-Bold',
-    fontSize: 30,
+    fontSize: 20,
     color: Colors.primary,
   },
   cardDescription2: {
-    fontFamily: 'Poppins-Bold',
-    fontSize: 24,
-    color: Colors.primary,
+    fontFamily: 'Poppins-Medium',
+    fontSize: 12,
+    // color: Colors.primary,
   },
 });
 

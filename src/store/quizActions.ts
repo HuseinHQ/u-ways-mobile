@@ -215,3 +215,55 @@ export const getStudentQuiz = createAsyncThunk(
     }
   },
 );
+
+export const getAvailableQuiz = createAsyncThunk(
+  'quiz/getAvailableQuiz',
+  async (
+    {callback = () => {}}: {callback?: () => void},
+    {getState, rejectWithValue},
+  ) => {
+    const state = getState() as RootState;
+    const accessToken = state.auth.accessToken;
+
+    try {
+      const {data} = await axios({
+        method: 'GET',
+        url: baseUrl + '/available',
+        headers: {'X-Access-Token': accessToken},
+        timeout: 5000,
+      });
+
+      callback();
+      return data.data;
+    } catch (error: any) {
+      console.log(error);
+      return rejectWithValue(error.response.data.errors);
+    }
+  },
+);
+
+export const getNewQuiz = createAsyncThunk(
+  'quiz/getNewQuiz',
+  async (
+    {callback = () => {}}: {callback?: () => void},
+    {getState, rejectWithValue},
+  ) => {
+    const state = getState() as RootState;
+    const accessToken = state.auth.accessToken;
+
+    try {
+      const {data} = await axios({
+        method: 'GET',
+        url: baseUrl + '/new-quiz',
+        headers: {'X-Access-Token': accessToken},
+        timeout: 5000,
+      });
+
+      callback();
+      return data.data;
+    } catch (error: any) {
+      console.log(error);
+      return rejectWithValue(error.response.data.errors);
+    }
+  },
+);

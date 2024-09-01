@@ -1,15 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {Header} from './LocalComponent';
-import bg from '@/assets/images/gradient_bg.png';
-import number1 from '@/assets/images/number/1.png';
 
 import {
   SafeAreaView,
   StyleSheet,
   ScrollView,
   View,
-  Image,
-  Dimensions,
   Text,
   TouchableOpacity,
   ActivityIndicator,
@@ -25,7 +21,7 @@ import {
 } from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 import {RootState, useAppDispatch} from '@/store/store';
-import {getQuizDetail} from '@/store/quizActions';
+import {getNewQuiz} from '@/store/quizActions';
 import useErrorToast from '@/hooks/useToastError';
 import {clearErrors as clearQuizErrors} from '@/store/quizSlice';
 import {clearErrors as quizResultClearErrors} from '@/store/quizResultSlice';
@@ -33,15 +29,16 @@ import {RootStackParamList} from '@/navigator/StackNavigator';
 import {countScore} from '@/helpers';
 import {createQuizResult} from '@/store/quizResultActions';
 
-const possibleAnswer = [1, 2, 3, 4, 5];
+const possibleAnswer = [0, 1, 2, 3];
 
 type RouteParams = {
-  id: number;
+  semester: number;
+  part: number;
 };
 
 function QuestionnaireScreen(): React.JSX.Element {
-  const [answer, setAnswer] = useState<number[][]>([]);
-  const studentQuiz = useSelector((state: RootState) => state.quiz.detail);
+  const [answer, setAnswer] = useState<number[]>([]);
+  const newQuiz = useSelector((state: RootState) => state.quiz.newQuiz);
   const loading = useSelector((state: RootState) => state.quiz.loading);
   const quizResultLoading = useSelector(
     (state: RootState) => state.quizResult.loading,
@@ -53,21 +50,20 @@ function QuestionnaireScreen(): React.JSX.Element {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const dispatch = useAppDispatch();
   const route = useRoute<RouteProp<{params: RouteParams}, 'params'>>();
-  const {id} = route.params;
+  const {semester, part} = route.params;
 
-  const onClickAnswer =
-    (data: {partIdx: number; questionIdx: number; newValue: number}) => () => {
-      const {partIdx, questionIdx, newValue} = data;
-      setAnswer(prevAnswers => {
-        const updatedAnswers = [...prevAnswers];
-        if (updatedAnswers[partIdx][questionIdx] === newValue) {
-          updatedAnswers[partIdx][questionIdx] = 0;
-        } else {
-          updatedAnswers[partIdx][questionIdx] = newValue;
-        }
-        return updatedAnswers;
-      });
-    };
+  const onClickAnswer = (data: {index: number; newValue: number}) => () => {
+    const {index, newValue} = data;
+    setAnswer(prevAnswers => {
+      const updatedAnswers = [...prevAnswers];
+      if (updatedAnswers[index] === newValue) {
+        updatedAnswers[index] = 0;
+      } else {
+        updatedAnswers[index] = newValue;
+      }
+      return updatedAnswers;
+    });
+  };
 
   const onSubmitHandler = async () => {
     const score = countScore(answer);
@@ -75,16 +71,16 @@ function QuestionnaireScreen(): React.JSX.Element {
       dispatch(
         createQuizResult({
           data: {
-            semester: studentQuiz.semester,
-            part: studentQuiz.part,
+            semester: semester,
+            part: part,
             score: score as number,
             answer,
           },
           callback: (value: number) =>
             navigation.navigate('QuestionCompleteScreen', {
               id: value,
-              semester: studentQuiz.semester,
-              part: studentQuiz.part,
+              semester: semester,
+              part: part,
             }),
         }),
       );
@@ -92,17 +88,15 @@ function QuestionnaireScreen(): React.JSX.Element {
   };
 
   useEffect(() => {
-    dispatch(getQuizDetail({id}));
-  }, [dispatch, id]);
+    dispatch(getNewQuiz({}));
+  }, [dispatch]);
 
   useEffect(() => {
-    if (studentQuiz.details) {
-      const newAnswers = studentQuiz.details.map(part =>
-        new Array(part.questions.length).fill(0),
-      );
+    if (newQuiz?.length) {
+      const newAnswers = new Array(newQuiz?.length).fill(null);
       setAnswer(newAnswers);
     }
-  }, [studentQuiz.details]);
+  }, [newQuiz]);
 
   useErrorToast({
     title: 'Error',
@@ -127,104 +121,96 @@ function QuestionnaireScreen(): React.JSX.Element {
   return (
     <SafeAreaView>
       <Header
-        title={`Semester ${studentQuiz.semester} - ${
-          studentQuiz.part === 0 ? 'Awal' : 'Akhir'
-        }`}
+        title={`Semester ${semester} - ${part === 0 ? 'Awal' : 'Akhir'}`}
         withBackButton
       />
 
       <ScrollView>
-        <View style={styles.imageContainer}>
-          <Image source={bg} style={GlobalStyles.image} />
-          <Image source={number1} style={styles.image} />
+        <View style={styles.topContainer}>
+          {/* <Image source={bg} style={GlobalStyles.image} />
+          <Image source={number1} style={styles.image} /> */}
+          <Text style={styles.title}>Catatan</Text>
+          <Text style={styles.question}>0 : Tidak Pernah</Text>
+          <Text style={styles.question}>1{'  '}: Beberapa Hari</Text>
+          <Text style={styles.question}>
+            2 : Lebih dari separuh waktu yang dimaksud
+          </Text>
+          <Text style={styles.question}>3 : Hampir Setiap Hari</Text>
         </View>
 
-        <View>
-          {studentQuiz.details?.map((item, index) => (
-            <View key={index} style={styles.cardContainer}>
-              <Text style={[styles.title, styles.font18]}>{`Bagian ${
-                index + 1
-              }: ${item.partName}`}</Text>
-              {item.questions.map((question, questionIndex) => (
-                <View key={questionIndex} style={styles.questionCard}>
-                  <Text style={styles.title}>
-                    Pertanyaan {questionIndex + 1}
-                  </Text>
-                  <Spacer height={10} />
-                  <Text style={styles.question}>{question}</Text>
-                  <Spacer height={10} />
-                  <View style={styles.answerContainer}>
-                    {possibleAnswer?.map((value, idx) => (
-                      <TouchableOpacity
-                        key={idx}
-                        onPress={onClickAnswer({
-                          partIdx: index,
-                          questionIdx: questionIndex,
-                          newValue: value,
-                        })}
-                        style={[
-                          styles.answer,
-                          // eslint-disable-next-line react-native/no-inline-styles
-                          {
-                            backgroundColor:
-                              answer.length &&
-                              answer[index][questionIndex] === value
-                                ? Colors.white.default
-                                : Colors.primary,
-                            borderColor:
-                              answer.length &&
-                              answer[index][questionIndex] === value
-                                ? Colors.black.default
-                                : 'transparent',
-                          },
-                        ]}>
-                        <Text
-                          style={[
-                            styles.answerText,
-                            {
-                              color:
-                                answer.length &&
-                                answer[index][questionIndex] === value
-                                  ? Colors.black.default
-                                  : Colors.white.default,
-                            },
-                          ]}>
-                          {value}
-                        </Text>
-                      </TouchableOpacity>
-                    ))}
-                  </View>
-                  <Spacer height={5} />
-                  <View style={styles.yesno}>
-                    <Text style={styles.yesnoText}>Tidak Setuju</Text>
-                    <Text style={styles.yesnoText}>Setuju</Text>
-                  </View>
-                </View>
-              ))}
-              {index === studentQuiz.details.length - 1 && (
-                <TouchableOpacity
-                  onPress={onSubmitHandler}
-                  style={styles.submitButton}
-                  disabled={quizResultLoading}>
-                  {quizResultLoading ? (
-                    <ActivityIndicator color={Colors.white.default} />
-                  ) : (
-                    <Text style={styles.submit}>Submit</Text>
-                  )}
-                </TouchableOpacity>
-              )}
+        <View style={styles.cardContainer}>
+          {newQuiz?.map((item, index) => (
+            <View key={index} style={styles.questionCard}>
+              <Text style={styles.title}>Pertanyaan {index + 1}</Text>
+              <Spacer height={10} />
+              <Text style={styles.question}>{item.question}</Text>
+              <Spacer height={10} />
+              <View style={styles.answerContainer}>
+                {possibleAnswer?.map((value, idx) => (
+                  <TouchableOpacity
+                    key={idx}
+                    onPress={onClickAnswer({
+                      index,
+                      newValue: value,
+                    })}
+                    style={[
+                      styles.answer,
+                      // eslint-disable-next-line react-native/no-inline-styles
+                      {
+                        backgroundColor:
+                          answer[index] === value
+                            ? Colors.white.default
+                            : Colors.primary,
+                        borderColor:
+                          answer[index] === value
+                            ? Colors.black.default
+                            : 'transparent',
+                      },
+                    ]}>
+                    <Text
+                      style={[
+                        styles.answerText,
+                        {
+                          color:
+                            answer[index] === value
+                              ? Colors.black.default
+                              : Colors.white.default,
+                        },
+                      ]}>
+                      {value}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+              <Spacer height={5} />
+              {/* <View style={styles.yesno}>
+                <Text style={styles.yesnoText}>Tidak Pernah</Text>
+                <Text style={styles.yesnoText}>Hampir Setiap Hari</Text>
+              </View> */}
             </View>
           ))}
         </View>
+
+        <TouchableOpacity
+          onPress={onSubmitHandler}
+          style={styles.submitButton}
+          disabled={quizResultLoading}>
+          {quizResultLoading ? (
+            <ActivityIndicator color={Colors.white.default} />
+          ) : (
+            <Text style={styles.submit}>Submit</Text>
+          )}
+        </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  imageContainer: {
+  topContainer: {
     width: '100%',
-    height: Dimensions.get('screen').height / 4,
+    // height: Dimensions.get('screen').height / 4,
+    paddingHorizontal: 20,
   },
   image: {
     position: 'absolute',
@@ -284,6 +270,7 @@ const styles = StyleSheet.create({
   submitButton: {
     backgroundColor: Colors.primary,
     padding: 10,
+    marginHorizontal: 20,
     borderRadius: 10,
     ...GlobalStyles.shadow,
     marginBottom: 80,

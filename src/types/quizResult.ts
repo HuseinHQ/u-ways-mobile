@@ -13,5 +13,5 @@ export type QuizResultReq = {
   semester: number;
   part: number;
   score: number;
-  answer: number[][];
+  answer: number[];
 };

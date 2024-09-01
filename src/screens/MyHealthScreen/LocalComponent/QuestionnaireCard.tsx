@@ -1,5 +1,4 @@
 import Spacer from '@/components/Spacer';
-import {formatDates} from '@/helpers';
 import GlobalStyles from '@/styles/GlobalStyles';
 import Colors from '@/utils/Colors';
 import 'moment/locale/id';
@@ -30,7 +29,7 @@ import number9 from '@/assets/images/number/9.png';
 import number0 from '@/assets/images/number/0.png';
 import {RootStackParamList} from '@/navigator/StackNavigator';
 import {RootState, useAppDispatch} from '@/store/store';
-import {getStudentQuiz} from '@/store/quizActions';
+import {getAvailableQuiz} from '@/store/quizActions';
 import {useSelector} from 'react-redux';
 
 const numberImages = {
@@ -53,14 +52,19 @@ function QuestionnaireCard(): React.JSX.Element {
   const dispatch = useAppDispatch();
   const quiz = useSelector((state: RootState) => state.quiz.studentQuiz);
   const quizLoading = useSelector((state: RootState) => state.quiz.loading);
-  // const quizLoading = true;
 
-  const goToQuestionnaire = (id: number) => {
-    navigation.navigate('QuestionnaireScreen', {id});
+  const goToQuestionnaire = ({
+    semester,
+    part,
+  }: {
+    semester: number;
+    part: number;
+  }) => {
+    navigation.navigate('QuestionnaireScreen', {semester, part});
   };
 
   useEffect(() => {
-    dispatch(getStudentQuiz({}));
+    dispatch(getAvailableQuiz({}));
   }, [dispatch]);
 
   return (
@@ -77,7 +81,7 @@ function QuestionnaireCard(): React.JSX.Element {
         )}
         {!quizLoading &&
           quiz?.map((item, index) => (
-            <View key={item.id} style={styles.card}>
+            <View key={index} style={styles.card}>
               <View style={styles.timeline}>
                 <FontAwesome name="circle" size={15} color={Colors.primary} />
                 {index !== quiz.length - 1 && (
@@ -94,7 +98,12 @@ function QuestionnaireCard(): React.JSX.Element {
                 <Spacer height={5} />
                 <TouchableOpacity
                   style={styles.innerCard}
-                  onPress={() => goToQuestionnaire(item.id)}>
+                  onPress={() =>
+                    goToQuestionnaire({
+                      semester: item.semester,
+                      part: item.part,
+                    })
+                  }>
                   <View style={styles.imageContainer}>
                     {(index + 1)
                       .toString()
@@ -115,11 +124,7 @@ function QuestionnaireCard(): React.JSX.Element {
                         (item.part === 0 ? 'awal' : 'akhir')}
                     </Text>
                     <View style={styles.timeContainer}>
-                      <Text style={styles.dateText}>
-                        {item.startTime && item.endTime
-                          ? formatDates(item.startTime, item.endTime)
-                          : 'Tersedia'}
-                      </Text>
+                      <Text style={styles.dateText}>Tersedia</Text>
                       <MaterialCommunityIcons
                         name="timer-outline"
                         size={18}

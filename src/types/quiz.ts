@@ -15,6 +15,11 @@ export type Quiz = {
   updatedAt?: Date;
 };
 
+export type AvailableQuiz = {
+  semester: number;
+  part: number;
+};
+
 export type QuizRequest = {
   title: string;
   details: QuizDetail[];
@@ -29,4 +34,11 @@ export type SetQuizDetailValue = {
   questionIndex?: number;
   field: string;
   fieldValue: string;
+};
+
+export type NewQuiz = {
+  id: number;
+  question: string;
+  createdAt: Date;
+  updatedAt: Date;
 };

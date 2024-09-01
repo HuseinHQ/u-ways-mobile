@@ -1,26 +1,21 @@
 import Toast from 'react-native-toast-message';
 
-function countScore(values: number[][]): number | boolean {
+function countScore(values: number[] | null[]): number | boolean {
   let totalScore = 0;
-  let maxScore = 0;
 
-  for (const subArray of values) {
-    for (const num of subArray) {
-      if (num === 0) {
-        Toast.show({
-          type: 'error',
-          text1: 'Mohon isi semua pertanyaan',
-          text2: 'Tidak boleh ada jawaban yang kosong!',
-        });
-        return false;
-      }
-      totalScore += num;
-      maxScore += 5; // Each number's maximum value is 5
+  for (const num of values) {
+    if (num === null) {
+      Toast.show({
+        type: 'error',
+        text1: 'Mohon isi semua pertanyaan',
+        text2: 'Tidak boleh ada jawaban yang kosong!',
+      });
+      return false;
     }
+    totalScore += num;
   }
 
-  const percentageScore = (totalScore / maxScore) * 100;
-  return percentageScore;
+  return totalScore;
 }
 
 export default countScore;
