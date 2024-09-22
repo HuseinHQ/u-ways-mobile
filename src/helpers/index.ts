@@ -3,6 +3,7 @@ import validateInput from './validateInput';
 import validateRegister from './validateRegister';
 import countScore from './countScore';
 import scoreDescription from './scoreDescription';
+import getMimeType from './getMimeType';
 
 export function validateEmailUPN(email: string): boolean {
   const lecturerDomain = 'upnjatim.ac.id';
@@ -50,4 +51,10 @@ export function formatDates(startDate: Date, endDate: Date): string {
   }
 }
 
-export {validateInput, validateRegister, countScore, scoreDescription};
+export {
+  validateInput,
+  validateRegister,
+  countScore,
+  scoreDescription,
+  getMimeType,
+};

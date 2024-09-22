@@ -138,7 +138,7 @@ function EditLecturerScreen(): React.JSX.Element {
             method: 'GET',
             url: `${process.env.BACKEND_URL}/lecturers/${id}`,
             headers: {'X-Access-Token': access_token},
-            timeout: 500,
+            timeout: 5000,
           });
 
           setLecturerData({
